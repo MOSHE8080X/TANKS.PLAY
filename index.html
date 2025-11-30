@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TANKS.PLAY</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@700&display=swap');
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #b4b4b4;
+            font-family: 'Ubuntu', sans-serif;
+            user-select: none;
+        }
+
+        #gameCanvas {
+            display: block;
+        }
+
+        #mainMenu, #howToPlay, #shopOverlay, #loseScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10;
+            color: white;
+            transition: opacity 0.3s;
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        h1 { font-size: 4rem; margin-bottom: 20px; text-shadow: 2px 2px 0 #000; }
+        h2 { font-size: 2rem; margin-bottom: 20px; color: #eee; }
+        p { max-width: 600px; text-align: center; line-height: 1.6; font-size: 1.1rem; }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #00b2e1;
+            color: white;
+            font-family: 'Ubuntu', sans-serif;
+            box-shadow: 0 4px 0 #008fb5;
+            transition: transform 0.1s;
+        }
+
+        button:active { transform: translateY(4px); box-shadow: none; }
+        button.secondary { background: #e05e5e; box-shadow: 0 4px 0 #b33e3e; }
+        button.back { background: #555; box-shadow: 0 4px 0 #333; font-size: 1rem; padding: 10px 20px;}
+
+        #topHud {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffd700;
+            font-size: 1.8rem;
+            text-shadow: 2px 2px 3px black;
+            z-index: 5;
+            display: none;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 5px 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border: 2px solid #ffd700;
+        }
+
+        #hud {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            pointer-events: none;
+            display: none;
+        }
+
+        #xpBarContainer {
+            width: 100%;
+            height: 20px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        #xpBar {
+            height: 100%;
+            width: 0%;
+            background: #e6d13e;
+            transition: width 0.2s;
+        }
+
+        #scoreBoard {
+            text-align: center;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+            font-size: 1.2rem;
+        }
+
+        #upgradeContainer {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: -300px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            pointer-events: auto;
+            
+            transition: left 0.3s ease-in-out;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 0 10px 10px 0;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 9;
+        }
+        
+        #upgradeContainer.open {
+            left: 0;
+        }
+
+        #upgradeToggleBtn {
+            position: absolute;
+            top: 50%;
+            right: -25px;
+            transform: translateY(-50%);
+            width: 25px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 0 5px 5px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            font-size: 1.5rem;
+            line-height: 1;
+            pointer-events: auto;
+            z-index: 10;
+        }
+        
+        .stat-row {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            padding: 4px;
+            width: 280px;
+            cursor: pointer;
+            transition: background 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-row:hover { background: rgba(255,255,255,0.3); }
+
+        .stat-label {
+            color: white;
+            font-size: 0.9rem;
+            width: 120px;
+            z-index: 2;
+            font-weight: bold;
+            padding-left: 5px;
+            text-shadow: 1px 1px 1px black;
+        }
+
+        .stat-bars {
+            display: flex;
+            gap: 2px;
+            flex: 1;
+            z-index: 2;
+        }
+
+        .bar-segment {
+            width: 8px;
+            height: 15px;
+            background: #333;
+        }
+        .bar-segment.filled { background: #00b2e1; }
+        
+        .stat-cost {
+            position: absolute;
+            right: 5px;
+            color: #ffd700;
+            font-size: 0.8rem;
+            z-index: 2;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        #classShopBtn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #222;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+            text-align: center;
+            box-shadow: 0 4px 0 #000;
+        }
+        
+        #classShopMenu {
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            width: 200px;
+        }
+
+        .class-card {
+            background: #444;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            color: white;
+            border: 2px solid transparent;
+        }
+        .class-card:hover { border-color: white; }
+        .class-card.locked { opacity: 0.5; cursor: not-allowed; }
+        .class-price { color: #ffd700; font-size: 0.9rem; }
+
+    </style>
+</head>
+<body>
+
+    <div id="mainMenu">
+        <h1>TANKS.PLAY V0.0</h1>
+        <p>Survive, Farm Shapes, Upgrade Stats, and Destroy Bots.</p>
+        <button onclick="startGame()">Play</button>
+        <button class="secondary" onclick="showHowTo()">How to Play</button>
+    </div>
+
+    <div id="howToPlay" class="hidden">
+        <h2>How to Play</h2>
+        <p>
+            <b>WASD</b> to Move<br>
+            <b>Mouse</b> to Aim & Shoot<br><br>
+            Destroy <b>Squares, Triangles, and Pentagons</b> to earn Score & Coins.<br>
+            Crashing into shapes damages them heavily but hurts you slightly.<br>
+            Click the <b>Arrow</b> on the left edge of the screen to open the <b>Upgrade Menu</b>.<br>
+            Reach high scores to unlock powerful tanks!
+        </p>
+        <button class="back" onclick="hideHowTo()">Back</button>
+    </div>
+
+    <div id="loseScreen" class="hidden">
+        <h2>GAME OVER</h2>
+        <p>Your journey ends here. You achieved a score of <span id="finalScore">0</span>.</p>
+        <button onclick="startGame()">Reset</button>
+        <button class="secondary" onclick="showMainMenu()">Home</button>
+    </div>
+
+    <div id="topHud">
+        Coins: <span id="topCoinVal">0</span>
+    </div>
+
+    <div id="hud">
+        <div id="scoreBoard">Score: <span id="scoreVal">0</span></div>
+        <div id="xpBarContainer"><div id="xpBar"></div></div>
+    </div>
+
+    <div id="upgradeContainer">
+        <div id="upgradeToggleBtn" onclick="toggleUpgradeMenu()">&#9654;</div>
+    </div>
+
+    <div id="classShopBtn" onclick="toggleClassShop()">
+        Change Class<br>
+        <span style="font-size: 0.8rem">(Requires Coins)</span>
+    </div>
+    <div id="classShopMenu"></div>
+
+    <canvas id="gameCanvas"></canvas>
+
+<script>
+const CONFIG = {
+    mapWidth: 3000,
+    mapHeight: 3000,
+    gridSize: 50,
+    maxShapes: 150,
+    maxBots: 10,
+    fps: 60
+};
+
+const COLORS = {
+    bg: '#b4b4b4',
+    grid: '#cdcdcd',
+    player: '#00b2e1',
+    playerBorder: '#008fb5',
+    enemy: '#f14e54',
+    enemyBorder: '#b33e3e',
+    shapeSquare: '#ffe869',
+    shapeTriangle: '#fc7677',
+    shapePentagon: '#768dfc',
+    barrel: '#999999',
+    barrelBorder: '#727272'
+};
+
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+let gameLoopId;
+let isRunning = false;
+let entities = [];
+let particles = [];
+let player;
+let camera = { x: 0, y: 0, zoom: 1 };
+let lastTime = 0;
+let isUpgradeMenuOpen = false;
+
+const STAT_TYPES = [
+    { id: 'regen', name: 'Health Regen', color: '#e69f58', max: 8 },
+    { id: 'maxHp', name: 'Max Health', color: '#c358e6', max: 8 },
+    { id: 'bodyDmg', name: 'Body Damage', color: '#9758e6', max: 8 },
+    { id: 'bulletSpd', name: 'Bullet Speed', color: '#589be6', max: 8 },
+    { id: 'bulletPen', name: 'Bullet Pen.', color: '#e6d058', max: 8 },
+    { id: 'bulletDmg', name: 'Bullet Dmg', color: '#e65858', max: 8 },
+    { id: 'reload', name: 'Reload', color: '#96e658', max: 8 },
+    { id: 'moveSpd', name: 'Move Speed', color: '#58e6d2', max: 8 }
+];
+
+const CLASSES = [
+    { id: 'basic', name: 'Basic', price: 0, scale: 1, recoil: 1, guns: [{x:0, y:0, width:1.0, height:1.9, angle:0, delay: 0}] },
+    { id: 'sniper', name: 'Sniper', price: 5000, scale: 1.1, recoil: 2, fov: 1.2, guns: [{x:0, y:0, width:1.0, height:2.5, angle:0, delay:0, speedMult: 1.5, dmgMult: 2, reloadMult: 0.5}] },
+    { id: 'twin', name: 'Twin', price: 5000, scale: 1, recoil: 1, guns: [{x:0.5, y:0, width:1.0, height:1.9, angle:0, delay:0}, {x:-0.5, y:0, width:1.0, height:1.9, angle:0, delay:0.5}] },
+    { id: 'machine', name: 'Machine Gun', price: 5000, scale: 1, recoil: 1.2, guns: [{x:0, y:0, width:1.0, height:1.6, angle:0, delay:0, spread: 0.4, reloadMult: 2, dmgMult: 0.7}] },
+    { id: 'destroyer', name: 'Destroyer', price: 1000000, scale: 1.5, recoil: 5, guns: [{x:0, y:0, width:1.2, height:1.9, angle:0, delay:0, speedMult: 0.8, dmgMult: 10, reloadMult: 0.2, sizeMult: 2}] }
+];
+
+const input = {
+    up: false, down: false, left: false, right: false,
+    mouseX: 0, mouseY: 0, mouseDown: false
+};
+
+window.addEventListener('resize', resize);
+window.addEventListener('keydown', e => {
+    if(e.code === 'KeyW' || e.code === 'ArrowUp') input.up = true;
+    if(e.code === 'KeyS' || e.code === 'ArrowDown') input.down = true;
+    if(e.code === 'KeyA' || e.code === 'ArrowLeft') input.left = true;
+    if(e.code === 'KeyD' || e.code === 'ArrowRight') input.right = true;
+});
+window.addEventListener('keyup', e => {
+    if(e.code === 'KeyW' || e.code === 'ArrowUp') input.up = false;
+    if(e.code === 'KeyS' || e.code === 'ArrowDown') input.down = false;
+    if(e.code === 'KeyA' || e.code === 'ArrowLeft') input.left = false;
+    if(e.code === 'KeyD' || e.code === 'ArrowRight') input.right = false;
+});
+window.addEventListener('mousemove', e => {
+    input.mouseX = e.clientX;
+    input.mouseY = e.clientY;
+});
+window.addEventListener('mousedown', () => input.mouseDown = true);
+window.addEventListener('mouseup', () => input.mouseDown = false);
+
+const rand = (min, max) => Math.random() * (max - min) + min;
+const randInt = (min, max) => Math.floor(rand(min, max));
+const dist = (x1, y1, x2, y2) => Math.hypot(x1 - x2, y1 - y2);
+
+class Entity {
+    constructor(x, y, radius, color) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+        this.vx = 0;
+        this.vy = 0;
+        this.isDead = false;
+        this.angle = 0;
+        this.mass = 1;
+        this.friction = 0.9;
+    }
+
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vx *= this.friction;
+        this.vy *= this.friction;
+
+        if (this.x < 0) { this.x = 0; this.vx = Math.abs(this.vx); }
+        if (this.x > CONFIG.mapWidth) { this.x = CONFIG.mapWidth; this.vx = -Math.abs(this.vx); }
+        if (this.y < 0) { this.y = 0; this.vy = Math.abs(this.vy); }
+        if (this.y > CONFIG.mapHeight) { this.y = CONFIG.mapHeight; this.vy = -Math.abs(this.vy); }
+    }
+
+    draw(ctx) {}
+}
+
+class Shape extends Entity {
+    constructor(x, y, type) {
+        let r, sides, hp, xp, color, dmg;
+        if (type === 0) {
+            r = 15; sides = 4; hp = 10; xp = 10; color = COLORS.shapeSquare; dmg = 8;
+        } else if (type === 1) {
+            r = 20; sides = 3; hp = 30; xp = 25; color = COLORS.shapeTriangle; dmg = 12;
+        } else {
+            r = 35; sides = 5; hp = 100; xp = 120; color = COLORS.shapePentagon; dmg = 20;
+        }
+        super(x, y, r, color);
+        this.sides = sides;
+        this.maxHp = hp;
+        this.hp = hp;
+        this.xpValue = xp;
+        this.bodyDamage = dmg;
+        this.rotation = rand(0, Math.PI * 2);
+        this.rotateSpeed = rand(-0.02, 0.02);
+        this.pushable = true;
+    }
+
+    takeDamage(amount, source) {
+        this.hp -= amount;
+        if (this.hp <= 0 && !this.isDead) {
+            this.isDead = true;
+            createExplosion(this.x, this.y, this.radius, this.color);
+            if (source && source instanceof Tank) {
+                source.gainXp(this.xpValue);
+            }
+        }
+    }
+
+    update() {
+        super.update();
+        this.rotation += this.rotateSpeed;
+    }
+
+    draw(ctx) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation);
+        
+        ctx.fillStyle = this.color;
+        ctx.strokeStyle = '#555';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        for (let i = 0; i < this.sides; i++) {
+            const theta = (i / this.sides) * Math.PI * 2;
+            const px = Math.cos(theta) * this.radius;
+            const py = Math.sin(theta) * this.radius;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        if (this.hp < this.maxHp) {
+            ctx.rotate(-this.rotation);
+            ctx.fillStyle = 'black';
+            ctx.fillRect(-this.radius, this.radius + 5, this.radius * 2, 4);
+            ctx.fillStyle = '#6f6';
+            ctx.fillRect(-this.radius, this.radius + 5, (this.radius * 2) * (this.hp / this.maxHp), 4);
+        }
+        ctx.restore();
+    }
+}
+
+class Bullet extends Entity {
+    constructor(owner, x, y, angle, speed, dmg, pen, size, duration) {
+        super(x, y, size, owner.color);
+        this.owner = owner;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+        this.damage = dmg;
+        this.penetration = pen;
+        this.life = duration;
+        this.friction = 1;
+    }
+
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life--;
+        if (this.life <= 0) this.isDead = true;
+        
+        if (this.x < 0 || this.x > CONFIG.mapWidth || this.y < 0 || this.y > CONFIG.mapHeight) {
+            this.isDead = true;
+        }
+    }
+
+    draw(ctx) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.fillStyle = this.color;
+        ctx.strokeStyle = '#444';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+    }
+}
+
+class Tank extends Entity {
+    constructor(x, y, isBot) {
+        super(x, y, 20, isBot ? COLORS.enemy : COLORS.player);
+        this.isBot = isBot;
+        
+        this.stats = {
+            regen: 0, maxHp: 0, bodyDmg: 0, bulletSpd: 0,
+            bulletPen: 0, bulletDmg: 0, reload: 0, moveSpd: 0
+        };
+        
+        this.level = 1;
+        this.score = 0;
+        this.coins = 0;
+        this.baseMaxHp = 50;
+        this.hp = 50;
+        this.classDef = CLASSES[0];
+        
+        this.guns = this.classDef.guns.map(g => ({...g, lastShot: 0}));
+        
+        this.target = null;
+        this.state = 'farm';
+    }
+
+    getStat(key) {
+        const lvl = this.stats[key];
+        switch(key) {
+            case 'regen': return 0.05 + (lvl * 0.05);
+            case 'maxHp': return this.baseMaxHp + (lvl * 20);
+            case 'bodyDmg': return 10 + (lvl * 5);
+            case 'bulletSpd': return 5 + (lvl * 1);
+            case 'bulletPen': return 10 + (lvl * 8);
+            case 'bulletDmg': return 8 + (lvl * 3);
+            case 'reload': return 1 - (lvl * 0.06);
+            case 'moveSpd': return 0.2 + (lvl * 0.04);
+            default: return 0;
+        }
+    }
+
+    changeClass(classId) {
+        const newClass = CLASSES.find(c => c.id === classId);
+        if (!newClass) return;
+        this.classDef = newClass;
+        this.radius = 20 * newClass.scale;
+        this.guns = newClass.guns.map(g => ({...g, lastShot: 0}));
+    }
+
+    upgradeStat(key) {
+        if (this.stats[key] < 8) {
+            const cost = this.getUpgradeCost(key);
+            if (this.coins >= cost) {
+                this.coins -= cost;
+                this.stats[key]++;
+                if (key === 'maxHp') this.hp += 20; 
+                return true;
+            }
+        }
+        return false;
+    }
+
+    getUpgradeCost(key) {
+        const lvl = this.stats[key];
+        return Math.floor(10 * Math.pow(1.5, lvl));
+    }
+
+    takeDamage(amount, source) {
+        this.hp -= amount;
+        if (this.hp <= 0 && !this.isDead) {
+            this.isDead = true;
+            createExplosion(this.x, this.y, this.radius * 2, this.color);
+            if (source && source instanceof Tank) {
+                const reward = Math.floor(this.score / 2) + 100;
+                source.gainXp(reward);
+            }
+        }
+    }
+
+    gainXp(amount) {
+        this.score += amount;
+        this.coins += amount;
+    }
+
+    fire() {
+        this.guns.forEach(g => {
+            if (g.lastShot <= 0) {
+                const bSpd = this.getStat('bulletSpd') * (g.speedMult || 1);
+                const bDmg = this.getStat('bulletDmg') * (g.dmgMult || 1);
+                const bPen = this.getStat('bulletPen');
+                const bLife = 60 * (1 + (this.getStat('bulletPen')/50));
+                const bSize = (this.radius / 2.5) * (g.sizeMult || 1);
+                
+                const totalAngle = this.angle + g.angle + rand(-0.05, 0.05) * (g.spread || 0);
+                
+                const gx = this.x + Math.cos(this.angle) * (this.radius * 1.2);
+                const gy = this.y + Math.sin(this.angle) * (this.radius * 1.2);
+
+                const bullet = new Bullet(
+                    this, 
+                    gx, gy, 
+                    totalAngle, 
+                    bSpd, 
+                    bDmg, 
+                    bPen,
+                    bSize,
+                    bLife
+                );
+                entities.push(bullet);
+
+                const recoil = 1 * this.classDef.recoil;
+                this.vx -= Math.cos(totalAngle) * recoil;
+                this.vy -= Math.sin(totalAngle) * recoil;
+
+                const baseReload = 30;
+                const reloadMod = this.getStat('reload') * (g.reloadMult || 1);
+                g.lastShot = Math.max(5, baseReload * reloadMod);
+            }
+        });
+    }
+
+    update() {
+        super.update();
+
+        if (this.hp < this.getStat('maxHp')) {
+            this.hp += this.getStat('regen');
+        }
+        if (this.hp > this.getStat('maxHp')) this.hp = this.getStat('maxHp');
+
+        this.guns.forEach(g => { if(g.lastShot > 0) g.lastShot--; });
+
+        if (this.isBot) this.updateAI();
+        else this.updatePlayer();
+    }
+
+    updatePlayer() {
+        const accel = this.getStat('moveSpd');
+        if (input.up) this.vy -= accel;
+        if (input.down) this.vy += accel;
+        if (input.left) this.vx -= accel;
+        if (input.right) this.vx += accel;
+
+        const worldMouseX = input.mouseX + (camera.x - canvas.width/2);
+        const worldMouseY = input.mouseY + (camera.y - canvas.height/2);
+        this.angle = Math.atan2(worldMouseY - this.y, worldMouseX - this.x);
+
+        if (input.mouseDown) {
+            this.fire();
+        }
+    }
+
+    updateAI() {
+        if (Math.random() < 0.02 && this.coins > 10) {
+             const stat = STAT_TYPES[randInt(0, STAT_TYPES.length)].id;
+             this.upgradeStat(stat);
+        }
+
+        if (this.hp < this.getStat('maxHp') * 0.3) {
+            this.state = 'flee';
+        } else {
+            let nearestEnemy = null;
+            let nearestShape = null;
+            let minDistE = 600;
+            let minDistS = 400;
+
+            entities.forEach(e => {
+                if (e === this) return;
+                const d = dist(this.x, this.y, e.x, e.y);
+                if (e instanceof Tank && d < minDistE && !e.isDead) {
+                    nearestEnemy = e;
+                    minDistE = d;
+                }
+                if (e instanceof Shape && d < minDistS) {
+                    nearestShape = e;
+                    minDistS = d;
+                }
+            });
+
+            if (nearestEnemy) {
+                this.target = nearestEnemy;
+                this.state = 'fight';
+            } else if (nearestShape) {
+                this.target = nearestShape;
+                this.state = 'farm';
+            } else {
+                this.state = 'wander';
+                this.target = null;
+            }
+        }
+
+        const accel = this.getStat('moveSpd') * 0.8;
+
+        if (this.state === 'flee') {
+             if (this.target) {
+                 const angleTo = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+                 this.vx -= Math.cos(angleTo) * accel;
+                 this.vy -= Math.sin(angleTo) * accel;
+                 this.angle = angleTo + Math.PI;
+                 this.fire();
+             } else {
+                 this.vx += rand(-accel, accel);
+                 this.vy += rand(-accel, accel);
+             }
+        } 
+        else if (this.state === 'fight' && this.target) {
+            const angleTo = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+            this.angle = angleTo;
+            
+            this.vx += Math.cos(angleTo + Math.PI/2) * (accel * 0.5); 
+            this.vy += Math.sin(angleTo + Math.PI/2) * (accel * 0.5);
+
+            const d = dist(this.x, this.y, this.target.x, this.target.y);
+            if (d > 300) {
+                this.vx += Math.cos(angleTo) * accel;
+                this.vy += Math.sin(angleTo) * accel;
+            } else if (d < 150) {
+                 this.vx -= Math.cos(angleTo) * accel;
+                 this.vy -= Math.sin(angleTo) * accel;
+            }
+
+            this.fire();
+        }
+        else if (this.state === 'farm' && this.target) {
+            const angleTo = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+            this.angle = angleTo;
+            this.fire();
+             this.vx += Math.cos(angleTo) * (accel * 0.5);
+             this.vy += Math.sin(angleTo) * (accel * 0.5);
+        }
+        else {
+            if (Math.random() < 0.05) {
+                this.angle = rand(0, Math.PI * 2);
+                this.vx += Math.cos(this.angle) * accel;
+                this.vy += Math.sin(this.angle) * accel;
+            }
+        }
+    }
+
+    draw(ctx) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+
+        ctx.fillStyle = COLORS.barrel;
+        ctx.strokeStyle = COLORS.barrelBorder;
+        ctx.lineWidth = 2;
+
+        this.guns.forEach(g => {
+            const w = this.radius * g.width;
+            const h = this.radius * g.height;
+            ctx.save();
+            ctx.rotate(g.angle);
+            ctx.translate(g.x * this.radius, g.y * this.radius);
+            ctx.fillRect(0, -w/2, h, w);
+            ctx.strokeRect(0, -w/2, h, w);
+            ctx.restore();
+        });
+
+        ctx.beginPath();
+        ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.strokeStyle = this.isBot ? COLORS.enemyBorder : COLORS.playerBorder;
+        ctx.lineWidth = 3;
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.restore();
+
+        const hpPct = Math.max(0, this.hp / this.getStat('maxHp'));
+        ctx.fillStyle = '#333';
+        ctx.fillRect(this.x - 20, this.y + this.radius + 10, 40, 6);
+        ctx.fillStyle = '#6f6';
+        ctx.fillRect(this.x - 20, this.y + this.radius + 10, 40 * hpPct, 6);
+        
+        ctx.fillStyle = 'white';
+        ctx.font = '10px Ubuntu';
+        ctx.textAlign = 'center';
+        ctx.fillText(this.isBot ? "Bot" : "Player", this.x, this.y - this.radius - 8);
+    }
+}
+
+class Particle {
+    constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.size = rand(2, 5);
+        const ang = rand(0, Math.PI * 2);
+        const spd = rand(1, 4);
+        this.vx = Math.cos(ang) * spd;
+        this.vy = Math.sin(ang) * spd;
+        this.life = 1;
+        this.decay = rand(0.02, 0.05);
+    }
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life -= this.decay;
+    }
+    draw(ctx) {
+        ctx.globalAlpha = Math.max(0, this.life);
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+    }
+}
+
+function createExplosion(x, y, size, color) {
+    const count = size / 2;
+    for(let i=0; i<count; i++) {
+        particles.push(new Particle(x, y, color));
+    }
+}
+
+function spawnShape() {
+    if (entities.filter(e => e instanceof Shape).length >= CONFIG.maxShapes) return;
+    const x = rand(50, CONFIG.mapWidth - 50);
+    const y = rand(50, CONFIG.mapHeight - 50);
+    const r = Math.random();
+    let type = 0;
+    if (r > 0.8) type = 1;
+    if (r > 0.95) type = 2;
+    entities.push(new Shape(x, y, type));
+}
+
+function spawnBot() {
+    const x = rand(100, CONFIG.mapWidth - 100);
+    const y = rand(100, CONFIG.mapHeight - 100);
+    const bot = new Tank(x, y, true);
+    for(let i=0; i<10; i++) {
+        bot.upgradeStat(STAT_TYPES[randInt(0, STAT_TYPES.length)].id);
+    }
+    entities.push(bot);
+}
+
+function checkCollisions() {
+    for (let i = 0; i < entities.length; i++) {
+        for (let j = i + 1; j < entities.length; j++) {
+            const a = entities[i];
+            const b = entities[j];
+            if (a.isDead || b.isDead) continue;
+
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const distSq = dx*dx + dy*dy;
+            const radSum = a.radius + b.radius;
+
+            if (distSq < radSum * radSum) {
+                
+                if (a instanceof Bullet && !(b instanceof Bullet)) {
+                    if (a.owner === b) continue;
+                    b.takeDamage(a.damage, a.owner);
+                    a.penetration -= 10;
+                    if (a.penetration <= 0) a.isDead = true;
+                    const angle = Math.atan2(dy, dx);
+                    b.vx -= Math.cos(angle) * 0.5;
+                    b.vy -= Math.sin(angle) * 0.5;
+                } 
+                else if (b instanceof Bullet && !(a instanceof Bullet)) {
+                    if (b.owner === a) continue;
+                    a.takeDamage(b.damage, b.owner);
+                    b.penetration -= 10;
+                    if (b.penetration <= 0) b.isDead = true;
+                    const angle = Math.atan2(dy, dx);
+                    a.vx += Math.cos(angle) * 0.5;
+                    a.vy += Math.sin(angle) * 0.5;
+                }
+                else {
+                    const angle = Math.atan2(dy, dx);
+                    const force = 0.5;
+                    a.vx += Math.cos(angle) * force;
+                    a.vy += Math.sin(angle) * force;
+                    b.vx -= Math.cos(angle) * force;
+                    b.vy -= Math.sin(angle) * force;
+
+                    if (a instanceof Tank || b instanceof Tank || a instanceof Shape || b instanceof Shape) {
+                        let dmgA = (a instanceof Tank) ? a.getStat('bodyDmg') : a.bodyDamage;
+                        let dmgB = (b instanceof Tank) ? b.getStat('bodyDmg') : b.bodyDamage;
+                        
+                        a.takeDamage(dmgB * 0.1, b);
+                        b.takeDamage(dmgA * 0.1, a);
+                    }
+                }
+            }
+        }
+    }
+}
+
+function drawGrid() {
+    const startX = Math.floor(camera.x / CONFIG.gridSize) * CONFIG.gridSize;
+    const startY = Math.floor(camera.y / CONFIG.gridSize) * CONFIG.gridSize;
+    
+    ctx.strokeStyle = COLORS.grid;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+
+    for (let x = startX - CONFIG.gridSize; x < camera.x + canvas.width + CONFIG.gridSize; x += CONFIG.gridSize) {
+        ctx.moveTo(x - camera.x + canvas.width/2, 0);
+        ctx.lineTo(x - camera.x + canvas.width/2, canvas.height);
+    }
+    for (let y = startY - CONFIG.gridSize; y < camera.y + canvas.height + CONFIG.gridSize; y += CONFIG.gridSize) {
+        ctx.moveTo(0, y - camera.y + canvas.height/2);
+        ctx.lineTo(canvas.width, y - camera.y + canvas.height/2);
+    }
+    ctx.stroke();
+
+    ctx.strokeStyle = '#888';
+    ctx.lineWidth = 5;
+    const bx = -camera.x + canvas.width/2;
+    const by = -camera.y + canvas.height/2;
+    ctx.strokeRect(bx, by, CONFIG.mapWidth, CONFIG.mapHeight);
+}
+
+
+function gameLoop() {
+    if (!isRunning) return;
+    
+    if (player.isDead) {
+        isRunning = false;
+        document.getElementById('finalScore').innerText = Math.floor(player.score).toLocaleString();
+        document.getElementById('loseScreen').classList.remove('hidden');
+        document.getElementById('hud').style.display = 'none';
+        document.getElementById('topHud').style.display = 'none';
+        document.getElementById('upgradeContainer').classList.remove('open');
+        document.getElementById('upgradeContainer').style.display = 'none';
+        document.getElementById('classShopBtn').style.display = 'none';
+        document.getElementById('classShopMenu').style.display = 'none';
+        return;
+    }
+
+    if (Math.random() < 0.05) spawnShape();
+    
+    const bots = entities.filter(e => e instanceof Tank && e.isBot);
+    if (bots.length < CONFIG.maxBots) spawnBot();
+
+    entities.forEach(e => e.update());
+    particles.forEach(p => p.update());
+    checkCollisions();
+
+    entities = entities.filter(e => !e.isDead);
+    particles = particles.filter(p => p.life > 0);
+
+    if (!player.isDead) {
+        camera.x += (player.x - camera.x) * 0.1;
+        camera.y += (player.y - camera.y) * 0.1;
+    }
+
+    ctx.fillStyle = COLORS.bg;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    drawGrid();
+
+    ctx.save();
+    ctx.translate(-camera.x + canvas.width/2, -camera.y + canvas.height/2);
+
+    entities.filter(e => e instanceof Shape).forEach(e => e.draw(ctx));
+    entities.filter(e => e instanceof Bullet).forEach(e => e.draw(ctx));
+    entities.filter(e => e instanceof Tank).forEach(e => e.draw(ctx));
+    particles.forEach(e => e.draw(ctx));
+
+    ctx.restore();
+
+    updateUI();
+
+    requestAnimationFrame(gameLoop);
+}
+
+function toggleUpgradeMenu() {
+    const container = document.getElementById('upgradeContainer');
+    const btn = document.getElementById('upgradeToggleBtn');
+
+    if (!isRunning || player.isDead) return;
+
+    isUpgradeMenuOpen = !isUpgradeMenuOpen;
+
+    if (isUpgradeMenuOpen) {
+        container.classList.add('open');
+        btn.innerHTML = '&#9664;';
+    } else {
+        container.classList.remove('open');
+        btn.innerHTML = '&#9654;';
+    }
+}
+
+function initUI() {
+    const container = document.getElementById('upgradeContainer');
+    
+    const toggleButton = document.getElementById('upgradeToggleBtn');
+    container.innerHTML = '<h2>Upgrades</h2>';
+    
+    STAT_TYPES.forEach(stat => {
+        const row = document.createElement('div');
+        row.className = 'stat-row';
+        row.onclick = () => { 
+            if(player && !player.isDead) {
+                const success = player.upgradeStat(stat.id);
+            }
+        };
+        
+        let html = `
+            <div class="stat-label">${stat.name}</div>
+            <div class="stat-bars">`;
+        for(let i=0; i<8; i++) html += `<div class="bar-segment" id="bar-${stat.id}-${i}"></div>`;
+        html += `</div>
+            <div class="stat-cost" id="cost-${stat.id}">10</div>
+        `;
+        row.innerHTML = html;
+        container.appendChild(row);
+    });
+
+    container.appendChild(toggleButton);
+
+    const classMenu = document.getElementById('classShopMenu');
+    classMenu.innerHTML = '';
+    CLASSES.forEach(cls => {
+        const card = document.createElement('div');
+        card.className = 'class-card';
+        card.innerHTML = `
+            <div>${cls.name}</div>
+            <div class="class-price">${cls.price === 0 ? 'Free' : cls.price.toLocaleString()}</div>
+        `;
+        card.onclick = () => {
+             if (player.coins >= cls.price) {
+                 if (cls.price > 0) player.coins -= cls.price;
+                 player.changeClass(cls.id);
+                 toggleClassShop();
+             }
+        };
+        classMenu.appendChild(card);
+    });
+}
+
+function updateUI() {
+    if (!player || player.isDead) return;
+
+    document.getElementById('scoreVal').innerText = Math.floor(player.score).toLocaleString();
+    
+    document.getElementById('topCoinVal').innerText = Math.floor(player.coins).toLocaleString();
+
+    STAT_TYPES.forEach(stat => {
+        const lvl = player.stats[stat.id];
+        const cost = player.getUpgradeCost(stat.id);
+        
+        const costEl = document.getElementById(`cost-${stat.id}`);
+        if(lvl >= 8) costEl.innerText = "MAX";
+        else {
+            costEl.innerText = cost.toLocaleString();
+            costEl.style.color = player.coins >= cost ? '#ffd700' : '#888';
+        }
+
+        for(let i=0; i<8; i++) {
+            const el = document.getElementById(`bar-${stat.id}-${i}`);
+            if (i < lvl) {
+                el.style.backgroundColor = stat.color;
+            } else {
+                el.style.backgroundColor = '#333';
+            }
+        }
+    });
+
+    const cards = document.querySelectorAll('.class-card');
+    CLASSES.forEach((cls, idx) => {
+        if(cards[idx]) {
+            if (player.coins < cls.price) cards[idx].classList.add('locked');
+            else cards[idx].classList.remove('locked');
+        }
+    });
+}
+
+function toggleClassShop() {
+    const m = document.getElementById('classShopMenu');
+    m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+}
+
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+function showMainMenu() {
+    document.getElementById('loseScreen').classList.add('hidden');
+    document.getElementById('mainMenu').classList.remove('hidden');
+    document.getElementById('hud').style.display = 'none';
+    document.getElementById('topHud').style.display = 'none';
+    document.getElementById('upgradeContainer').classList.remove('open');
+    document.getElementById('upgradeContainer').style.display = 'none';
+    document.getElementById('classShopBtn').style.display = 'none';
+    document.getElementById('classShopMenu').style.display = 'none';
+    isRunning = false;
+}
+
+function startGame() {
+    document.getElementById('mainMenu').classList.add('hidden');
+    document.getElementById('loseScreen').classList.add('hidden');
+    document.getElementById('hud').style.display = 'block';
+    document.getElementById('topHud').style.display = 'block';
+    document.getElementById('upgradeContainer').style.display = 'flex';
+    document.getElementById('classShopBtn').style.display = 'block';
+    
+    isRunning = true;
+    entities = [];
+    particles = [];
+    
+    player = new Tank(CONFIG.mapWidth/2, CONFIG.mapHeight/2, false);
+    entities.push(player);
+    camera.x = player.x;
+    camera.y = player.y;
+
+    for(let i=0; i<50; i++) spawnShape();
+
+    initUI();
+    const container = document.getElementById('upgradeContainer');
+    container.classList.remove('open');
+    isUpgradeMenuOpen = false;
+    document.getElementById('upgradeToggleBtn').innerHTML = '&#9654;'; 
+
+    resize();
+    gameLoop();
+}
+
+function showHowTo() {
+    document.getElementById('howToPlay').classList.remove('hidden');
+}
+function hideHowTo() {
+    document.getElementById('howToPlay').classList.add('hidden');
+}
+
+resize();
+
+</script>
+</body>
+</html>
