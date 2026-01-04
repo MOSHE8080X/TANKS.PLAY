@@ -384,6 +384,33 @@
             min-width: 200px;
         }
 
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .checkbox-option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-option label {
+            margin: 0;
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            cursor: pointer;
+        }
+
+        .difficulty-description {
+            font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+            color: #ccc;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
         @media (max-width: 768px) {
             #upgradeContainer {
                 left: -220px;
@@ -479,7 +506,7 @@
 <body>
 
     <div id="mainMenu" class="overlay">
-        <h1>TANKS.PLAY V0.1</h1>
+        <h1>TANKS.PLAY V0.2</h1>
         <p>Survive, Farm Shapes, Upgrade Stats, and Destroy Bots.</p>
         <button onclick="startGame()">Play</button>
         <button class="secondary" onclick="showHowTo()">How to Play</button>
@@ -507,6 +534,20 @@
                 <option value="pc">PC (Mouse & Keyboard)</option>
                 <option value="mobile">Mobile (Touch Controls)</option>
             </select>
+        </div>
+        <div class="settings-option">
+            <label for="difficultyMode">Difficulty:</label>
+            <select id="difficultyMode" onchange="updateDifficulty()">
+                <option value="test">Test Mode</option>
+                <option value="easy">Easy Mode</option>
+                <option value="normal" selected>Normal Mode</option>
+                <option value="hard">Hard Mode</option>
+            </select>
+            <div class="difficulty-description" id="difficultyDesc">Regular gameplay experience</div>
+        </div>
+        <div class="checkbox-option" id="testModeToggle" style="display: none;">
+            <input type="checkbox" id="canDieToggle" onchange="updateCanDie()">
+            <label for="canDieToggle">Can Die (Test Mode)</label>
         </div>
         <button class="back" onclick="hideSettings()">Back</button>
     </div>
@@ -582,6 +623,8 @@ let player;
 let camera = { x: 0, y: 0 };
 let isUpgradeMenuOpen = false;
 let controlMode = 'pc';
+let difficulty = 'normal';
+let canDieInTestMode = false;
 
 const STAT_TYPES = [
     { id: 'regen', name: 'Health Regen', color: '#e69f58' },
@@ -613,6 +656,56 @@ const joysticks = {
     left: { active: false, startX: 0, startY: 0, currentX: 0, currentY: 0, touchId: null },
     right: { active: false, startX: 0, startY: 0, currentX: 0, currentY: 0, touchId: null }
 };
+
+function getDifficultySettings() {
+    switch(difficulty) {
+        case 'test':
+            return {
+                maxShapes: 150,
+                maxBots: 10,
+                botDamageMultiplier: 1,
+                shapeDamageMultiplier: 1,
+                spawnRateMultiplier: 1,
+                botAggression: 1
+            };
+        case 'easy':
+            return {
+                maxShapes: 100,
+                maxBots: 5,
+                botDamageMultiplier: 0.5,
+                shapeDamageMultiplier: 0.5,
+                spawnRateMultiplier: 0.5,
+                botAggression: 0.7
+            };
+        case 'normal':
+            return {
+                maxShapes: 150,
+                maxBots: 10,
+                botDamageMultiplier: 1,
+                shapeDamageMultiplier: 1,
+                spawnRateMultiplier: 1,
+                botAggression: 1
+            };
+        case 'hard':
+            return {
+                maxShapes: 200,
+                maxBots: 20,
+                botDamageMultiplier: 1.5,
+                shapeDamageMultiplier: 1.5,
+                spawnRateMultiplier: 2,
+                botAggression: 1.5
+            };
+        default:
+            return {
+                maxShapes: 150,
+                maxBots: 10,
+                botDamageMultiplier: 1,
+                shapeDamageMultiplier: 1,
+                spawnRateMultiplier: 1,
+                botAggression: 1
+            };
+    }
+}
 
 window.addEventListener('resize', resize);
 
@@ -794,6 +887,7 @@ class Entity {
 class Shape extends Entity {
     constructor(x, y, type) {
         let r, sides, hp, xp, color, dmg;
+        const diffSettings = getDifficultySettings();
         if (type === 0) {
             r = 15; sides = 4; hp = 10; xp = 10; color = COLORS.shapeSquare; dmg = 8;
         } else if (type === 1) {
@@ -806,7 +900,7 @@ class Shape extends Entity {
         this.maxHp = hp;
         this.hp = hp;
         this.xpValue = xp;
-        this.bodyDamage = dmg;
+        this.bodyDamage = dmg * diffSettings.shapeDamageMultiplier;
         this.rotation = rand(0, Math.PI * 2);
         this.rotateSpeed = rand(-0.02, 0.02);
     }
@@ -943,8 +1037,8 @@ class Tank extends Entity {
     upgradeStat(key) {
         if (this.stats[key] < 8) {
             const cost = this.getUpgradeCost(key);
-            if (this.coins >= cost) {
-                this.coins -= cost;
+            if (difficulty === 'test' || this.coins >= cost) {
+                if (difficulty !== 'test') this.coins -= cost;
                 this.stats[key]++;
                 if (key === 'maxHp') this.hp += 20;
                 return true;
@@ -959,6 +1053,10 @@ class Tank extends Entity {
     }
 
     takeDamage(amount, source) {
+        if (difficulty === 'test' && !canDieInTestMode && !this.isBot) {
+            return;
+        }
+        
         this.hp -= amount;
         if (this.hp <= 0 && !this.isDead) {
             this.isDead = true;
@@ -1060,6 +1158,8 @@ class Tank extends Entity {
     }
 
     updateAI() {
+        const diffSettings = getDifficultySettings();
+        
         if (Math.random() < 0.02 && this.coins > 10) {
              const stat = STAT_TYPES[randInt(0, STAT_TYPES.length)].id;
              this.upgradeStat(stat);
@@ -1070,7 +1170,7 @@ class Tank extends Entity {
         } else {
             let nearestEnemy = null;
             let nearestShape = null;
-            let minDistE = 600;
+            let minDistE = 600 * diffSettings.botAggression;
             let minDistS = 400;
 
             entities.forEach(e => {
@@ -1227,7 +1327,8 @@ function createExplosion(x, y, size, color) {
 }
 
 function spawnShape() {
-    if (entities.filter(e => e instanceof Shape).length >= CONFIG.maxShapes) return;
+    const diffSettings = getDifficultySettings();
+    if (entities.filter(e => e instanceof Shape).length >= diffSettings.maxShapes) return;
     const x = rand(50, CONFIG.mapWidth - 50);
     const y = rand(50, CONFIG.mapHeight - 50);
     const r = Math.random();
@@ -1238,6 +1339,7 @@ function spawnShape() {
 }
 
 function spawnBot() {
+    const diffSettings = getDifficultySettings();
     const x = rand(100, CONFIG.mapWidth - 100);
     const y = rand(100, CONFIG.mapHeight - 100);
     const bot = new Tank(x, y, true);
@@ -1248,6 +1350,8 @@ function spawnBot() {
 }
 
 function checkCollisions() {
+    const diffSettings = getDifficultySettings();
+    
     for (let i = 0; i < entities.length; i++) {
         for (let j = i + 1; j < entities.length; j++) {
             const a = entities[i];
@@ -1263,7 +1367,11 @@ function checkCollisions() {
                 
                 if (a instanceof Bullet && !(b instanceof Bullet)) {
                     if (a.owner === b) continue;
-                    b.takeDamage(a.damage, a.owner);
+                    let damage = a.damage;
+                    if (a.owner.isBot && b === player) {
+                        damage *= diffSettings.botDamageMultiplier;
+                    }
+                    b.takeDamage(damage, a.owner);
                     a.penetration -= 10;
                     if (a.penetration <= 0) a.isDead = true;
                     const angle = Math.atan2(dy, dx);
@@ -1272,7 +1380,11 @@ function checkCollisions() {
                 } 
                 else if (b instanceof Bullet && !(a instanceof Bullet)) {
                     if (b.owner === a) continue;
-                    a.takeDamage(b.damage, b.owner);
+                    let damage = b.damage;
+                    if (b.owner.isBot && a === player) {
+                        damage *= diffSettings.botDamageMultiplier;
+                    }
+                    a.takeDamage(damage, b.owner);
                     b.penetration -= 10;
                     if (b.penetration <= 0) b.isDead = true;
                     const angle = Math.atan2(dy, dx);
@@ -1290,6 +1402,9 @@ function checkCollisions() {
                     if (a instanceof Tank || b instanceof Tank || a instanceof Shape || b instanceof Shape) {
                         let dmgA = (a instanceof Tank) ? a.getStat('bodyDmg') : a.bodyDamage;
                         let dmgB = (b instanceof Tank) ? b.getStat('bodyDmg') : b.bodyDamage;
+                        
+                        if (a.isBot && b === player) dmgA *= diffSettings.botDamageMultiplier;
+                        if (b.isBot && a === player) dmgB *= diffSettings.botDamageMultiplier;
                         
                         a.takeDamage(dmgB * 0.1, b);
                         b.takeDamage(dmgA * 0.1, a);
@@ -1333,10 +1448,12 @@ function gameLoop() {
         return;
     }
 
-    if (Math.random() < 0.05) spawnShape();
+    const diffSettings = getDifficultySettings();
+    
+    if (Math.random() < 0.05 * diffSettings.spawnRateMultiplier) spawnShape();
     
     const bots = entities.filter(e => e instanceof Tank && e.isBot);
-    if (bots.length < CONFIG.maxBots) spawnBot();
+    if (bots.length < diffSettings.maxBots) spawnBot();
 
     entities.forEach(e => e.update());
     particles.forEach(p => p.update());
@@ -1435,8 +1552,8 @@ function initUI() {
             <div class="class-price">${cls.price === 0 ? 'Free' : cls.price.toLocaleString()}</div>
         `;
         card.onclick = () => {
-             if (player.coins >= cls.price) {
-                 if (cls.price > 0) player.coins -= cls.price;
+             if (difficulty === 'test' || player.coins >= cls.price) {
+                 if (cls.price > 0 && difficulty !== 'test') player.coins -= cls.price;
                  player.changeClass(cls.id);
                  toggleClassShop();
              }
@@ -1449,7 +1566,7 @@ function updateUI() {
     if (!player || player.isDead) return;
 
     document.getElementById('scoreVal').innerText = Math.floor(player.score).toLocaleString();
-    document.getElementById('topCoinVal').innerText = Math.floor(player.coins).toLocaleString();
+    document.getElementById('topCoinVal').innerText = difficulty === 'test' ? '∞' : Math.floor(player.coins).toLocaleString();
 
     STAT_TYPES.forEach(stat => {
         const lvl = player.stats[stat.id];
@@ -1458,8 +1575,8 @@ function updateUI() {
         const costEl = document.getElementById(`cost-${stat.id}`);
         if(lvl >= 8) costEl.innerText = "MAX";
         else {
-            costEl.innerText = cost.toLocaleString();
-            costEl.style.color = player.coins >= cost ? '#ffd700' : '#888';
+            costEl.innerText = difficulty === 'test' ? 'FREE' : cost.toLocaleString();
+            costEl.style.color = (difficulty === 'test' || player.coins >= cost) ? '#ffd700' : '#888';
         }
 
         for(let i=0; i<8; i++) {
@@ -1475,7 +1592,7 @@ function updateUI() {
     const cards = document.querySelectorAll('.class-card');
     CLASSES.forEach((cls, idx) => {
         if(cards[idx]) {
-            if (player.coins < cls.price) cards[idx].classList.add('locked');
+            if (difficulty !== 'test' && player.coins < cls.price) cards[idx].classList.add('locked');
             else cards[idx].classList.remove('locked');
         }
     });
@@ -1560,6 +1677,8 @@ function showSettings() {
     document.getElementById('mainMenu').classList.add('hidden');
     document.getElementById('settingsMenu').classList.remove('hidden');
     document.getElementById('controlMode').value = controlMode;
+    document.getElementById('difficultyMode').value = difficulty;
+    updateDifficultyDescription();
 }
 
 function hideSettings() {
@@ -1569,6 +1688,39 @@ function hideSettings() {
 
 function updateControlMode() {
     controlMode = document.getElementById('controlMode').value;
+}
+
+function updateDifficulty() {
+    difficulty = document.getElementById('difficultyMode').value;
+    updateDifficultyDescription();
+}
+
+function updateDifficultyDescription() {
+    const desc = document.getElementById('difficultyDesc');
+    const testToggle = document.getElementById('testModeToggle');
+    
+    switch(difficulty) {
+        case 'test':
+            desc.textContent = 'Infinite money, no death (unless enabled), test everything!';
+            testToggle.style.display = 'flex';
+            break;
+        case 'easy':
+            desc.textContent = 'Fewer enemies, reduced damage, relaxed gameplay';
+            testToggle.style.display = 'none';
+            break;
+        case 'normal':
+            desc.textContent = 'Regular gameplay experience';
+            testToggle.style.display = 'none';
+            break;
+        case 'hard':
+            desc.textContent = 'More enemies, increased damage, challenging gameplay';
+            testToggle.style.display = 'none';
+            break;
+    }
+}
+
+function updateCanDie() {
+    canDieInTestMode = document.getElementById('canDieToggle').checked;
 }
 
 function detectMobile() {
