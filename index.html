@@ -7,6 +7,16 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@700&display=swap');
 
+        :root {
+            --ui-white: #ffffff;
+            --ui-yellow: #ffd400;
+            --ui-yellow-glow: rgba(255, 150, 0, 0.58);
+            --ui-yellow-glow-strong: rgba(255, 170, 0, 0.65);
+            --ui-gray: #d8d8d8;
+            --ui-gray-soft: #c8c8c8;
+            --ui-gray-mid: #bdbdbd;
+        }
+
         * {
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: none;
@@ -40,8 +50,11 @@
             align-items: center;
             background: rgba(0, 0, 0, 0.7);
             z-index: 10;
-            color: white;
+            color: var(--ui-white);
             transition: opacity 0.3s;
+            box-sizing: border-box;
+            padding: 20px 12px;
+            overflow-y: auto;
         }
 
         .hidden {
@@ -58,7 +71,7 @@
         h2 { 
             font-size: clamp(1.5rem, 5vw, 2rem); 
             margin-bottom: 20px; 
-            color: #eee; 
+            color: var(--ui-white); 
         }
         
         p { 
@@ -77,18 +90,13 @@
             border-radius: 5px;
             cursor: pointer;
             background: #00b2e1;
-            color: white;
+            color: var(--ui-white);
             font-family: 'Ubuntu', sans-serif;
             box-shadow: 0 4px 0 #008fb5;
-            transition: transform 0.1s;
+            transition: transform 0.14s ease, filter 0.14s ease, box-shadow 0.14s ease;
             min-width: 200px;
         }
 
-        button:active { 
-            transform: translateY(4px); 
-            box-shadow: none; 
-        }
-        
         button.secondary { 
             background: #e05e5e; 
             box-shadow: 0 4px 0 #b33e3e; 
@@ -109,19 +117,19 @@
 
         #topHud {
             position: absolute;
-            top: 20px;
+            top: calc(env(safe-area-inset-top) + 10px);
             left: 50%;
             transform: translateX(-50%);
-            color: #ffd700;
+            color: var(--ui-yellow);
             font-size: clamp(1rem, 4vw, 1.8rem);
-            text-shadow: 2px 2px 3px black;
+            text-shadow: 0 1px 2px #000, 0 0 10px var(--ui-yellow-glow-strong);
             z-index: 5;
             display: none;
             background: rgba(0, 0, 0, 0.4);
             padding: 5px 15px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            border: 2px solid #ffd700;
+            border: 2px solid var(--ui-yellow);
         }
 
         #hud {
@@ -152,7 +160,7 @@
 
         #scoreBoard {
             text-align: center;
-            color: white;
+            color: var(--ui-white);
             text-shadow: 1px 1px 2px black;
             font-size: clamp(0.9rem, 3vw, 1.2rem);
         }
@@ -161,75 +169,83 @@
             position: fixed;
             top: 50%;
             transform: translateY(-50%);
-            left: -220px;
+            left: -228px;
+            width: 228px;
             display: none;
             flex-direction: column;
             gap: 4px;
             pointer-events: auto;
             transition: left 0.3s ease-in-out;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.72);
             padding: 8px;
             border-radius: 0 8px 8px 0;
-            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.5);
+            box-shadow: none;
             z-index: 9;
             max-height: 80vh;
             overflow-y: auto;
+            box-sizing: border-box;
+            overscroll-behavior: contain;
+            max-width: calc(100vw - 12px);
         }
         
         #upgradeContainer.open {
-            left: 0;
+            left: 6px;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.5);
         }
 
         #upgradeToggleBtn {
             position: fixed;
             top: 50%;
-            left: 0;
+            left: 6px;
             transform: translateY(-50%);
-            width: 30px;
-            height: 50px;
+            width: 20px;
+            height: 40px;
             background: rgba(0, 0, 0, 0.9);
-            color: white;
+            color: var(--ui-white);
             display: none;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             border-radius: 0 6px 6px 0;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-            font-size: 1.4rem;
+            font-size: 0.98rem;
             line-height: 1;
             pointer-events: auto;
             z-index: 11;
             border: none;
             font-family: Arial, sans-serif;
-            transition: left 0.3s ease-in-out;
+            transition: left 0.3s ease-in-out, transform 0.14s ease, filter 0.14s ease, box-shadow 0.14s ease;
         }
         
         .stat-row {
             display: flex;
             align-items: center;
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.11);
             border-radius: 4px;
             padding: 5px 6px;
-            width: 210px;
+            width: 100%;
             cursor: pointer;
             transition: background 0.2s;
             position: relative;
             overflow: hidden;
             min-height: 32px;
+            box-sizing: border-box;
+            transition: background 0.2s, transform 0.14s ease, filter 0.14s ease, box-shadow 0.14s ease;
         }
 
-        .stat-row:hover { 
-            background: rgba(255,255,255,0.3); 
+        .stat-row:hover {
+            background: rgba(255,255,255,0.22);
         }
 
         .stat-label {
-            color: white;
+            color: var(--ui-white);
             font-size: 0.75rem;
-            width: 80px;
+            width: 82px;
+            flex: 0 0 82px;
             z-index: 2;
             font-weight: bold;
             padding-left: 3px;
-            text-shadow: 1px 1px 1px black;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95);
         }
 
         .stat-bars {
@@ -253,19 +269,19 @@
         .stat-cost {
             position: absolute;
             right: 6px;
-            color: #ffd700;
-            font-size: 0.7rem;
+            color: var(--ui-yellow);
+            font-size: 0.66rem;
             z-index: 2;
-            text-shadow: 1px 1px 0 #000;
+            text-shadow: 0 1px 2px #000, 0 0 8px var(--ui-yellow-glow);
             font-weight: bold;
         }
 
         #classShopBtn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
+            position: fixed;
+            top: calc(env(safe-area-inset-top) + 14px);
+            right: calc(env(safe-area-inset-right) + 12px);
             background: #222;
-            color: white;
+            color: var(--ui-white);
             padding: 12px 16px;
             border-radius: 8px;
             cursor: pointer;
@@ -273,50 +289,112 @@
             text-align: center;
             box-shadow: 0 4px 0 #000;
             font-size: 1rem;
-            z-index: 5;
+            z-index: 11;
             min-width: 140px;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+            line-height: 1.2;
+            transition: transform 0.14s ease, filter 0.14s ease, box-shadow 0.14s ease;
         }
         
         #classShopMenu {
-            position: absolute;
-            top: 80px;
-            right: 20px;
-            background: rgba(0,0,0,0.9);
+            position: fixed;
+            top: calc(env(safe-area-inset-top) + 76px);
+            right: calc(env(safe-area-inset-right) + 12px);
+            background: rgba(0,0,0,0.72);
             padding: 15px;
             border-radius: 8px;
             display: none;
             flex-direction: column;
             gap: 12px;
-            width: 220px;
-            z-index: 5;
+            width: min(280px, 48vw);
+            z-index: 12;
+            max-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 96px);
+            overflow-y: auto;
+            box-sizing: border-box;
+            overscroll-behavior: contain;
         }
 
         .class-card {
-            background: #444;
+            background: rgba(68, 68, 68, 0.72);
             padding: 14px;
             border-radius: 6px;
             cursor: pointer;
             text-align: center;
-            color: white;
+            color: var(--ui-white);
             border: 3px solid transparent;
+            box-sizing: border-box;
             font-size: 1.05rem;
-            transition: all 0.2s;
+            transition: all 0.2s, transform 0.14s ease, filter 0.14s ease, box-shadow 0.14s ease;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
         }
-        
-        .class-card:hover { 
-            border-color: white;
-            background: #555;
+
+        .class-card:hover {
+            border-color: var(--ui-white);
+            background: rgba(85, 85, 85, 0.78);
         }
         
         .class-card.locked { 
-            opacity: 0.5; 
+            opacity: 0.9; 
             cursor: not-allowed; 
+        }
+
+        .class-card.locked:hover,
+        .class-card.locked:active {
+            transform: none;
+            filter: none;
+            box-shadow: none;
+        }
+
+        button:hover,
+        #upgradeToggleBtn:hover,
+        #classShopBtn:hover,
+        .class-card:hover,
+        .stat-row:hover {
+            transform: translateY(-1px) scale(1.01);
+            filter: brightness(1.14) saturate(1.08);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.35);
+        }
+
+        button:active,
+        #upgradeToggleBtn:active,
+        #classShopBtn:active,
+        .class-card:active,
+        .stat-row:active {
+            transform: translateY(1px) scale(0.99);
+            filter: brightness(1.08) saturate(1.05);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.32);
+        }
+
+        button:focus-visible,
+        #upgradeToggleBtn:focus-visible,
+        #classShopBtn:focus-visible,
+        .class-card:focus-visible,
+        .stat-row:focus-visible {
+            outline: 2px solid var(--ui-yellow);
+            outline-offset: 2px;
         }
         
         .class-price { 
-            color: #ffd700; 
+            color: var(--ui-yellow); 
             font-size: 0.95rem;
             margin-top: 5px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 9px var(--ui-yellow-glow);
+        }
+
+        .class-role {
+            color: var(--ui-gray);
+            font-size: 0.75rem;
+            margin-top: 4px;
+            min-height: 1.8em;
+            line-height: 1.2;
+        }
+
+        .class-stats {
+            color: var(--ui-gray-soft);
+            font-size: 0.68rem;
+            margin-top: 4px;
+            letter-spacing: 0.03em;
         }
 
         .joystick-container {
@@ -351,13 +429,13 @@
         }
 
         #leftJoystick {
-            bottom: 40px;
-            left: 20px;
+            bottom: calc(env(safe-area-inset-bottom) + 18px);
+            left: calc(env(safe-area-inset-left) + 12px);
         }
 
         #rightJoystick {
-            bottom: 40px;
-            right: 20px;
+            bottom: calc(env(safe-area-inset-bottom) + 18px);
+            right: calc(env(safe-area-inset-right) + 12px);
         }
 
         .settings-option {
@@ -369,7 +447,7 @@
             display: block;
             margin-bottom: 10px;
             font-size: clamp(1rem, 3.5vw, 1.2rem);
-            color: #eee;
+            color: var(--ui-white);
         }
 
         .settings-option select {
@@ -378,10 +456,15 @@
             border: none;
             border-radius: 5px;
             background: #444;
-            color: white;
+            color: var(--ui-white);
             font-family: 'Ubuntu', sans-serif;
             cursor: pointer;
             min-width: 200px;
+        }
+
+        .settings-option select option {
+            color: var(--ui-white);
+            background: #2b2b2b;
         }
 
         .checkbox-option {
@@ -406,98 +489,225 @@
 
         .difficulty-description {
             font-size: clamp(0.8rem, 2.5vw, 0.95rem);
-            color: #ccc;
+            color: var(--ui-gray-soft);
             margin-top: 5px;
             font-style: italic;
         }
 
-        @media (max-width: 768px) {
+        #mainMenu p,
+        #howToPlay p,
+        #settingsMenu p,
+        #loseScreen p,
+        #settingsMenu .checkbox-option label {
+            color: var(--ui-white);
+        }
+
+        @media (max-width: 1024px) {
             #upgradeContainer {
-                left: -220px;
-                max-height: 70vh;
+                left: -232px;
+                right: auto;
+                top: 50%;
+                bottom: auto;
+                transform: translateY(-50%);
+                width: 232px;
+                max-height: 74vh;
+                border-radius: 0 10px 10px 0;
+                transition: left 0.25s ease-in-out;
+                padding: 8px;
+                gap: 4px;
             }
-            
+
             #upgradeContainer.open {
-                left: 0;
+                left: 6px;
+                bottom: auto;
             }
-            
+
+            #upgradeToggleBtn {
+                top: 50%;
+                left: 6px;
+                bottom: auto;
+                transform: translateY(-50%);
+                width: 20px;
+                height: 40px;
+                border-radius: 0 6px 6px 0;
+                font-size: 0.98rem;
+            }
+
             .stat-row {
-                width: 210px;
+                min-height: 34px;
                 padding: 5px 6px;
             }
-            
+
             #topHud {
-                top: 10px;
-                font-size: 1.3rem;
-                padding: 8px 12px;
+                top: calc(env(safe-area-inset-top) + 8px);
+                font-size: 1.25rem;
+                padding: 8px 14px;
             }
-            
+
             #hud {
-                bottom: 180px;
-                width: 90%;
+                bottom: 210px;
+                width: min(700px, 92%);
             }
-            
+
             #classShopBtn {
-                top: 70px;
-                right: 10px;
+                top: calc(env(safe-area-inset-top) + 66px);
+                right: calc(env(safe-area-inset-right) + 10px);
                 font-size: 0.9rem;
-                padding: 10px 12px;
-                min-width: 120px;
+                padding: 9px 11px;
+                min-width: 128px;
             }
-            
+
             #classShopMenu {
-                top: 130px;
-                right: 10px;
-                width: 200px;
+                top: calc(env(safe-area-inset-top) + 120px);
+                right: calc(env(safe-area-inset-right) + 10px);
+                left: auto;
+                width: min(320px, 52vw);
+                max-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 146px);
+                border-radius: 8px;
             }
-            
+
+            .class-card {
+                padding: 11px;
+                font-size: 0.92rem;
+            }
+
             .joystick-container {
-                width: 150px;
-                height: 150px;
+                width: 165px;
+                height: 165px;
             }
-            
+
             #leftJoystick {
-                bottom: 30px;
-                left: 15px;
+                bottom: calc(env(safe-area-inset-bottom) + 16px);
+                left: calc(env(safe-area-inset-left) + 14px);
             }
-            
+
             #rightJoystick {
-                bottom: 30px;
-                right: 15px;
+                bottom: calc(env(safe-area-inset-bottom) + 16px);
+                right: calc(env(safe-area-inset-right) + 14px);
             }
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 700px) {
             #upgradeContainer {
-                left: -210px;
+                left: -190px;
+                width: 190px;
+                top: calc(env(safe-area-inset-top) + 220px);
+                transform: none;
+                max-height: min(300px, calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 170px));
+                height: auto;
                 padding: 6px;
             }
-            
+
+            #upgradeContainer.open {
+                left: 6px;
+            }
+
+            #upgradeToggleBtn {
+                left: 6px;
+                width: 20px;
+                height: 40px;
+                font-size: 0.98rem;
+                transform: none;
+                border-radius: 0 6px 6px 0;
+            }
+
             .stat-row {
-                width: 200px;
+                min-height: 30px;
                 padding: 4px 5px;
             }
-            
+
             .stat-label {
-                font-size: 0.7rem;
-                width: 75px;
+                width: 76px;
+                flex: 0 0 76px;
+                font-size: 0.72rem;
             }
-            
+
             .bar-segment {
                 width: 5px;
-                height: 11px;
+                height: 10px;
             }
-            
+
             .stat-cost {
-                font-size: 0.65rem;
+                right: 4px;
+                font-size: 0.62rem;
             }
-            
+
             #classShopBtn {
-                top: 60px;
+                top: calc(env(safe-area-inset-top) + 0px);
+                right: calc(env(safe-area-inset-right) + 0px);
+                min-width: 94px;
+                padding: 6px 6px;
+                font-size: 0.66rem;
+                border-radius: 7px;
             }
-            
+
             #classShopMenu {
-                top: 120px;
+                top: calc(env(safe-area-inset-top) + 42px);
+                right: calc(env(safe-area-inset-right) + 0px);
+                left: auto;
+                bottom: auto;
+                transform: none;
+                width: min(168px, 53vw);
+                height: 246px;
+                max-height: 246px;
+                padding: 6px;
+                gap: 4px;
+                border-radius: 10px;
+            }
+
+            .class-card {
+                padding: 6px 6px;
+                min-height: 76px;
+                height: 76px;
+                font-size: 0.72rem;
+                line-height: 1.1;
+                overflow: visible;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .class-role {
+                font-size: 0.6rem;
+                min-height: auto;
+                margin-top: 1px;
+                line-height: 1.1;
+                white-space: normal;
+                overflow: visible;
+            }
+
+            .class-stats {
+                font-size: 0.56rem;
+                margin-top: 1px;
+                line-height: 1.1;
+                white-space: normal;
+                overflow: visible;
+            }
+
+            .class-price {
+                font-size: 0.82rem;
+                margin-top: 1px;
+                line-height: 1.1;
+            }
+
+            #hud {
+                bottom: calc(env(safe-area-inset-bottom) + 145px);
+                width: 94%;
+            }
+
+            .joystick-container {
+                width: 136px;
+                height: 136px;
+            }
+
+            #leftJoystick {
+                bottom: calc(env(safe-area-inset-bottom) + 12px);
+                left: calc(env(safe-area-inset-left) + 8px);
+            }
+
+            #rightJoystick {
+                bottom: calc(env(safe-area-inset-bottom) + 12px);
+                right: calc(env(safe-area-inset-right) + 8px);
             }
         }
 
@@ -613,12 +823,21 @@ const COLORS = {
     barrelBorder: '#727272'
 };
 
+const UI_TEXT_COLORS = Object.freeze({
+    white: '#ffffff',
+    yellow: '#ffd400',
+    grayMid: '#bdbdbd'
+});
+
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 let isRunning = false;
 let entities = [];
 let particles = [];
+let muzzleFlashes = [];
+let gameTick = 0;
+let cameraShake = 0;
 let player;
 let camera = { x: 0, y: 0 };
 let isUpgradeMenuOpen = false;
@@ -638,12 +857,81 @@ const STAT_TYPES = [
 ];
 
 const CLASSES = [
-    { id: 'basic', name: 'Basic', price: 0, scale: 1, recoil: 1, guns: [{x:0, y:0, width:1.0, height:1.9, angle:0, delay: 0}] },
-    { id: 'sniper', name: 'Sniper', price: 5000, scale: 1.1, recoil: 2, guns: [{x:0, y:0, width:1.0, height:2.5, angle:0, delay:0, speedMult: 1.5, dmgMult: 2, reloadMult: 0.5}] },
-    { id: 'twin', name: 'Twin', price: 5000, scale: 1, recoil: 1, guns: [{x:0.5, y:0, width:1.0, height:1.9, angle:0, delay:0}, {x:-0.5, y:0, width:1.0, height:1.9, angle:0, delay:0.5}] },
-    { id: 'machine', name: 'Machine Gun', price: 5000, scale: 1, recoil: 1.2, guns: [{x:0, y:0, width:1.0, height:1.6, angle:0, delay:0, spread: 0.4, reloadMult: 2, dmgMult: 0.7}] },
-    { id: 'destroyer', name: 'Destroyer', price: 1000000, scale: 1.5, recoil: 5, guns: [{x:0, y:0, width:1.2, height:1.9, angle:0, delay:0, speedMult: 0.8, dmgMult: 10, reloadMult: 0.2, sizeMult: 2}] }
+    { id: 'basic', name: 'Scout', role: 'Starter frame', price: 0, dmgRating: 1, spdRating: 2, hpRating: 1, fireMode: 'standard', scale: 1, recoil: 1, aiRange: 205, accent: '#8fd7ff', barrelColor: '#9a9a9a', barrelBorder: '#707070', emblem: 'dot', guns: [{x:0, y:0, width:1.0, height:1.9, angle:0, delay:0}] },
+    { id: 'twin', name: 'Twin', role: 'Classic dual barrels', price: 2000, dmgRating: 2, spdRating: 3, hpRating: 2, fireMode: 'standard', scale: 1.02, recoil: 1.05, aiRange: 220, accent: '#57d5ff', barrelColor: '#8ea9bd', barrelBorder: '#657889', moveSpdMult: 1.04, maxHpMult: 1.03, guns: [{x:0.5, y:0, width:1.0, height:1.9, angle:0, delay:0}, {x:-0.5, y:0, width:1.0, height:1.9, angle:0, delay:0.5}], emblem: 'double' },
+    { id: 'raptor', name: 'Raptor', role: 'Fast alternating guns', price: 3200, dmgRating: 2, spdRating: 5, hpRating: 1, fireMode: 'alternate', scale: 1.03, recoil: 1.05, aiRange: 210, accent: '#69f3a4', barrelColor: '#8db79a', barrelBorder: '#68886f', moveSpdMult: 1.22, maxHpMult: 0.92, bulletDmgMult: 0.92, guns: [{x:0.45, y:0, width:0.9, height:1.85, angle:0.05, delay:0}, {x:-0.45, y:0, width:0.9, height:1.85, angle:-0.05, delay:0.3}, {x:0, y:0, width:0.75, height:1.35, angle:Math.PI, delay:0.2, reloadMult:1.15, dmgMult:0.72}], emblem: 'arrow' },
+    { id: 'cyclone', name: 'Cyclone', role: '360-degree bullet ring', price: 4500, dmgRating: 3, spdRating: 3, hpRating: 2, fireMode: 'radial', fireConfig: { count: 14, speedMult: 0.95, dmgMult: 0.74, penMult: 0.78, sizeMult: 0.82, reloadMult: 1.08, spinStep: 0.22 }, scale: 1.08, recoil: 0.55, aiRange: 185, accent: '#a7f6ff', barrelColor: '#87a6b3', barrelBorder: '#657b85', moveSpdMult: 1.05, bulletSpdMult: 0.95, guns: [{x:0, y:0, width:0.82, height:1.25, angle:0, delay:0}], emblem: 'burst' },
+    { id: 'sniper', name: 'Sniper', role: 'Long-range precision cannon', price: 5000, dmgRating: 4, spdRating: 2, hpRating: 1, fireMode: 'standard', scale: 1.08, recoil: 2.1, aiRange: 345, accent: '#ffb26b', barrelColor: '#b29a83', barrelBorder: '#846f5b', moveSpdMult: 0.9, maxHpMult: 0.9, bulletSpdMult: 1.3, bulletDmgMult: 1.2, guns: [{x:0, y:0, width:0.95, height:2.7, angle:0, delay:0, speedMult:1.75, dmgMult:2.25, reloadMult:0.5}], emblem: 'diamond' },
+    { id: 'trident', name: 'Trident', role: '3-way front fan', price: 7000, dmgRating: 3, spdRating: 3, hpRating: 3, fireMode: 'fan', fireConfig: { count: 3, spread: 0.14, speedMult: 1.05, dmgMult: 0.95, reloadMult: 0.95 }, scale: 1.1, recoil: 1.2, aiRange: 230, accent: '#b38dff', barrelColor: '#9e93b9', barrelBorder: '#726b86', moveSpdMult: 0.97, maxHpMult: 1.08, bodyDmgMult: 1.05, guns: [{x:0.62, y:0, width:0.84, height:1.92, angle:-0.08, delay:0}, {x:0, y:0, width:1.0, height:2.05, angle:0, delay:0.25}, {x:-0.62, y:0, width:0.84, height:1.92, angle:0.08, delay:0.5}], emblem: 'triangle' },
+    { id: 'broadside', name: 'Broadside', role: 'Side cannons + frontal pressure', price: 8200, dmgRating: 4, spdRating: 2, hpRating: 3, fireMode: 'standard', scale: 1.14, recoil: 1.45, aiRange: 190, accent: '#93c4ff', barrelColor: '#8f9eb4', barrelBorder: '#68758a', moveSpdMult: 0.95, maxHpMult: 1.15, bodyDmgMult: 1.12, bulletPenMult: 1.1, guns: [{x:0, y:0, width:0.9, height:1.9, angle:0, delay:0}, {x:0, y:0, width:0.78, height:1.55, angle:Math.PI / 2, delay:0.2, dmgMult:0.85}, {x:0, y:0, width:0.78, height:1.55, angle:-Math.PI / 2, delay:0.45, dmgMult:0.85}], emblem: 'square' },
+    { id: 'shatter', name: 'Shatter', role: 'Close-range pellet blast', price: 9600, dmgRating: 5, spdRating: 2, hpRating: 3, fireMode: 'shotgun', fireConfig: { count: 8, spread: 0.37, speedMult: 0.8, dmgMult: 0.6, penMult: 0.75, sizeMult: 0.88, reloadMult: 0.92 }, scale: 1.16, recoil: 1.95, aiRange: 135, accent: '#ffd55f', barrelColor: '#b9aa88', barrelBorder: '#8a7d62', moveSpdMult: 0.9, maxHpMult: 1.2, bodyDmgMult: 1.2, bulletDmgMult: 1.1, guns: [{x:0, y:0, width:1.18, height:1.45, angle:0, delay:0}], emblem: 'burst' },
+    { id: 'aegis', name: 'Aegis', role: '4-direction defensive stream', price: 11200, dmgRating: 4, spdRating: 1, hpRating: 5, fireMode: 'cross', fireConfig: { directions: 4, speedMult: 1, dmgMult: 0.92, penMult: 1.1, reloadMult: 0.88 }, scale: 1.22, recoil: 1.2, aiRange: 175, accent: '#7fe8ff', barrelColor: '#8fa8b8', barrelBorder: '#667684', moveSpdMult: 0.82, maxHpMult: 1.35, bodyDmgMult: 1.35, bulletPenMult: 1.22, guns: [{x:0, y:0, width:0.76, height:1.72, angle:0, delay:0}, {x:0, y:0, width:0.76, height:1.72, angle:Math.PI / 2, delay:0.25}, {x:0, y:0, width:0.76, height:1.72, angle:Math.PI, delay:0.5}, {x:0, y:0, width:0.76, height:1.72, angle:-Math.PI / 2, delay:0.75}], emblem: 'square' },
+    { id: 'phantom', name: 'Phantom', role: 'High-speed twin lances', price: 13000, dmgRating: 5, spdRating: 4, hpRating: 2, fireMode: 'paired', fireConfig: { spread: 0.06, speedMult: 1.35, dmgMult: 1.15, penMult: 1.05, reloadMult: 0.95 }, scale: 1.17, recoil: 2.2, aiRange: 320, accent: '#ff7b95', barrelColor: '#b08a95', barrelBorder: '#815f68', moveSpdMult: 1.15, maxHpMult: 0.92, bulletSpdMult: 1.4, bulletDmgMult: 1.25, guns: [{x:0.35, y:0, width:0.72, height:2.35, angle:0.02, delay:0}, {x:-0.35, y:0, width:0.72, height:2.35, angle:-0.02, delay:0.25}], emblem: 'crosshair' },
+    { id: 'destroyer', name: 'Destroyer', role: 'Ultimate twin siege cannons', price: 18000, dmgRating: 5, spdRating: 2, hpRating: 5, fireMode: 'paired', fireConfig: { spread: 0.12, speedMult: 1.02, dmgMult: 1.45, penMult: 1.28, reloadMult: 0.74 }, scale: 1.52, recoil: 4.9, aiRange: 300, accent: '#ff5b5b', barrelColor: '#a08181', barrelBorder: '#775e5e', moveSpdMult: 0.74, maxHpMult: 1.52, bodyDmgMult: 1.46, bulletPenMult: 1.48, bulletDmgMult: 1.72, guns: [{x:0.45, y:0, width:1.04, height:2.3, angle:0.03, delay:0, speedMult:1.05, dmgMult:4.4, reloadMult:0.36, sizeMult:1.65}, {x:-0.45, y:0, width:1.04, height:2.3, angle:-0.03, delay:0.2, speedMult:1.05, dmgMult:4.4, reloadMult:0.36, sizeMult:1.65}], emblem: 'star' }
 ];
+
+const SHOP_CLASS_ORDER = ['twin', 'raptor', 'cyclone', 'sniper', 'trident', 'broadside', 'shatter', 'aegis', 'phantom', 'destroyer'];
+
+function getClassById(id) {
+    return CLASSES.find(c => c.id === id);
+}
+
+function getShopClasses() {
+    return SHOP_CLASS_ORDER.map(getClassById).filter(Boolean);
+}
+
+function getAIUpgradeClasses() {
+    return ['basic', ...SHOP_CLASS_ORDER].map(getClassById).filter(Boolean);
+}
+
+const AI_PROFILES = [
+    { id: 'dumb', label: 'Dumb', intelligence: 0.25, aimJitter: 0.22, scanMultiplier: 0.78, retreatHp: 0.42, hitRetreatHp: 0.56, moveBias: 0.92, strafeBias: 0.2, fightBias: 0.42, upgradeDelayMin: 70, upgradeDelayMax: 130, rangeBonus: -20, edgeCaution: 0.8 },
+    { id: 'medium', label: 'Medium', intelligence: 0.55, aimJitter: 0.12, scanMultiplier: 1, retreatHp: 0.35, hitRetreatHp: 0.62, moveBias: 1, strafeBias: 0.45, fightBias: 0.62, upgradeDelayMin: 35, upgradeDelayMax: 80, rangeBonus: 0, edgeCaution: 1 },
+    { id: 'smart', label: 'Smart', intelligence: 0.9, aimJitter: 0.05, scanMultiplier: 1.22, retreatHp: 0.3, hitRetreatHp: 0.55, moveBias: 1.04, strafeBias: 0.75, fightBias: 0.8, upgradeDelayMin: 18, upgradeDelayMax: 45, rangeBonus: 25, edgeCaution: 1.25 },
+    { id: 'berserker', label: 'Berserker', intelligence: 0.5, aimJitter: 0.1, scanMultiplier: 1.18, retreatHp: 0.2, hitRetreatHp: 0.38, moveBias: 1.12, strafeBias: 0.5, fightBias: 0.95, upgradeDelayMin: 20, upgradeDelayMax: 55, rangeBonus: -25, edgeCaution: 0.9 },
+    { id: 'survivor', label: 'Survivor', intelligence: 0.72, aimJitter: 0.09, scanMultiplier: 1.05, retreatHp: 0.55, hitRetreatHp: 0.72, moveBias: 1.1, strafeBias: 0.52, fightBias: 0.5, upgradeDelayMin: 24, upgradeDelayMax: 58, rangeBonus: 10, edgeCaution: 1.4 },
+    { id: 'hunter', label: 'Hunter', intelligence: 0.82, aimJitter: 0.06, scanMultiplier: 1.28, retreatHp: 0.3, hitRetreatHp: 0.52, moveBias: 0.98, strafeBias: 0.68, fightBias: 0.84, upgradeDelayMin: 22, upgradeDelayMax: 50, rangeBonus: 55, edgeCaution: 1.1 }
+];
+
+const DEFAULT_AI_PROFILE = AI_PROFILES[1];
+
+function pickAIProfile(mode = difficulty) {
+    let weights;
+    if (mode === 'easy') {
+        weights = [
+            { id: 'dumb', w: 0.38 },
+            { id: 'medium', w: 0.35 },
+            { id: 'smart', w: 0.07 },
+            { id: 'berserker', w: 0.06 },
+            { id: 'survivor', w: 0.1 },
+            { id: 'hunter', w: 0.04 }
+        ];
+    } else if (mode === 'hard') {
+        weights = [
+            { id: 'dumb', w: 0.06 },
+            { id: 'medium', w: 0.18 },
+            { id: 'smart', w: 0.3 },
+            { id: 'berserker', w: 0.2 },
+            { id: 'survivor', w: 0.08 },
+            { id: 'hunter', w: 0.18 }
+        ];
+    } else {
+        weights = [
+            { id: 'dumb', w: 0.17 },
+            { id: 'medium', w: 0.34 },
+            { id: 'smart', w: 0.18 },
+            { id: 'berserker', w: 0.11 },
+            { id: 'survivor', w: 0.1 },
+            { id: 'hunter', w: 0.1 }
+        ];
+    }
+    let r = Math.random();
+    for (const entry of weights) {
+        r -= entry.w;
+        if (r <= 0) return AI_PROFILES.find(p => p.id === entry.id) || DEFAULT_AI_PROFILE;
+    }
+    return DEFAULT_AI_PROFILE;
+}
 
 const input = {
     up: false, down: false, left: false, right: false,
@@ -666,7 +954,8 @@ function getDifficultySettings() {
                 botDamageMultiplier: 1,
                 shapeDamageMultiplier: 1,
                 spawnRateMultiplier: 1,
-                botAggression: 1
+                botAggression: 1,
+                botSkillMultiplier: 1
             };
         case 'easy':
             return {
@@ -675,7 +964,8 @@ function getDifficultySettings() {
                 botDamageMultiplier: 0.5,
                 shapeDamageMultiplier: 0.5,
                 spawnRateMultiplier: 0.5,
-                botAggression: 0.7
+                botAggression: 0.7,
+                botSkillMultiplier: 0.75
             };
         case 'normal':
             return {
@@ -684,7 +974,8 @@ function getDifficultySettings() {
                 botDamageMultiplier: 1,
                 shapeDamageMultiplier: 1,
                 spawnRateMultiplier: 1,
-                botAggression: 1
+                botAggression: 1,
+                botSkillMultiplier: 1
             };
         case 'hard':
             return {
@@ -693,7 +984,8 @@ function getDifficultySettings() {
                 botDamageMultiplier: 1.5,
                 shapeDamageMultiplier: 1.5,
                 spawnRateMultiplier: 2,
-                botAggression: 1.5
+                botAggression: 1.5,
+                botSkillMultiplier: 1.3
             };
         default:
             return {
@@ -702,7 +994,8 @@ function getDifficultySettings() {
                 botDamageMultiplier: 1,
                 shapeDamageMultiplier: 1,
                 spawnRateMultiplier: 1,
-                botAggression: 1
+                botAggression: 1,
+                botSkillMultiplier: 1
             };
     }
 }
@@ -728,8 +1021,28 @@ window.addEventListener('mousemove', e => {
     input.mouseY = e.clientY;
 });
 
-window.addEventListener('mousedown', () => input.mouseDown = true);
+function isGameplayUIElement(target) {
+    if (!target || !target.closest) return false;
+    return !!target.closest(
+        '#upgradeContainer, #upgradeToggleBtn, #classShopBtn, #classShopMenu, ' +
+        '#mainMenu, #howToPlay, #settingsMenu, #loseScreen, button, select, label, .stat-row, .class-card'
+    );
+}
+
+function isMenuOpen() {
+    const overlaysOpen =
+        !document.getElementById('mainMenu').classList.contains('hidden') ||
+        !document.getElementById('howToPlay').classList.contains('hidden') ||
+        !document.getElementById('settingsMenu').classList.contains('hidden') ||
+        !document.getElementById('loseScreen').classList.contains('hidden');
+    return overlaysOpen;
+}
+
+window.addEventListener('mousedown', e => {
+    input.mouseDown = !isGameplayUIElement(e.target);
+});
 window.addEventListener('mouseup', () => input.mouseDown = false);
+window.addEventListener('blur', () => input.mouseDown = false);
 
 document.addEventListener('touchstart', handleTouchStart, { passive: false });
 document.addEventListener('touchmove', handleTouchMove, { passive: false });
@@ -857,6 +1170,38 @@ function getJoystickInput(side) {
 const rand = (min, max) => Math.random() * (max - min) + min;
 const randInt = (min, max) => Math.floor(rand(min, max));
 const dist = (x1, y1, x2, y2) => Math.hypot(x1 - x2, y1 - y2);
+const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+const normalizeAngle = a => {
+    while (a <= -Math.PI) a += Math.PI * 2;
+    while (a > Math.PI) a -= Math.PI * 2;
+    return a;
+};
+const rotateTowardAngle = (from, to, maxStep) => {
+    const diff = normalizeAngle(to - from);
+    if (Math.abs(diff) <= maxStep) return normalizeAngle(to);
+    return normalizeAngle(from + Math.sign(diff) * maxStep);
+};
+
+function hexToRgba(hex, alpha) {
+    if (typeof hex !== 'string') return `rgba(255, 255, 255, ${alpha})`;
+    const clean = hex.trim();
+    const short = clean.match(/^#([a-fA-F0-9]{3})$/);
+    const full = clean.match(/^#([a-fA-F0-9]{6})$/);
+    if (short) {
+        const r = parseInt(short[1][0] + short[1][0], 16);
+        const g = parseInt(short[1][1] + short[1][1], 16);
+        const b = parseInt(short[1][2] + short[1][2], 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+    if (full) {
+        const value = full[1];
+        const r = parseInt(value.slice(0, 2), 16);
+        const g = parseInt(value.slice(2, 4), 16);
+        const b = parseInt(value.slice(4, 6), 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+    return `rgba(255, 255, 255, ${alpha})`;
+}
 
 class Entity {
     constructor(x, y, radius, color) {
@@ -1005,40 +1350,102 @@ class Tank extends Entity {
         this.hp = 50;
         this.classDef = CLASSES[0];
         
-        this.guns = this.classDef.guns.map(g => ({...g, lastShot: 0}));
+        this.guns = this.classDef.guns.map(g => ({...g, lastShot: (g.delay || 0) * 30, kick: 0, lastFxTick: -1}));
         
         this.target = null;
         this.state = 'farm';
+
+        this.recentAttacker = null;
+        this.recentHitTimer = 0;
+        this.retreatTimer = 0;
+        this.aiStrafeDir = Math.random() < 0.5 ? -1 : 1;
+        this.aiStrafeTimer = randInt(40, 120);
+        this.aiWanderTimer = randInt(40, 140);
+        this.aiWanderAngle = rand(0, Math.PI * 2);
+        this.aiTargetLock = 0;
+        this.radialSpin = rand(0, Math.PI * 2);
+        this.altGunIndex = 0;
+
+        if (this.isBot) {
+            this.aiProfile = { ...pickAIProfile() };
+            const ai = this.getBotTuning();
+            this.aiUpgradeCooldown = randInt(ai.upgradeDelayMin, ai.upgradeDelayMax);
+        } else {
+            this.aiProfile = null;
+            this.aiUpgradeCooldown = 0;
+        }
+    }
+
+    getBotTuning() {
+        const profile = this.aiProfile || DEFAULT_AI_PROFILE;
+        const diffSettings = getDifficultySettings();
+        const skill = diffSettings.botSkillMultiplier || 1;
+        return {
+            intelligence: clamp(profile.intelligence * skill, 0.15, 1),
+            aimJitter: clamp(profile.aimJitter / skill, 0.02, 0.35),
+            scanMultiplier: profile.scanMultiplier * skill,
+            retreatHp: clamp(profile.retreatHp + (1 - skill) * 0.12, 0.15, 0.75),
+            hitRetreatHp: clamp(profile.hitRetreatHp + (1 - skill) * 0.12, 0.22, 0.85),
+            moveBias: profile.moveBias * (0.92 + skill * 0.08),
+            strafeBias: clamp(profile.strafeBias * (0.9 + skill * 0.12), 0.1, 1),
+            fightBias: clamp(profile.fightBias * (0.85 + skill * 0.2), 0.2, 0.98),
+            upgradeDelayMin: Math.max(10, Math.floor(profile.upgradeDelayMin / skill)),
+            upgradeDelayMax: Math.max(20, Math.floor(profile.upgradeDelayMax / skill)),
+            rangeBonus: profile.rangeBonus + (skill - 1) * 24,
+            edgeCaution: profile.edgeCaution * (0.95 + skill * 0.1)
+        };
     }
 
     getStat(key) {
         const lvl = this.stats[key];
+        const classDef = this.classDef || {};
         switch(key) {
-            case 'regen': return 0.05 + (lvl * 0.05);
-            case 'maxHp': return this.baseMaxHp + (lvl * 20);
-            case 'bodyDmg': return 10 + (lvl * 5);
-            case 'bulletSpd': return 5 + (lvl * 1);
-            case 'bulletPen': return 10 + (lvl * 8);
-            case 'bulletDmg': return 8 + (lvl * 3);
+            case 'regen': return (0.05 + (lvl * 0.05)) * (classDef.regenMult || 1);
+            case 'maxHp': return (this.baseMaxHp + (lvl * 20)) * (classDef.maxHpMult || 1);
+            case 'bodyDmg': return (10 + (lvl * 5)) * (classDef.bodyDmgMult || 1);
+            case 'bulletSpd': return (5 + (lvl * 1)) * (classDef.bulletSpdMult || 1);
+            case 'bulletPen': return (10 + (lvl * 8)) * (classDef.bulletPenMult || 1);
+            case 'bulletDmg': return (8 + (lvl * 3)) * (classDef.bulletDmgMult || 1);
             case 'reload': return 1 - (lvl * 0.06);
-            case 'moveSpd': return 0.2 + (lvl * 0.04);
+            case 'moveSpd': return (0.2 + (lvl * 0.04)) * (classDef.moveSpdMult || 1);
             default: return 0;
         }
     }
 
     changeClass(classId) {
-        const newClass = CLASSES.find(c => c.id === classId);
+        const newClass = getClassById(classId);
         if (!newClass) return;
+        const oldMaxHp = this.getStat('maxHp');
+        const hpRatio = oldMaxHp > 0 ? this.hp / oldMaxHp : 1;
         this.classDef = newClass;
         this.radius = 20 * newClass.scale;
-        this.guns = newClass.guns.map(g => ({...g, lastShot: 0}));
+        this.guns = newClass.guns.map(g => ({...g, lastShot: (g.delay || 0) * 30, kick: 0, lastFxTick: -1}));
+        const newMaxHp = this.getStat('maxHp');
+        this.hp = Math.max(0, Math.min(newMaxHp, newMaxHp * hpRatio));
+    }
+
+    canUseTestModeBenefits() {
+        return difficulty === 'test' && !this.isBot;
+    }
+
+    buyClass(classId) {
+        const targetClass = getClassById(classId);
+        if (!targetClass || this.classDef.id === targetClass.id) return false;
+        const canUseFree = this.canUseTestModeBenefits();
+        if (canUseFree || this.coins >= targetClass.price) {
+            if (!canUseFree && targetClass.price > 0) this.coins -= targetClass.price;
+            this.changeClass(targetClass.id);
+            return true;
+        }
+        return false;
     }
 
     upgradeStat(key) {
         if (this.stats[key] < 8) {
             const cost = this.getUpgradeCost(key);
-            if (difficulty === 'test' || this.coins >= cost) {
-                if (difficulty !== 'test') this.coins -= cost;
+            const canUseFree = this.canUseTestModeBenefits();
+            if (canUseFree || this.coins >= cost) {
+                if (!canUseFree) this.coins -= cost;
                 this.stats[key]++;
                 if (key === 'maxHp') this.hp += 20;
                 return true;
@@ -1058,6 +1465,16 @@ class Tank extends Entity {
         }
         
         this.hp -= amount;
+
+        if (this.isBot && source instanceof Tank && source !== this && !source.isDead) {
+            this.recentAttacker = source;
+            this.recentHitTimer = 240;
+            const ai = this.getBotTuning();
+            if (this.hp / this.getStat('maxHp') <= ai.hitRetreatHp) {
+                this.retreatTimer = Math.max(this.retreatTimer, 50);
+            }
+        }
+
         if (this.hp <= 0 && !this.isDead) {
             this.isDead = true;
             createExplosion(this.x, this.y, this.radius * 2, this.color);
@@ -1073,41 +1490,155 @@ class Tank extends Entity {
         this.coins += amount;
     }
 
-    fire() {
+    setGunCooldown(g, reloadMult = 1) {
+        const baseReload = 30;
+        const reloadMod = this.getStat('reload') * (g.reloadMult || 1) * reloadMult;
+        g.lastShot = Math.max(5, baseReload * reloadMod);
+    }
+
+    setAllGunsCooldown(reloadMult = 1) {
+        this.guns.forEach(g => this.setGunCooldown(g, reloadMult));
+    }
+
+    spawnShot(g, shotAngle, modeMods = {}, barrelAngle = shotAngle) {
+        const ai = this.isBot ? this.getBotTuning() : DEFAULT_AI_PROFILE;
+        const jitter = this.isBot ? rand(-ai.aimJitter, ai.aimJitter) : 0;
+        const spreadRand = rand(-0.05, 0.05) * (g.spread || 0);
+        const extraSpread = modeMods.extraSpread ? rand(-modeMods.extraSpread, modeMods.extraSpread) : 0;
+        const totalAngle = shotAngle + spreadRand + jitter + extraSpread;
+
+        const relX = (g.x || 0) * this.radius;
+        const relY = (g.y || 0) * this.radius;
+        const cosTank = Math.cos(this.angle);
+        const sinTank = Math.sin(this.angle);
+        const mountX = this.x + relX * cosTank - relY * sinTank;
+        const mountY = this.y + relX * sinTank + relY * cosTank;
+        const muzzleLen = this.radius * (g.height || 1.8);
+
+        const bSpd = this.getStat('bulletSpd') * (g.speedMult || 1) * (modeMods.speedMult || 1);
+        const bDmg = this.getStat('bulletDmg') * (g.dmgMult || 1) * (modeMods.dmgMult || 1);
+        const bPen = this.getStat('bulletPen') * (modeMods.penMult || 1);
+        const bLife = 60 * (1 + (this.getStat('bulletPen') / 50)) * (modeMods.lifeMult || 1);
+        const rawBSize = (this.radius / 2.5) * (g.sizeMult || 1) * (modeMods.sizeMult || 1);
+        const muzzleRadius = this.radius * (g.width || 1) * 0.5;
+        const maxMuzzleFitSize = (muzzleRadius * 0.95) + (rawBSize * 0.05);
+        const bSize = Math.max(3, Math.min(rawBSize, maxMuzzleFitSize));
+        const muzzleOffset = muzzleLen + (bSize * 0.9) + 1;
+        const gx = mountX + Math.cos(barrelAngle) * muzzleOffset;
+        const gy = mountY + Math.sin(barrelAngle) * muzzleOffset;
+
+        entities.push(new Bullet(this, gx, gy, totalAngle, bSpd, bDmg, bPen, bSize, bLife));
+        const flashX = mountX + Math.cos(barrelAngle) * (muzzleLen + Math.max(2, bSize * 0.28));
+        const flashY = mountY + Math.sin(barrelAngle) * (muzzleLen + Math.max(2, bSize * 0.28));
+        const mode = this.classDef.fireMode || 'standard';
+        const modeFlashMult = mode === 'radial' ? 0.42 : (mode === 'cross' ? 0.5 : (mode === 'shotgun' ? 0.62 : 0.92));
+        const baseFlashSize = Math.max(7, (this.radius * (g.width || 1) * 0.92) + (bSize * 0.38));
+        const flashSize = baseFlashSize * modeFlashMult;
+        if (g.lastFxTick !== gameTick || Math.random() < 0.2) {
+            createMuzzleFlash(flashX, flashY, barrelAngle, flashSize, this.classDef.accent || this.color);
+            g.lastFxTick = gameTick;
+        }
+        g.kick = Math.max(g.kick || 0, Math.min(this.radius * 0.34, flashSize * 0.22));
+        if (!this.isBot) {
+            cameraShake = Math.max(cameraShake, Math.min(3.2, flashSize * 0.08));
+        }
+
+        const recoil = (this.classDef.recoil || 1) * (modeMods.recoilMult || 1);
+        this.vx -= Math.cos(totalAngle) * recoil;
+        this.vy -= Math.sin(totalAngle) * recoil;
+    }
+
+    fireStandard(cfg = {}) {
         this.guns.forEach(g => {
             if (g.lastShot <= 0) {
-                const bSpd = this.getStat('bulletSpd') * (g.speedMult || 1);
-                const bDmg = this.getStat('bulletDmg') * (g.dmgMult || 1);
-                const bPen = this.getStat('bulletPen');
-                const bLife = 60 * (1 + (this.getStat('bulletPen')/50));
-                const bSize = (this.radius / 2.5) * (g.sizeMult || 1);
-                
-                const totalAngle = this.angle + g.angle + rand(-0.05, 0.05) * (g.spread || 0);
-                
-                const gx = this.x + Math.cos(this.angle) * (this.radius * 1.2);
-                const gy = this.y + Math.sin(this.angle) * (this.radius * 1.2);
-
-                const bullet = new Bullet(
-                    this, 
-                    gx, gy, 
-                    totalAngle, 
-                    bSpd, 
-                    bDmg, 
-                    bPen,
-                    bSize,
-                    bLife
-                );
-                entities.push(bullet);
-
-                const recoil = 1 * this.classDef.recoil;
-                this.vx -= Math.cos(totalAngle) * recoil;
-                this.vy -= Math.sin(totalAngle) * recoil;
-
-                const baseReload = 30;
-                const reloadMod = this.getStat('reload') * (g.reloadMult || 1);
-                g.lastShot = Math.max(5, baseReload * reloadMod);
+                const gunAngle = this.angle + (g.angle || 0);
+                this.spawnShot(g, gunAngle, cfg, gunAngle);
+                this.setGunCooldown(g, cfg.reloadMult || 1);
             }
         });
+    }
+
+    fireAlternate(cfg = {}) {
+        if (this.guns.length === 0) return;
+        for (let i = 0; i < this.guns.length; i++) {
+            const idx = (this.altGunIndex + i) % this.guns.length;
+            const g = this.guns[idx];
+            if (g.lastShot <= 0) {
+                const gunAngle = this.angle + (g.angle || 0);
+                this.spawnShot(g, gunAngle, cfg, gunAngle);
+                this.setGunCooldown(g, cfg.reloadMult || 1);
+                this.altGunIndex = (idx + 1) % this.guns.length;
+                break;
+            }
+        }
+    }
+
+    fireRadial(cfg = {}) {
+        const g = this.guns[0];
+        if (!g || g.lastShot > 0) return;
+        const count = Math.max(4, Math.floor(cfg.count || 12));
+        for (let i = 0; i < count; i++) {
+            const shotAngle = this.radialSpin + (i / count) * Math.PI * 2;
+            this.spawnShot(g, shotAngle, cfg);
+        }
+        this.radialSpin += cfg.spinStep || 0.16;
+        this.setAllGunsCooldown(cfg.reloadMult || 1);
+    }
+
+    fireFan(cfg = {}) {
+        const g = this.guns[Math.floor(this.guns.length / 2)] || this.guns[0];
+        if (!g || g.lastShot > 0) return;
+        const count = Math.max(2, Math.floor(cfg.count || 3));
+        const spread = cfg.spread || 0.12;
+        for (let i = 0; i < count; i++) {
+            const offset = (i - (count - 1) / 2) * spread;
+            this.spawnShot(g, this.angle + offset, cfg);
+        }
+        this.setAllGunsCooldown(cfg.reloadMult || 1);
+    }
+
+    fireShotgun(cfg = {}) {
+        const g = this.guns[0];
+        if (!g || g.lastShot > 0) return;
+        const count = Math.max(4, Math.floor(cfg.count || 7));
+        const spread = cfg.spread || 0.32;
+        for (let i = 0; i < count; i++) {
+            this.spawnShot(g, this.angle + rand(-spread, spread), cfg);
+        }
+        this.setAllGunsCooldown(cfg.reloadMult || 1);
+    }
+
+    fireCross(cfg = {}) {
+        const g = this.guns[0];
+        if (!g || g.lastShot > 0) return;
+        const directions = Math.max(3, Math.floor(cfg.directions || 4));
+        for (let i = 0; i < directions; i++) {
+            const shotAngle = this.angle + (i / directions) * Math.PI * 2;
+            this.spawnShot(g, shotAngle, cfg);
+        }
+        this.setAllGunsCooldown(cfg.reloadMult || 1);
+    }
+
+    firePaired(cfg = {}) {
+        const g = this.guns[0];
+        if (!g || g.lastShot > 0) return;
+        const spread = cfg.spread || 0.05;
+        this.spawnShot(g, this.angle - spread, cfg);
+        this.spawnShot(g, this.angle + spread, cfg);
+        this.setAllGunsCooldown(cfg.reloadMult || 1);
+    }
+
+    fire() {
+        if (this.guns.length === 0) return;
+        const mode = this.classDef.fireMode || 'standard';
+        const cfg = this.classDef.fireConfig || {};
+        if (mode === 'alternate') this.fireAlternate(cfg);
+        else if (mode === 'radial') this.fireRadial(cfg);
+        else if (mode === 'fan') this.fireFan(cfg);
+        else if (mode === 'shotgun') this.fireShotgun(cfg);
+        else if (mode === 'cross') this.fireCross(cfg);
+        else if (mode === 'paired') this.firePaired(cfg);
+        else this.fireStandard(cfg);
     }
 
     update() {
@@ -1118,7 +1649,11 @@ class Tank extends Entity {
         }
         if (this.hp > this.getStat('maxHp')) this.hp = this.getStat('maxHp');
 
-        this.guns.forEach(g => { if(g.lastShot > 0) g.lastShot--; });
+        this.guns.forEach(g => {
+            if (g.lastShot > 0) g.lastShot--;
+            if (g.kick > 0.01) g.kick *= 0.7;
+            else g.kick = 0;
+        });
 
         if (this.isBot) this.updateAI();
         else this.updatePlayer();
@@ -1136,7 +1671,7 @@ class Tank extends Entity {
             
             const aimInput = getJoystickInput('right');
             if (aimInput.active) {
-                if (aimInput.x !== 0 || aimInput.y !== 0) {
+                if ((aimInput.x !== 0 || aimInput.y !== 0) && !isMenuOpen()) {
                     this.angle = Math.atan2(aimInput.y, aimInput.x);
                     this.fire();
                 }
@@ -1151,99 +1686,252 @@ class Tank extends Entity {
             const worldMouseY = input.mouseY + (camera.y - canvas.height/2);
             this.angle = Math.atan2(worldMouseY - this.y, worldMouseX - this.x);
 
-            if (input.mouseDown) {
+            if (input.mouseDown && !isMenuOpen()) {
                 this.fire();
             }
         }
     }
 
+    getBestTankTarget(maxRange) {
+        let best = null;
+        let bestScore = Infinity;
+        entities.forEach(e => {
+            if (!(e instanceof Tank) || e === this || e.isDead) return;
+            const d = dist(this.x, this.y, e.x, e.y);
+            if (d > maxRange) return;
+            let score = d;
+            if (this.recentHitTimer > 0 && e === this.recentAttacker) score *= 0.55;
+            if (e === this.target) score *= 0.82;
+            const hpPct = e.hp / e.getStat('maxHp');
+            if (hpPct < 0.4) score *= 0.9;
+            if (score < bestScore) {
+                bestScore = score;
+                best = e;
+            }
+        });
+        return best;
+    }
+
+    getNearestShape(maxRange) {
+        let nearestShape = null;
+        let minDist = maxRange;
+        entities.forEach(e => {
+            if (!(e instanceof Shape) || e.isDead) return;
+            const d = dist(this.x, this.y, e.x, e.y);
+            if (d < minDist) {
+                minDist = d;
+                nearestShape = e;
+            }
+        });
+        return nearestShape;
+    }
+
+    getPreferredCombatRange() {
+        const base = this.classDef.aiRange || 210;
+        if (this.isBot && this.aiProfile) {
+            return Math.max(120, base + (this.aiProfile.rangeBonus || 0));
+        }
+        return base;
+    }
+
+    maybeUpgradeAI() {
+        const ai = this.getBotTuning();
+        if (this.aiUpgradeCooldown > 0) {
+            this.aiUpgradeCooldown--;
+            return;
+        }
+
+        this.aiUpgradeCooldown = randInt(ai.upgradeDelayMin, ai.upgradeDelayMax);
+
+        const progression = getAIUpgradeClasses();
+        const currentIdx = progression.findIndex(c => c.id === this.classDef.id);
+        const futureClasses = progression
+            .filter((c, idx) => idx > currentIdx && c.price <= this.coins);
+
+        if (futureClasses.length > 0) {
+            let classChoice = null;
+            if (ai.intelligence >= 0.85) {
+                classChoice = futureClasses[futureClasses.length - 1];
+            } else if (ai.intelligence >= 0.55) {
+                const nearTier = futureClasses.slice(0, Math.min(2, futureClasses.length));
+                classChoice = nearTier[randInt(0, nearTier.length)];
+            } else {
+                classChoice = futureClasses[randInt(0, futureClasses.length)];
+            }
+            if (classChoice) this.buyClass(classChoice.id);
+        }
+
+        const affordableStats = STAT_TYPES
+            .map(stat => ({ id: stat.id, level: this.stats[stat.id], cost: this.getUpgradeCost(stat.id) }))
+            .filter(stat => stat.level < 8 && stat.cost <= this.coins);
+        if (affordableStats.length === 0) return;
+
+        let candidateStats = affordableStats;
+        const hpPct = this.hp / this.getStat('maxHp');
+        if (hpPct < ai.retreatHp + 0.12) {
+            const defensive = affordableStats.filter(s => s.id === 'regen' || s.id === 'maxHp' || s.id === 'moveSpd');
+            if (defensive.length > 0) candidateStats = defensive;
+        }
+
+        if (ai.intelligence >= 0.75) {
+            const classOffense = ['bulletDmg', 'bulletPen', 'reload', 'bulletSpd'];
+            const classDefense = ['maxHp', 'regen', 'bodyDmg'];
+            const agile = ['moveSpd', 'reload', 'bulletSpd'];
+            let preferred = classOffense;
+            if (this.classDef.id === 'aegis' || this.classDef.id === 'destroyer') preferred = classDefense;
+            if (this.classDef.id === 'raptor' || this.classDef.id === 'cyclone' || this.classDef.id === 'phantom') preferred = agile;
+            const focused = candidateStats.filter(s => preferred.includes(s.id));
+            if (focused.length > 0) candidateStats = focused;
+        }
+
+        if (ai.intelligence >= 0.8) candidateStats.sort((a, b) => a.level - b.level || a.cost - b.cost);
+        const pool = ai.intelligence >= 0.8
+            ? candidateStats.slice(0, Math.min(3, candidateStats.length))
+            : candidateStats;
+        this.upgradeStat(pool[randInt(0, pool.length)].id);
+    }
+
     updateAI() {
         const diffSettings = getDifficultySettings();
-        
-        if (Math.random() < 0.02 && this.coins > 10) {
-             const stat = STAT_TYPES[randInt(0, STAT_TYPES.length)].id;
-             this.upgradeStat(stat);
-        }
+        const ai = this.getBotTuning();
+        const aimTurnRate = clamp(0.055 + ai.intelligence * 0.1, 0.055, 0.165);
 
-        if (this.hp < this.getStat('maxHp') * 0.3) {
-            this.state = 'flee';
+        if (this.recentHitTimer > 0) {
+            this.recentHitTimer--;
+            if (!this.recentAttacker || this.recentAttacker.isDead) this.recentAttacker = null;
         } else {
-            let nearestEnemy = null;
-            let nearestShape = null;
-            let minDistE = 600 * diffSettings.botAggression;
-            let minDistS = 400;
+            this.recentAttacker = null;
+        }
+        if (this.retreatTimer > 0) this.retreatTimer--;
+        if (this.aiTargetLock > 0) this.aiTargetLock--;
+        if (this.target && this.target.isDead) {
+            this.target = null;
+            this.aiTargetLock = 0;
+        }
 
-            entities.forEach(e => {
-                if (e === this) return;
-                const d = dist(this.x, this.y, e.x, e.y);
-                if (e instanceof Tank && d < minDistE && !e.isDead) {
-                    nearestEnemy = e;
-                    minDistE = d;
-                }
-                if (e instanceof Shape && d < minDistS) {
-                    nearestShape = e;
-                    minDistS = d;
-                }
-            });
+        this.maybeUpgradeAI();
 
-            if (nearestEnemy) {
-                this.target = nearestEnemy;
-                this.state = 'fight';
-            } else if (nearestShape) {
-                this.target = nearestShape;
-                this.state = 'farm';
+        const nearestEnemy = this.getBestTankTarget(650 * diffSettings.botAggression * ai.scanMultiplier);
+        const nearestShape = this.getNearestShape(420 * (ai.fightBias < 0.55 ? 1.2 : 0.9));
+        const hpPct = this.hp / this.getStat('maxHp');
+        const underPressure = this.recentHitTimer > 0 && hpPct <= ai.hitRetreatHp;
+        const shouldRetreat = hpPct <= ai.retreatHp || underPressure || this.retreatTimer > 0;
+        let nextState = 'wander';
+        let nextTarget = null;
+
+        if (shouldRetreat) {
+            nextState = 'flee';
+            nextTarget = (this.recentAttacker && !this.recentAttacker.isDead) ? this.recentAttacker : nearestEnemy;
+        } else if (nearestEnemy && nearestShape) {
+            const enemyDist = dist(this.x, this.y, nearestEnemy.x, nearestEnemy.y);
+            const shapeDist = dist(this.x, this.y, nearestShape.x, nearestShape.y);
+            const enemyScore = enemyDist * (1 - ai.fightBias * 0.25);
+            const shapeScore = shapeDist * (0.92 + ai.fightBias * 0.28);
+            if (enemyScore <= shapeScore) {
+                nextState = 'fight';
+                nextTarget = nearestEnemy;
             } else {
-                this.state = 'wander';
-                this.target = null;
+                nextState = 'farm';
+                nextTarget = nearestShape;
+            }
+        } else if (nearestEnemy) {
+            nextState = 'fight';
+            nextTarget = nearestEnemy;
+        } else if (nearestShape) {
+            nextState = 'farm';
+            nextTarget = nearestShape;
+        }
+
+        const hasLockedTarget = this.target && !this.target.isDead && this.aiTargetLock > 0;
+        if (hasLockedTarget && !shouldRetreat) {
+            const lockedIsTank = this.target instanceof Tank;
+            const lockedDist = dist(this.x, this.y, this.target.x, this.target.y);
+            const nextDist = nextTarget ? dist(this.x, this.y, nextTarget.x, nextTarget.y) : Infinity;
+            const keepLocked = !nextTarget || nextTarget === this.target || nextDist > lockedDist * 0.72;
+            if (keepLocked) {
+                nextTarget = this.target;
+                nextState = lockedIsTank ? 'fight' : 'farm';
             }
         }
 
-        const accel = this.getStat('moveSpd') * 0.8;
-
-        if (this.state === 'flee') {
-             if (this.target) {
-                 const angleTo = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-                 this.vx -= Math.cos(angleTo) * accel;
-                 this.vy -= Math.sin(angleTo) * accel;
-                 this.angle = angleTo + Math.PI;
-                 this.fire();
-             } else {
-                 this.vx += rand(-accel, accel);
-                 this.vy += rand(-accel, accel);
-             }
-        } 
-        else if (this.state === 'fight' && this.target) {
-            const angleTo = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-            this.angle = angleTo;
-            
-            this.vx += Math.cos(angleTo + Math.PI/2) * (accel * 0.5);
-            this.vy += Math.sin(angleTo + Math.PI/2) * (accel * 0.5);
-
-            const d = dist(this.x, this.y, this.target.x, this.target.y);
-            if (d > 300) {
-                this.vx += Math.cos(angleTo) * accel;
-                this.vy += Math.sin(angleTo) * accel;
-            } else if (d < 150) {
-                 this.vx -= Math.cos(angleTo) * accel;
-                 this.vy -= Math.sin(angleTo) * accel;
-            }
-
-            this.fire();
+        const switched = this.target !== nextTarget || this.state !== nextState;
+        this.state = nextState;
+        this.target = nextTarget;
+        if (switched) {
+            if (this.state === 'flee') this.aiTargetLock = randInt(12, 24);
+            else if (this.target) this.aiTargetLock = randInt(24, 52);
+            else this.aiTargetLock = 0;
         }
-        else if (this.state === 'farm' && this.target) {
-            const angleTo = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-            this.angle = angleTo;
-            this.fire();
-             this.vx += Math.cos(angleTo) * (accel * 0.5);
-             this.vy += Math.sin(angleTo) * (accel * 0.5);
-        }
+
+        const accel = this.getStat('moveSpd') * ai.moveBias;
+        if (this.aiStrafeTimer > 0) this.aiStrafeTimer--;
         else {
-            if (Math.random() < 0.05) {
-                this.angle = rand(0, Math.PI * 2);
-                this.vx += Math.cos(this.angle) * accel;
-                this.vy += Math.sin(this.angle) * accel;
-            }
+            this.aiStrafeTimer = randInt(30, Math.max(40, 130 - Math.floor(ai.intelligence * 60)));
+            this.aiStrafeDir *= -1;
         }
+
+        if (this.state === 'flee' && this.target && !this.target.isDead) {
+            const angleTo = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+            const fleeAccel = this.getStat('moveSpd');
+            this.angle = rotateTowardAngle(this.angle, angleTo, aimTurnRate * 0.85);
+            this.vx -= Math.cos(angleTo) * (fleeAccel * 0.82);
+            this.vy -= Math.sin(angleTo) * (fleeAccel * 0.82);
+            this.vx += Math.cos(angleTo + Math.PI / 2) * (fleeAccel * (0.12 + ai.strafeBias * 0.2)) * this.aiStrafeDir;
+            this.vy += Math.sin(angleTo + Math.PI / 2) * (fleeAccel * (0.12 + ai.strafeBias * 0.2)) * this.aiStrafeDir;
+            const fleeMax = this.getStat('moveSpd') * 8.6;
+            const fleeSpeed = Math.hypot(this.vx, this.vy);
+            if (fleeSpeed > fleeMax) {
+                const mul = fleeMax / fleeSpeed;
+                this.vx *= mul;
+                this.vy *= mul;
+            }
+            this.fire();
+        } else if (this.state === 'fight' && this.target && !this.target.isDead) {
+            const angleTo = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+            const d = dist(this.x, this.y, this.target.x, this.target.y);
+            const preferredRange = this.getPreferredCombatRange();
+            this.angle = rotateTowardAngle(this.angle, angleTo, aimTurnRate);
+
+            if (d > preferredRange + 30) {
+                this.vx += Math.cos(angleTo) * (accel * (0.8 + ai.fightBias * 0.45));
+                this.vy += Math.sin(angleTo) * (accel * (0.8 + ai.fightBias * 0.45));
+            } else if (d < preferredRange - 30) {
+                this.vx -= Math.cos(angleTo) * (accel * (0.75 + (1 - ai.fightBias) * 0.35));
+                this.vy -= Math.sin(angleTo) * (accel * (0.75 + (1 - ai.fightBias) * 0.35));
+            }
+
+            this.vx += Math.cos(angleTo + Math.PI / 2) * (accel * (0.25 + ai.strafeBias * 0.65)) * this.aiStrafeDir;
+            this.vy += Math.sin(angleTo + Math.PI / 2) * (accel * (0.25 + ai.strafeBias * 0.65)) * this.aiStrafeDir;
+            this.fire();
+        } else if (this.state === 'farm' && this.target && !this.target.isDead) {
+            const angleTo = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+            const d = dist(this.x, this.y, this.target.x, this.target.y);
+            this.angle = rotateTowardAngle(this.angle, angleTo, aimTurnRate * 0.92);
+            if (d > 120) {
+                this.vx += Math.cos(angleTo) * (accel * 0.6);
+                this.vy += Math.sin(angleTo) * (accel * 0.6);
+            } else if (d < 70) {
+                this.vx -= Math.cos(angleTo) * (accel * 0.4);
+                this.vy -= Math.sin(angleTo) * (accel * 0.4);
+            }
+            this.fire();
+        } else {
+            if (this.aiWanderTimer > 0) this.aiWanderTimer--;
+            else {
+                this.aiWanderTimer = randInt(40, 140);
+                this.aiWanderAngle = rand(0, Math.PI * 2);
+            }
+            this.angle = rotateTowardAngle(this.angle, this.aiWanderAngle, aimTurnRate * 0.65);
+            this.vx += Math.cos(this.angle) * (accel * (0.24 + (1 - ai.intelligence) * 0.24));
+            this.vy += Math.sin(this.angle) * (accel * (0.24 + (1 - ai.intelligence) * 0.24));
+        }
+
+        const edgePad = 80;
+        const edgeForce = accel * ai.edgeCaution;
+        if (this.x < edgePad) this.vx += edgeForce;
+        if (this.x > CONFIG.mapWidth - edgePad) this.vx -= edgeForce;
+        if (this.y < edgePad) this.vy += edgeForce;
+        if (this.y > CONFIG.mapHeight - edgePad) this.vy -= edgeForce;
     }
 
     draw(ctx) {
@@ -1251,18 +1939,21 @@ class Tank extends Entity {
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle);
 
-        ctx.fillStyle = COLORS.barrel;
-        ctx.strokeStyle = COLORS.barrelBorder;
+        const classDef = this.classDef || {};
+        const accent = classDef.accent || '#ffffff';
+        ctx.fillStyle = classDef.barrelColor || COLORS.barrel;
+        ctx.strokeStyle = classDef.barrelBorder || COLORS.barrelBorder;
         ctx.lineWidth = 2;
 
         this.guns.forEach(g => {
             const w = this.radius * g.width;
             const h = this.radius * g.height;
+            const kick = g.kick || 0;
             ctx.save();
-            ctx.rotate(g.angle);
             ctx.translate(g.x * this.radius, g.y * this.radius);
-            ctx.fillRect(0, -w/2, h, w);
-            ctx.strokeRect(0, -w/2, h, w);
+            ctx.rotate(g.angle);
+            ctx.fillRect(-kick, -w/2, h, w);
+            ctx.strokeRect(-kick, -w/2, h, w);
             ctx.restore();
         });
 
@@ -1274,6 +1965,82 @@ class Tank extends Entity {
         ctx.fill();
         ctx.stroke();
 
+        ctx.strokeStyle = accent;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 0, this.radius * 0.7, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.fillStyle = accent;
+        ctx.globalAlpha = 0.35;
+        switch (classDef.emblem) {
+            case 'double':
+                ctx.beginPath();
+                ctx.arc(-this.radius * 0.23, 0, this.radius * 0.13, 0, Math.PI * 2);
+                ctx.arc(this.radius * 0.23, 0, this.radius * 0.13, 0, Math.PI * 2);
+                ctx.fill();
+                break;
+            case 'arrow':
+                ctx.beginPath();
+                ctx.moveTo(this.radius * 0.35, 0);
+                ctx.lineTo(-this.radius * 0.15, -this.radius * 0.2);
+                ctx.lineTo(-this.radius * 0.15, this.radius * 0.2);
+                ctx.closePath();
+                ctx.fill();
+                break;
+            case 'diamond':
+                ctx.beginPath();
+                ctx.moveTo(0, -this.radius * 0.22);
+                ctx.lineTo(this.radius * 0.22, 0);
+                ctx.lineTo(0, this.radius * 0.22);
+                ctx.lineTo(-this.radius * 0.22, 0);
+                ctx.closePath();
+                ctx.fill();
+                break;
+            case 'triangle':
+                ctx.beginPath();
+                ctx.moveTo(0, -this.radius * 0.22);
+                ctx.lineTo(this.radius * 0.22, this.radius * 0.19);
+                ctx.lineTo(-this.radius * 0.22, this.radius * 0.19);
+                ctx.closePath();
+                ctx.fill();
+                break;
+            case 'burst':
+                for (let i = 0; i < 6; i++) {
+                    const a = (i / 6) * Math.PI * 2;
+                    ctx.beginPath();
+                    ctx.arc(Math.cos(a) * this.radius * 0.24, Math.sin(a) * this.radius * 0.24, this.radius * 0.07, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                break;
+            case 'crosshair':
+                ctx.fillRect(-this.radius * 0.03, -this.radius * 0.25, this.radius * 0.06, this.radius * 0.5);
+                ctx.fillRect(-this.radius * 0.25, -this.radius * 0.03, this.radius * 0.5, this.radius * 0.06);
+                break;
+            case 'square':
+                ctx.fillRect(-this.radius * 0.16, -this.radius * 0.16, this.radius * 0.32, this.radius * 0.32);
+                break;
+            case 'star':
+                ctx.beginPath();
+                for (let i = 0; i < 10; i++) {
+                    const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
+                    const r = i % 2 === 0 ? this.radius * 0.23 : this.radius * 0.1;
+                    const px = Math.cos(a) * r;
+                    const py = Math.sin(a) * r;
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.closePath();
+                ctx.fill();
+                break;
+            default:
+                ctx.beginPath();
+                ctx.arc(0, 0, this.radius * 0.14, 0, Math.PI * 2);
+                ctx.fill();
+                break;
+        }
+        ctx.globalAlpha = 1;
+
         ctx.restore();
 
         const hpPct = Math.max(0, this.hp / this.getStat('maxHp'));
@@ -1282,10 +2049,11 @@ class Tank extends Entity {
         ctx.fillStyle = '#6f6';
         ctx.fillRect(this.x - 20, this.y + this.radius + 10, 40 * hpPct, 6);
         
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = UI_TEXT_COLORS.white;
         ctx.font = '10px Ubuntu';
         ctx.textAlign = 'center';
-        ctx.fillText(this.isBot ? "Bot" : "Player", this.x, this.y - this.radius - 8);
+        const label = this.isBot ? 'Bot' : 'Player';
+        ctx.fillText(label, this.x, this.y - this.radius - 8);
     }
 }
 
@@ -1319,6 +2087,133 @@ class Particle {
     }
 }
 
+class MuzzleFlash {
+    constructor(x, y, angle, size, color) {
+        this.x = x;
+        this.y = y;
+        this.angle = angle;
+        this.baseSize = size * rand(0.92, 1.08);
+        this.size = this.baseSize;
+        this.color = color;
+        this.life = 1;
+        this.decay = rand(0.13, 0.2);
+        this.twist = rand(-0.09, 0.09);
+        this.phase = rand(0, Math.PI * 2);
+        this.sparks = [];
+        const sparkCount = Math.max(3, Math.min(9, Math.floor(this.baseSize * 0.26)));
+        for (let i = 0; i < sparkCount; i++) {
+            this.sparks.push({
+                a: rand(-0.9, 0.9),
+                d: rand(this.baseSize * 0.14, this.baseSize * 0.42),
+                v: rand(this.baseSize * 0.09, this.baseSize * 0.24),
+                w: rand(0.7, 1.8)
+            });
+        }
+    }
+
+    update() {
+        this.life -= this.decay;
+        this.size *= 0.93;
+        this.angle += this.twist * Math.max(0.2, this.life);
+        this.phase += 0.26;
+        this.sparks.forEach(s => {
+            s.d += s.v;
+            s.v *= 0.88;
+        });
+    }
+
+    draw(ctx) {
+        const alpha = Math.max(0, this.life);
+        if (alpha <= 0) return;
+        const pulse = 1 + Math.sin(this.phase) * 0.06;
+        const ringR = this.baseSize * (0.35 + (1 - alpha) * 1.4);
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        const halo = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.baseSize * 1.6);
+        halo.addColorStop(0, `rgba(255, 246, 210, ${0.3 * alpha})`);
+        halo.addColorStop(0.3, hexToRgba(this.color, 0.2 * alpha));
+        halo.addColorStop(1, 'rgba(255, 120, 40, 0)');
+        ctx.fillStyle = halo;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.baseSize * 1.6, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+
+        ctx.fillStyle = `rgba(255, 253, 240, ${0.78 * alpha})`;
+        ctx.beginPath();
+        ctx.arc(0, 0, this.baseSize * 0.26 * pulse, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = `rgba(255, 214, 120, ${0.7 * alpha})`;
+        ctx.beginPath();
+        ctx.moveTo(-this.baseSize * 0.2, 0);
+        ctx.lineTo(this.size * 1.35 * pulse, this.size * 0.26);
+        ctx.lineTo(this.size * 0.48, this.size * 0.08);
+        ctx.lineTo(this.size * 1.58 * pulse, 0);
+        ctx.lineTo(this.size * 0.48, -this.size * 0.08);
+        ctx.lineTo(this.size * 1.35 * pulse, -this.size * 0.26);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = `rgba(255, 132, 54, ${0.58 * alpha})`;
+        ctx.beginPath();
+        ctx.moveTo(this.size * 0.78, this.size * 0.12);
+        ctx.lineTo(this.size * 1.78 * pulse, 0);
+        ctx.lineTo(this.size * 0.78, -this.size * 0.12);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = hexToRgba(this.color, 0.52 * alpha);
+        ctx.beginPath();
+        ctx.moveTo(this.size * 0.15, this.size * 0.2);
+        ctx.lineTo(this.size * 0.68, this.size * 0.42);
+        ctx.lineTo(this.size * 0.34, this.size * 0.03);
+        ctx.closePath();
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(this.size * 0.15, -this.size * 0.2);
+        ctx.lineTo(this.size * 0.68, -this.size * 0.42);
+        ctx.lineTo(this.size * 0.34, -this.size * 0.03);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = `rgba(255, 226, 160, ${0.62 * alpha})`;
+        this.sparks.forEach(s => {
+            const sx = Math.cos(s.a) * s.d;
+            const sy = Math.sin(s.a) * s.d;
+            const tx = Math.cos(s.a) * (s.d + s.w * 2.1);
+            const ty = Math.sin(s.a) * (s.d + s.w * 2.1);
+            ctx.lineWidth = Math.max(0.9, s.w * 0.55);
+            ctx.beginPath();
+            ctx.moveTo(sx, sy);
+            ctx.lineTo(tx, ty);
+            ctx.stroke();
+        });
+
+        ctx.restore();
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.strokeStyle = hexToRgba(this.color, 0.42 * alpha);
+        ctx.lineWidth = Math.max(1, this.baseSize * 0.06);
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, ringR, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+    }
+}
+
+function createMuzzleFlash(x, y, angle, size, color) {
+    if (muzzleFlashes.length > 700) {
+        muzzleFlashes.splice(0, 140);
+    }
+    muzzleFlashes.push(new MuzzleFlash(x, y, angle, size, color));
+}
+
 function createExplosion(x, y, size, color) {
     const count = size / 2;
     for(let i=0; i<count; i++) {
@@ -1339,13 +2234,9 @@ function spawnShape() {
 }
 
 function spawnBot() {
-    const diffSettings = getDifficultySettings();
     const x = rand(100, CONFIG.mapWidth - 100);
     const y = rand(100, CONFIG.mapHeight - 100);
     const bot = new Tank(x, y, true);
-    for(let i=0; i<10; i++) {
-        bot.upgradeStat(STAT_TYPES[randInt(0, STAT_TYPES.length)].id);
-    }
     entities.push(bot);
 }
 
@@ -1364,11 +2255,14 @@ function checkCollisions() {
             const radSum = a.radius + b.radius;
 
             if (distSq < radSum * radSum) {
+                if (a instanceof Bullet && b instanceof Bullet) {
+                    continue;
+                }
                 
                 if (a instanceof Bullet && !(b instanceof Bullet)) {
                     if (a.owner === b) continue;
                     let damage = a.damage;
-                    if (a.owner.isBot && b === player) {
+                    if (a.owner.isBot && b instanceof Tank) {
                         damage *= diffSettings.botDamageMultiplier;
                     }
                     b.takeDamage(damage, a.owner);
@@ -1381,7 +2275,7 @@ function checkCollisions() {
                 else if (b instanceof Bullet && !(a instanceof Bullet)) {
                     if (b.owner === a) continue;
                     let damage = b.damage;
-                    if (b.owner.isBot && a === player) {
+                    if (b.owner.isBot && a instanceof Tank) {
                         damage *= diffSettings.botDamageMultiplier;
                     }
                     a.takeDamage(damage, b.owner);
@@ -1403,8 +2297,8 @@ function checkCollisions() {
                         let dmgA = (a instanceof Tank) ? a.getStat('bodyDmg') : a.bodyDamage;
                         let dmgB = (b instanceof Tank) ? b.getStat('bodyDmg') : b.bodyDamage;
                         
-                        if (a.isBot && b === player) dmgA *= diffSettings.botDamageMultiplier;
-                        if (b.isBot && a === player) dmgB *= diffSettings.botDamageMultiplier;
+                        if (a instanceof Tank && a.isBot && b instanceof Tank) dmgA *= diffSettings.botDamageMultiplier;
+                        if (b instanceof Tank && b.isBot && a instanceof Tank) dmgB *= diffSettings.botDamageMultiplier;
                         
                         a.takeDamage(dmgB * 0.1, b);
                         b.takeDamage(dmgA * 0.1, a);
@@ -1415,33 +2309,37 @@ function checkCollisions() {
     }
 }
 
-function drawGrid() {
-    const startX = Math.floor(camera.x / CONFIG.gridSize) * CONFIG.gridSize;
-    const startY = Math.floor(camera.y / CONFIG.gridSize) * CONFIG.gridSize;
+function drawGrid(camX = camera.x, camY = camera.y) {
+    const grid = CONFIG.gridSize;
+    const offsetX = (((-camX + canvas.width / 2) % grid) + grid) % grid;
+    const offsetY = (((-camY + canvas.height / 2) % grid) + grid) % grid;
+    const startX = Math.round(offsetX) + 0.5;
+    const startY = Math.round(offsetY) + 0.5;
     
     ctx.strokeStyle = COLORS.grid;
     ctx.lineWidth = 1;
     ctx.beginPath();
 
-    for (let x = startX - CONFIG.gridSize; x < camera.x + canvas.width + CONFIG.gridSize; x += CONFIG.gridSize) {
-        ctx.moveTo(x - camera.x + canvas.width/2, 0);
-        ctx.lineTo(x - camera.x + canvas.width/2, canvas.height);
+    for (let x = startX - grid; x <= canvas.width + grid; x += grid) {
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
     }
-    for (let y = startY - CONFIG.gridSize; y < camera.y + canvas.height + CONFIG.gridSize; y += CONFIG.gridSize) {
-        ctx.moveTo(0, y - camera.y + canvas.height/2);
-        ctx.lineTo(canvas.width, y - camera.y + canvas.height/2);
+    for (let y = startY - grid; y <= canvas.height + grid; y += grid) {
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
     }
     ctx.stroke();
 
     ctx.strokeStyle = '#888';
     ctx.lineWidth = 5;
-    const bx = -camera.x + canvas.width/2;
-    const by = -camera.y + canvas.height/2;
+    const bx = -camX + canvas.width/2;
+    const by = -camY + canvas.height/2;
     ctx.strokeRect(bx, by, CONFIG.mapWidth, CONFIG.mapHeight);
 }
 
 function gameLoop() {
     if (!isRunning) return;
+    gameTick++;
     
     if (player.isDead) {
         endGame();
@@ -1457,25 +2355,38 @@ function gameLoop() {
 
     entities.forEach(e => e.update());
     particles.forEach(p => p.update());
+    muzzleFlashes.forEach(f => f.update());
     checkCollisions();
 
     entities = entities.filter(e => !e.isDead);
     particles = particles.filter(p => p.life > 0);
+    muzzleFlashes = muzzleFlashes.filter(f => f.life > 0);
 
     camera.x += (player.x - camera.x) * 0.1;
     camera.y += (player.y - camera.y) * 0.1;
 
+    let renderCamX = camera.x;
+    let renderCamY = camera.y;
+    if (cameraShake > 0.05) {
+        renderCamX += rand(-cameraShake, cameraShake);
+        renderCamY += rand(-cameraShake, cameraShake);
+        cameraShake *= 0.78;
+    } else {
+        cameraShake = 0;
+    }
+
     ctx.fillStyle = COLORS.bg;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    drawGrid();
+    drawGrid(renderCamX, renderCamY);
 
     ctx.save();
-    ctx.translate(-camera.x + canvas.width/2, -camera.y + canvas.height/2);
+    ctx.translate(-renderCamX + canvas.width/2, -renderCamY + canvas.height/2);
 
     entities.filter(e => e instanceof Shape).forEach(e => e.draw(ctx));
     entities.filter(e => e instanceof Bullet).forEach(e => e.draw(ctx));
     entities.filter(e => e instanceof Tank).forEach(e => e.draw(ctx));
+    muzzleFlashes.forEach(e => e.draw(ctx));
     particles.forEach(e => e.draw(ctx));
 
     ctx.restore();
@@ -1500,22 +2411,55 @@ function endGame() {
     document.getElementById('rightJoystick').style.display = 'none';
 }
 
+function syncUpgradeToggleVisual() {
+    const btn = document.getElementById('upgradeToggleBtn');
+    if (!btn) return;
+    const container = document.getElementById('upgradeContainer');
+    const closedLeft = 6;
+    let panelWidth = window.innerWidth <= 600 ? 228 : 232;
+    if (container) {
+        const cs = window.getComputedStyle(container);
+        const cssWidth = parseFloat(cs.width);
+        const rectWidth = container.getBoundingClientRect().width;
+        if (!Number.isNaN(cssWidth) && cssWidth > 0) panelWidth = cssWidth;
+        else if (rectWidth > 0) panelWidth = rectWidth;
+    }
+    btn.style.left = `${isUpgradeMenuOpen ? Math.round(closedLeft + panelWidth) : closedLeft}px`;
+    if (window.innerWidth <= 600) {
+        let topPx = 140;
+        if (container) {
+            const cs = window.getComputedStyle(container);
+            const cssTop = parseFloat(cs.top);
+            const cssMaxH = parseFloat(cs.maxHeight);
+            const rect = container.getBoundingClientRect();
+            const panelTop = !Number.isNaN(cssTop) ? cssTop : (rect.top || 120);
+            const panelH = rect.height > 20 ? rect.height : (!Number.isNaN(cssMaxH) ? cssMaxH : 280);
+            topPx = panelTop + (panelH * 0.5) - ((btn.offsetHeight || 50) * 0.5);
+        }
+        const minTop = 70;
+        const maxTop = window.innerHeight - 90;
+        btn.style.top = `${Math.round(clamp(topPx, minTop, maxTop))}px`;
+        btn.style.transform = 'none';
+    } else {
+        btn.style.top = '50%';
+        btn.style.transform = 'translateY(-50%)';
+    }
+    btn.innerHTML = isUpgradeMenuOpen ? '&#9664;' : '&#9654;';
+}
+
 function toggleUpgradeMenu() {
     if (!isRunning || player.isDead) return;
 
+    input.mouseDown = false;
     isUpgradeMenuOpen = !isUpgradeMenuOpen;
     const container = document.getElementById('upgradeContainer');
-    const btn = document.getElementById('upgradeToggleBtn');
 
     if (isUpgradeMenuOpen) {
         container.classList.add('open');
-        btn.innerHTML = '&#9664;';
-        btn.style.left = '220px';
     } else {
         container.classList.remove('open');
-        btn.innerHTML = '&#9654;';
-        btn.style.left = '0';
     }
+    syncUpgradeToggleVisual();
 }
 
 function initUI() {
@@ -1544,19 +2488,18 @@ function initUI() {
 
     const classMenu = document.getElementById('classShopMenu');
     classMenu.innerHTML = '';
-    CLASSES.forEach(cls => {
+    getShopClasses().forEach(cls => {
         const card = document.createElement('div');
         card.className = 'class-card';
+        card.style.borderColor = cls.accent || 'transparent';
         card.innerHTML = `
             <div>${cls.name}</div>
+            <div class="class-role">${cls.role || ''}</div>
+            <div class="class-stats">DMG ${cls.dmgRating || 1}/5 • SPD ${cls.spdRating || 1}/5 • ARM ${cls.hpRating || 1}/5</div>
             <div class="class-price">${cls.price === 0 ? 'Free' : cls.price.toLocaleString()}</div>
         `;
         card.onclick = () => {
-             if (difficulty === 'test' || player.coins >= cls.price) {
-                 if (cls.price > 0 && difficulty !== 'test') player.coins -= cls.price;
-                 player.changeClass(cls.id);
-                 toggleClassShop();
-             }
+             if (player.buyClass(cls.id)) toggleClassShop();
         };
         classMenu.appendChild(card);
     });
@@ -1576,7 +2519,7 @@ function updateUI() {
         if(lvl >= 8) costEl.innerText = "MAX";
         else {
             costEl.innerText = difficulty === 'test' ? 'FREE' : cost.toLocaleString();
-            costEl.style.color = (difficulty === 'test' || player.coins >= cost) ? '#ffd700' : '#888';
+            costEl.style.color = (difficulty === 'test' || player.coins >= cost) ? UI_TEXT_COLORS.yellow : UI_TEXT_COLORS.grayMid;
         }
 
         for(let i=0; i<8; i++) {
@@ -1590,22 +2533,30 @@ function updateUI() {
     });
 
     const cards = document.querySelectorAll('.class-card');
-    CLASSES.forEach((cls, idx) => {
+    getShopClasses().forEach((cls, idx) => {
         if(cards[idx]) {
-            if (difficulty !== 'test' && player.coins < cls.price) cards[idx].classList.add('locked');
+            const canUseFree = player.canUseTestModeBenefits();
+            if (!canUseFree && player.coins < cls.price) cards[idx].classList.add('locked');
             else cards[idx].classList.remove('locked');
         }
     });
 }
 
 function toggleClassShop() {
+    input.mouseDown = false;
     const m = document.getElementById('classShopMenu');
-    m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+    const opening = m.style.display !== 'flex';
+    if (opening) {
+        m.style.display = 'flex';
+    } else {
+        m.style.display = 'none';
+    }
 }
 
 function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    syncUpgradeToggleVisual();
 }
 
 function showMainMenu() {
@@ -1620,6 +2571,8 @@ function showMainMenu() {
     document.getElementById('classShopMenu').style.display = 'none';
     document.getElementById('leftJoystick').style.display = 'none';
     document.getElementById('rightJoystick').style.display = 'none';
+    isUpgradeMenuOpen = false;
+    syncUpgradeToggleVisual();
     isRunning = false;
 }
 
@@ -1632,6 +2585,7 @@ function startGame() {
     document.getElementById('upgradeContainer').style.display = 'flex';
     document.getElementById('upgradeToggleBtn').style.display = 'flex';
     document.getElementById('classShopBtn').style.display = 'block';
+    document.getElementById('classShopMenu').style.display = 'none';
     
     if (controlMode === 'mobile') {
         document.getElementById('leftJoystick').style.display = 'flex';
@@ -1644,6 +2598,9 @@ function startGame() {
     isRunning = true;
     entities = [];
     particles = [];
+    muzzleFlashes = [];
+    gameTick = 0;
+    cameraShake = 0;
     
     player = new Tank(CONFIG.mapWidth/2, CONFIG.mapHeight/2, false);
     entities.push(player);
@@ -1656,8 +2613,7 @@ function startGame() {
     
     isUpgradeMenuOpen = false;
     document.getElementById('upgradeContainer').classList.remove('open');
-    document.getElementById('upgradeToggleBtn').innerHTML = '&#9654;';
-    document.getElementById('upgradeToggleBtn').style.left = '0';
+    syncUpgradeToggleVisual();
 
     resize();
     gameLoop();
