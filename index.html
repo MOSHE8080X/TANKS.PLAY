@@ -1594,17 +1594,16 @@ function getDifficultySettings() {
 window.addEventListener('resize', resize);
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
-        ensureAudioUnlocked();
+        requestAudioUnlockBoost();
     }
 });
 
 document.addEventListener('pointerdown', () => {
-    ensureAudioUnlocked();
-    primeAudioContext();
+    requestAudioUnlockBoost();
 }, { capture: true });
 
 window.addEventListener('keydown', e => {
-    ensureAudioUnlocked();
+    requestAudioUnlockBoost();
     if(e.code === 'KeyW' || e.code === 'ArrowUp') input.up = true;
     if(e.code === 'KeyS' || e.code === 'ArrowDown') input.down = true;
     if(e.code === 'KeyA' || e.code === 'ArrowLeft') input.left = true;
@@ -1641,7 +1640,7 @@ function isMenuOpen() {
 }
 
 window.addEventListener('mousedown', e => {
-    ensureAudioUnlocked();
+    requestAudioUnlockBoost();
     if (isPaused) {
         input.mouseDown = false;
         return;
@@ -1686,7 +1685,7 @@ document.addEventListener('touchend', handleTouchEnd, { passive: false });
 document.addEventListener('touchcancel', handleTouchEnd, { passive: false });
 
 function handleTouchStart(e) {
-    ensureAudioUnlocked();
+    requestAudioUnlockBoost();
     if (controlMode !== 'mobile' || !isRunning || isPaused) return;
     
     for (let touch of e.changedTouches) {
@@ -1826,6 +1825,7 @@ const SFX = {
     compressor: null,
     noiseBuffer: null,
     unlockPromise: null,
+    unlockPollId: null,
     primed: false,
     masterVolume: 0.8,
     activeSources: 0,
@@ -1917,6 +1917,10 @@ function updateSoundEnabled() {
     }
 
     SFX.enabled = nextEnabled;
+    if (!SFX.enabled && SFX.unlockPollId) {
+        clearInterval(SFX.unlockPollId);
+        SFX.unlockPollId = null;
+    }
 
     if (SFX.ctx) {
         if (!SFX.enabled && SFX.ctx.state === 'running') {
@@ -1927,7 +1931,7 @@ function updateSoundEnabled() {
     }
 
     if (nextEnabled && !wasEnabled) {
-        if (ensureAudioUnlocked()) {
+        if (requestAudioUnlockBoost()) {
             playUiSfx('toggle', { force: true });
         } else {
             setTimeout(() => playUiSfx('toggle', { force: true }), 80);
@@ -1947,7 +1951,7 @@ function updateSoundVolume(preview = false) {
     syncSoundControls();
 
     if (preview && SFX.enabled) {
-        ensureAudioUnlocked();
+        requestAudioUnlockBoost();
         const now = performance.now();
         if (now - SFX.lastVolumePreviewAt > 110 && Math.abs(nextVolume - prevVolume) > 0.005) {
             SFX.lastVolumePreviewAt = now;
@@ -2000,6 +2004,37 @@ function ensureAudioUnlocked() {
     return ctx.state === 'running';
 }
 
+function requestAudioUnlockBoost() {
+    if (!SFX.enabled) return false;
+    const running = ensureAudioUnlocked();
+    if (running) {
+        primeAudioContext();
+        if (SFX.unlockPollId) {
+            clearInterval(SFX.unlockPollId);
+            SFX.unlockPollId = null;
+        }
+        return true;
+    }
+    if (!SFX.unlockPollId) {
+        let tries = 0;
+        SFX.unlockPollId = setInterval(() => {
+            tries++;
+            const ok = ensureAudioUnlocked();
+            if (ok) {
+                primeAudioContext();
+                clearInterval(SFX.unlockPollId);
+                SFX.unlockPollId = null;
+                return;
+            }
+            if (tries >= 28) {
+                clearInterval(SFX.unlockPollId);
+                SFX.unlockPollId = null;
+            }
+        }, 45);
+    }
+    return false;
+}
+
 function primeAudioContext() {
     if (!SFX.enabled) return false;
     const ctx = getAudioContext();
@@ -2033,22 +2068,9 @@ function playTone(opts = {}) {
     if (!SFX.enabled) return;
     const ctx = getAudioContext();
     if (!ctx) return;
-    if (ctx.state !== 'running') {
-        ensureAudioUnlocked();
-        const retries = Number.isFinite(opts._unlockRetries) ? opts._unlockRetries : 2;
-        if (retries > 0) {
-            const retryOpts = { ...opts, _unlockRetries: retries - 1 };
-            const wait = SFX.unlockPromise || Promise.resolve();
-            wait.then(() => {
-                if (SFX.enabled) playTone(retryOpts);
-            }).catch(() => {});
-            setTimeout(() => {
-                if (SFX.enabled) playTone(retryOpts);
-            }, 72);
-        }
-        return;
-    }
-    primeAudioContext();
+    if (ctx.state === 'closed') return;
+    if (ctx.state !== 'running') requestAudioUnlockBoost();
+    requestAudioUnlockBoost();
     const force = !!opts.force;
     if (!force && !reserveVoice()) return;
     if (force) SFX.activeSources++;
@@ -2071,28 +2093,16 @@ function playTone(opts = {}) {
     osc.onended = releaseVoice;
     osc.start(now);
     osc.stop(now + duration + 0.02);
+    setTimeout(releaseVoice, Math.ceil((duration + 0.12) * 1000));
 }
 
 function playNoise(opts = {}) {
     if (!SFX.enabled) return;
     const ctx = getAudioContext();
     if (!ctx) return;
-    if (ctx.state !== 'running') {
-        ensureAudioUnlocked();
-        const retries = Number.isFinite(opts._unlockRetries) ? opts._unlockRetries : 2;
-        if (retries > 0) {
-            const retryOpts = { ...opts, _unlockRetries: retries - 1 };
-            const wait = SFX.unlockPromise || Promise.resolve();
-            wait.then(() => {
-                if (SFX.enabled) playNoise(retryOpts);
-            }).catch(() => {});
-            setTimeout(() => {
-                if (SFX.enabled) playNoise(retryOpts);
-            }, 72);
-        }
-        return;
-    }
-    primeAudioContext();
+    if (ctx.state === 'closed') return;
+    if (ctx.state !== 'running') requestAudioUnlockBoost();
+    requestAudioUnlockBoost();
     const force = !!opts.force;
     if (!force && !reserveVoice()) return;
     if (force) SFX.activeSources++;
@@ -2121,6 +2131,7 @@ function playNoise(opts = {}) {
 
     src.start(now);
     src.stop(now + duration + 0.02);
+    setTimeout(releaseVoice, Math.ceil((duration + 0.16) * 1000));
 }
 
 function playShotSfx(classDef, loudness = 1) {
@@ -2216,7 +2227,7 @@ function playUiSfx(kind = 'click', opts = {}) {
     const now = performance.now();
     const force = !!opts.force;
     if (!force && now - SFX.lastUiAt < 35) return;
-    ensureAudioUnlocked();
+    requestAudioUnlockBoost();
     SFX.lastUiAt = now;
     if (kind === 'start') {
         playTone({ type: 'triangle', freq: 340, freqEnd: 560, duration: 0.09, volume: 0.11, force });
@@ -4414,6 +4425,7 @@ function detectMobile() {
 
 resize();
 loadSfxSettings();
+SFX.enabled = true;
 setMasterVolume(0.8);
 saveSfxSettings();
 syncSoundControls();
