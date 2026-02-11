@@ -46,7 +46,7 @@
         }
 
         .overlay {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -104,8 +104,86 @@
             overflow: hidden;
         }
 
+        #mainMenu .screen-panel {
+            max-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 18px);
+            overflow: hidden;
+        }
+
+        #mainMenu.compact .screen-panel {
+            padding: 16px 14px;
+            gap: 8px;
+        }
+
+        #mainMenu.compact h1 {
+            margin: 0;
+            font-size: clamp(2.25rem, 9vw, 4.5rem);
+            line-height: 0.88;
+        }
+
+        #mainMenu.compact p {
+            font-size: clamp(0.84rem, 2.45vw, 1rem);
+            line-height: 1.24;
+            margin: 0 0 2px;
+        }
+
+        #mainMenu.compact button {
+            margin: 4px 0;
+            padding: 10px 16px;
+            min-width: min(280px, 84vw);
+            font-size: clamp(0.95rem, 2.85vw, 1.35rem);
+        }
+
+        #mainMenu.compact-tight .screen-panel {
+            padding: 12px 10px;
+            gap: 5px;
+        }
+
+        #mainMenu.compact-tight h1 {
+            margin: 0;
+            font-size: clamp(2rem, 8vw, 3.8rem);
+            line-height: 0.86;
+        }
+
+        #mainMenu.compact-tight p {
+            font-size: clamp(0.76rem, 2.1vw, 0.9rem);
+            line-height: 1.14;
+            margin: 0;
+        }
+
+        #mainMenu.compact-tight button {
+            margin: 3px 0;
+            padding: 9px 14px;
+            min-width: min(260px, 82vw);
+            font-size: clamp(0.86rem, 2.5vw, 1.2rem);
+        }
+
+        #mainMenu.compact-ultra .screen-panel {
+            padding: 10px 8px;
+            gap: 4px;
+        }
+
+        #mainMenu.compact-ultra h1 {
+            margin: 0;
+            font-size: clamp(1.7rem, 7vw, 3.2rem);
+            line-height: 0.82;
+        }
+
+        #mainMenu.compact-ultra p {
+            font-size: clamp(0.7rem, 1.9vw, 0.84rem);
+            line-height: 1.08;
+            margin: 0;
+        }
+
+        #mainMenu.compact-ultra button {
+            margin: 2px 0;
+            padding: 7px 12px;
+            min-width: min(240px, 80vw);
+            font-size: clamp(0.8rem, 2.2vw, 1.05rem);
+        }
+
         #howToPlay,
-        #settingsMenu {
+        #settingsMenu,
+        #colorMenu {
             overflow: hidden;
             overscroll-behavior: none;
             touch-action: none;
@@ -129,11 +207,638 @@
 
         #howToPlay .screen-panel {
             width: min(94vw, 760px);
+            max-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 24px);
+            gap: 10px;
+        }
+
+        #howToPlay p {
+            max-width: min(100%, 700px);
+            margin: 0;
+            line-height: 1.42;
+        }
+
+        #howToPlay.compact .screen-panel {
+            padding: 16px 18px;
+            gap: 7px;
+        }
+
+        #howToPlay.compact h2 {
+            margin: 0;
+            font-size: clamp(1.55rem, 5vw, 2.2rem);
+        }
+
+        #howToPlay.compact p {
+            font-size: clamp(0.82rem, 2.2vw, 0.98rem);
+            line-height: 1.28;
+        }
+
+        #howToPlay.compact .back {
+            margin-top: 4px;
+            min-width: min(200px, 62vw);
+            padding: 8px 16px;
+        }
+
+        #howToPlay.compact-tight .screen-panel {
+            padding: 12px 14px;
+            gap: 5px;
+        }
+
+        #howToPlay.compact-tight h2 {
+            margin: 0;
+            font-size: clamp(1.35rem, 4.2vw, 1.95rem);
+        }
+
+        #howToPlay.compact-tight p {
+            font-size: clamp(0.76rem, 1.95vw, 0.9rem);
+            line-height: 1.2;
+        }
+
+        #howToPlay.compact-tight .back {
+            margin-top: 2px;
+            min-width: min(180px, 58vw);
+            padding: 7px 14px;
         }
 
         #settingsMenu .screen-panel {
             width: min(92vw, 540px);
             gap: 10px;
+        }
+
+        #colorMenu .screen-panel {
+            width: min(94vw, 560px);
+            max-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 16px);
+            padding: clamp(14px, 2.2vh, 22px) clamp(12px, 3vw, 18px);
+            gap: clamp(8px, 1.8vh, 12px);
+            overflow: hidden;
+        }
+
+        #colorMenu h2 {
+            margin: 0;
+            line-height: 0.95;
+        }
+
+        #colorMenu p {
+            max-width: min(100%, 520px);
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .color-picker-wrap {
+            width: min(520px, 94vw);
+            display: grid;
+            grid-template-columns: 1fr;
+            justify-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: linear-gradient(160deg, rgba(14, 20, 30, 0.44), rgba(26, 33, 42, 0.34));
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 8px 18px rgba(0, 0, 0, 0.2);
+            box-sizing: border-box;
+        }
+
+        #playerColorBoardWrap {
+            position: relative;
+            width: clamp(170px, 48vw, 320px);
+            aspect-ratio: 1 / 1;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.26);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            touch-action: none;
+            contain: layout paint;
+        }
+
+        #playerColorBoard {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        #playerHueSlider {
+            width: min(100%, 320px);
+            height: 10px;
+            margin: 0;
+            border-radius: 999px;
+            appearance: none;
+            -webkit-appearance: none;
+            background: linear-gradient(
+                90deg,
+                #ff0000 0%,
+                #ffff00 17%,
+                #00ff00 33%,
+                #00ffff 50%,
+                #0000ff 67%,
+                #ff00ff 83%,
+                #ff0000 100%
+            );
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        #playerHueSlider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            background: #11161d;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35);
+            cursor: pointer;
+        }
+
+        #playerHueSlider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            background: #11161d;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35);
+            cursor: pointer;
+        }
+
+        .tank-preview-wrap {
+            width: min(100%, 330px);
+            display: grid;
+            grid-template-columns: minmax(92px, 118px) minmax(0, 1fr);
+            align-items: start;
+            gap: 10px;
+            padding: 8px 30px 9px 14px;
+            border-radius: 10px;
+            background: rgba(10, 14, 20, 0.34);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-sizing: border-box;
+            overflow: visible;
+        }
+
+        #playerTankPreviewCanvas {
+            width: 118px;
+            height: 84px;
+            max-width: 100%;
+            aspect-ratio: 59 / 42;
+            display: block;
+            justify-self: start;
+            align-self: center;
+        }
+
+        .color-input-column {
+            min-width: 0;
+            width: min(100%, 190px);
+            display: grid;
+            gap: 7px;
+            align-content: start;
+            justify-self: start;
+        }
+
+        #playerColorHexInput {
+            min-width: 0;
+            width: 100%;
+            text-align: left;
+            font-size: 1.04rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            color: #ffffff;
+            background: rgba(7, 10, 14, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            border-radius: 9px;
+            padding: 8px 10px;
+            outline: none;
+            font-family: 'Ubuntu', sans-serif;
+            box-sizing: border-box;
+            user-select: text;
+            -webkit-user-select: text;
+            touch-action: manipulation;
+            caret-color: #ffffff;
+        }
+
+        .color-actions {
+            display: grid;
+            width: 100%;
+            grid-template-columns: repeat(2, minmax(72px, 1fr));
+            gap: 4px;
+            box-sizing: border-box;
+            padding: 0 1px 2px 0;
+            overflow: visible;
+        }
+
+        .color-actions button {
+            width: 100%;
+            min-width: 0;
+            margin: 0;
+            padding: 8px 12px;
+            border-radius: 9px;
+            font-size: 0.82rem;
+            line-height: 1;
+            letter-spacing: 0.02em;
+            box-shadow: 0 4px 0 rgba(18, 22, 28, 0.85), 0 10px 16px rgba(0, 0, 0, 0.22);
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .color-actions .random {
+            background: linear-gradient(180deg, #5f7fff 0%, #4364f0 100%);
+            box-shadow: 0 4px 0 rgba(40, 56, 140, 0.9), 0 10px 16px rgba(0, 0, 0, 0.22);
+        }
+
+        .color-actions .reset {
+            background: linear-gradient(180deg, #7a8696 0%, #5e6977 100%);
+            box-shadow: 0 4px 0 rgba(44, 50, 58, 0.9), 0 10px 16px rgba(0, 0, 0, 0.22);
+        }
+
+        #playerColorHexInput:focus {
+            border-color: rgba(255, 255, 255, 0.65);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.16);
+        }
+
+        #colorMenu .back {
+            margin-top: 2px;
+        }
+
+        #colorMenu.compact .screen-panel {
+            width: min(95vw, 520px);
+            padding: 12px 10px;
+            gap: 7px;
+        }
+
+        #colorMenu.compact #playerColorBoardWrap {
+            width: clamp(160px, 45vw, 270px);
+        }
+
+        #colorMenu.compact #playerHueSlider {
+            width: min(100%, 270px);
+        }
+
+        #colorMenu.compact .tank-preview-wrap {
+            width: min(100%, 340px);
+        }
+
+        #colorMenu.compact-tight .screen-panel {
+            width: min(96vw, 460px);
+            padding: 10px 8px;
+            gap: 6px;
+        }
+
+        #colorMenu.compact-tight h2 {
+            font-size: clamp(1.35rem, 4.2vw, 1.9rem);
+        }
+
+        #colorMenu.compact-tight p {
+            font-size: clamp(0.74rem, 1.95vw, 0.9rem);
+            line-height: 1.16;
+        }
+
+        #colorMenu.compact-tight #playerColorBoardWrap {
+            width: clamp(148px, 40vw, 225px);
+        }
+
+        #colorMenu.compact-tight #playerHueSlider {
+            width: min(100%, 225px);
+        }
+
+        #colorMenu.compact-tight .tank-preview-wrap {
+            width: min(100%, 300px);
+        }
+
+        #colorMenu.compact-tight #playerTankPreviewCanvas {
+            width: 90px;
+            height: 66px;
+        }
+
+        #colorMenu.compact-tight #playerColorHexInput {
+            font-size: 0.86rem;
+            padding: 6px 8px;
+        }
+
+        #colorMenu.compact-ultra .screen-panel {
+            width: min(97vw, 420px);
+            padding: 8px 6px;
+            gap: 4px;
+        }
+
+        #colorMenu.compact-ultra h2 {
+            font-size: clamp(1.18rem, 3.6vw, 1.5rem);
+        }
+
+        #colorMenu.compact-ultra p {
+            font-size: clamp(0.68rem, 1.7vw, 0.82rem);
+            line-height: 1.08;
+        }
+
+        #colorMenu.compact-ultra #playerColorBoardWrap {
+            width: clamp(130px, 34vw, 180px);
+        }
+
+        #colorMenu.compact-ultra #playerHueSlider {
+            width: min(100%, 180px);
+        }
+
+        #colorMenu.compact-ultra .tank-preview-wrap {
+            width: min(100%, 250px);
+        }
+
+        #colorMenu.compact-ultra #playerTankPreviewCanvas {
+            width: 76px;
+            height: 56px;
+        }
+
+        #colorMenu.compact-ultra #playerColorHexInput {
+            font-size: 0.75rem;
+            padding: 5px 6px;
+        }
+
+        #colorMenu.compact-ultra .color-actions button {
+            padding: 4px 6px;
+            font-size: 0.62rem;
+            border-radius: 8px;
+        }
+
+        #colorMenu.compact-tight .tank-preview-wrap,
+        #colorMenu.compact-ultra .tank-preview-wrap {
+            grid-template-columns: 1fr;
+            justify-items: center;
+            padding: 8px 9px 10px;
+            gap: 7px;
+        }
+
+        #colorMenu.compact-tight .color-input-column,
+        #colorMenu.compact-ultra .color-input-column {
+            width: min(100%, 200px);
+        }
+
+        #colorMenu.compact-tight .color-actions,
+        #colorMenu.compact-ultra .color-actions {
+            grid-template-columns: 1fr;
+        }
+
+        @media (max-width: 460px) {
+            #colorMenu .tank-preview-wrap {
+                width: min(100%, 290px);
+                grid-template-columns: 1fr;
+                justify-items: center;
+                padding: 9px 10px 11px;
+                gap: 8px;
+            }
+
+            #colorMenu #playerTankPreviewCanvas {
+                justify-self: center;
+            }
+
+            #colorMenu .color-input-column {
+                width: min(100%, 170px);
+                justify-self: center;
+                align-items: center;
+            }
+
+            #colorMenu .color-actions {
+                width: min(100%, 170px);
+                grid-template-columns: repeat(2, minmax(72px, 1fr));
+                justify-self: center;
+                margin-inline: auto;
+            }
+        }
+
+        @media (min-width: 701px) and (hover: none), (min-width: 701px) and (pointer: coarse) {
+            #colorMenu .screen-panel {
+                width: min(92vw, 620px);
+                padding: 12px 12px;
+                gap: 8px;
+            }
+
+            #colorMenu .color-picker-wrap {
+                grid-template-columns: minmax(180px, 280px) minmax(180px, 1fr);
+                align-items: start;
+                column-gap: 12px;
+                row-gap: 8px;
+                justify-items: stretch;
+            }
+
+            #colorMenu h2 {
+                font-size: clamp(1.75rem, 4.8vw, 2.6rem);
+            }
+
+            #colorMenu p {
+                font-size: clamp(0.9rem, 2.1vw, 1.06rem);
+            }
+
+            #playerColorBoardWrap {
+                width: clamp(180px, 42vw, 280px);
+                grid-column: 1;
+                grid-row: 1 / span 2;
+                justify-self: start;
+            }
+
+            #playerHueSlider {
+                width: min(100%, 280px);
+                grid-column: 2;
+                grid-row: 1;
+                justify-self: center;
+                align-self: center;
+            }
+
+            .tank-preview-wrap {
+                width: min(100%, 340px);
+                grid-column: 2;
+                grid-row: 2;
+                justify-self: center;
+                grid-template-columns: 1fr;
+                justify-items: center;
+            }
+
+            .tank-preview-wrap #playerTankPreviewCanvas {
+                justify-self: center;
+            }
+
+            .tank-preview-wrap .color-input-column {
+                width: min(100%, 210px);
+                justify-self: center;
+                align-items: center;
+            }
+
+            .tank-preview-wrap #playerColorHexInput {
+                text-align: center;
+            }
+
+            .tank-preview-wrap .color-actions {
+                width: min(100%, 170px);
+                justify-self: center;
+            }
+        }
+
+        @media (min-width: 701px) {
+            body.device-mobile #colorMenu .screen-panel {
+                max-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 6px);
+                max-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 6px);
+                padding: 6px 12px 5px;
+                gap: 4px;
+            }
+
+            body.device-mobile #colorMenu h2 {
+                line-height: 1.02;
+                margin: 0 0 2px;
+            }
+
+            body.device-mobile #colorMenu p {
+                margin: 0 0 2px;
+                line-height: 1.22;
+            }
+
+            body.device-mobile #colorMenu .color-picker-wrap {
+                padding: 7px;
+                gap: 6px;
+            }
+
+            body.device-mobile #colorMenu .color-picker-wrap {
+                grid-template-columns: minmax(180px, 280px) minmax(180px, 1fr);
+                align-items: start;
+                column-gap: 12px;
+                row-gap: 8px;
+                justify-items: stretch;
+            }
+
+            body.device-mobile #colorMenu #playerColorBoardWrap {
+                grid-column: 1;
+                grid-row: 1 / span 2;
+                justify-self: start;
+            }
+
+            body.device-mobile #colorMenu #playerHueSlider {
+                grid-column: 2;
+                grid-row: 1;
+                justify-self: center;
+                align-self: center;
+                display: block;
+                margin-inline: auto;
+            }
+
+            body.device-mobile #colorMenu .tank-preview-wrap {
+                grid-column: 2;
+                grid-row: 2;
+                justify-self: center;
+                align-self: start;
+                grid-template-columns: 1fr;
+                justify-items: center;
+                align-content: start;
+                row-gap: 8px;
+                padding: 10px 14px 14px;
+                margin-inline: auto;
+            }
+
+            body.device-mobile #colorMenu .tank-preview-wrap #playerTankPreviewCanvas {
+                justify-self: center;
+                margin-inline: auto;
+            }
+
+            body.device-mobile #colorMenu .tank-preview-wrap .color-input-column {
+                width: min(100%, 210px);
+                justify-self: center;
+                align-items: center;
+            }
+
+            body.device-mobile #colorMenu .tank-preview-wrap #playerColorHexInput {
+                text-align: center;
+            }
+
+            body.device-mobile #colorMenu .tank-preview-wrap .color-actions {
+                width: min(100%, 170px);
+                justify-self: center;
+            }
+
+            body.device-mobile #colorMenu .back {
+                margin-top: 3px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            #settingsMenu .settings-option .checkbox-option {
+                width: min(320px, 82vw);
+                margin: 10px auto 0;
+                padding: 6px 8px;
+                gap: 8px;
+            }
+
+            #settingsMenu .settings-option .checkbox-option label {
+                font-size: clamp(0.84rem, 2.7vw, 0.98rem);
+                line-height: 1.1;
+                white-space: nowrap;
+            }
+
+            #settingsMenu .settings-option .checkbox-option input[type="checkbox"] {
+                width: 18px;
+                height: 18px;
+                flex: 0 0 auto;
+            }
+
+            #colorMenu .color-picker-wrap {
+                width: min(520px, 86vw);
+                margin-inline: auto;
+            }
+
+            #colorMenu .screen-panel {
+                width: min(95vw, 440px);
+                padding: 10px 8px;
+                gap: 7px;
+            }
+
+            #colorMenu h2 {
+                font-size: clamp(1.55rem, 7.2vw, 2.1rem);
+            }
+
+            #colorMenu p {
+                font-size: clamp(0.8rem, 3vw, 0.94rem);
+            }
+
+            #playerColorBoardWrap {
+                width: clamp(150px, 64vw, 250px);
+            }
+
+            #playerHueSlider {
+                width: min(100%, 250px);
+            }
+
+            .tank-preview-wrap {
+                width: min(100%, 292px);
+            }
+
+            #colorMenu .tank-preview-wrap .color-input-column {
+                width: min(100%, 170px);
+                justify-self: center;
+                align-items: center;
+            }
+
+            #colorMenu .tank-preview-wrap #playerColorHexInput {
+                width: 100%;
+                text-align: center;
+                font-size: 0.75rem;
+                padding: 5px 6px;
+            }
+
+            #colorMenu .tank-preview-wrap .color-actions {
+                width: min(100%, 170px);
+                justify-self: center;
+                margin-inline: auto;
+            }
+
+            #colorMenu .tank-preview-wrap .color-actions button {
+                padding: 4px 6px;
+                font-size: 0.62rem;
+                border-radius: 8px;
+            }
+
+            #playerTankPreviewCanvas {
+                width: 92px;
+                height: 68px;
+            }
+
+            #playerColorHexInput {
+                font-size: 0.86rem;
+                padding: 6px 8px;
+            }
         }
 
         #settingsMenu .settings-option {
@@ -212,6 +917,12 @@
         button.settings { 
             background: linear-gradient(180deg, #26c983 0%, #199f67 100%);
             box-shadow: 0 7px 0 rgba(16, 96, 63, 0.95), 0 16px 22px rgba(0, 0, 0, 0.24);
+        }
+
+        button.customize {
+            background: linear-gradient(180deg, #ffbb58 0%, #ff8f1e 56%, #f07300 100%);
+            border-color: rgba(255, 255, 255, 0.35);
+            box-shadow: 0 7px 0 rgba(150, 70, 12, 0.95), 0 16px 22px rgba(0, 0, 0, 0.24);
         }
         
         button.back { 
@@ -961,6 +1672,34 @@
             }
         }
 
+        @media (max-height: 560px) and (min-width: 700px) and (hover: none),
+               (max-height: 560px) and (min-width: 700px) and (pointer: coarse) {
+            #mainMenu .screen-panel {
+                width: min(95vw, 640px);
+                padding: 12px 10px;
+                gap: 5px;
+            }
+
+            #mainMenu h1 {
+                margin: 0;
+                font-size: clamp(1.9rem, 8vw, 3.4rem);
+                line-height: 0.83;
+            }
+
+            #mainMenu p {
+                margin: 0;
+                font-size: clamp(0.74rem, 2vw, 0.94rem);
+                line-height: 1.14;
+            }
+
+            #mainMenu button {
+                margin: 3px 0;
+                padding: 8px 14px;
+                min-width: min(260px, 82vw);
+                font-size: clamp(0.86rem, 2.35vw, 1.18rem);
+            }
+        }
+
         #mainMenu p,
         #howToPlay p,
         #settingsMenu p,
@@ -1124,7 +1863,164 @@
             }
         }
 
+        body.ui-mobile #upgradeContainer {
+            left: -204px;
+            right: auto;
+            top: calc(env(safe-area-inset-top) + 30px);
+            bottom: auto;
+            transform: none;
+            width: 204px;
+            max-height: 280px;
+            border-radius: 0 10px 10px 0;
+            transition: left 0.25s ease-in-out;
+            padding: 6px;
+            gap: 3px;
+            overflow-y: hidden;
+        }
+
+        body.ui-mobile #upgradeContainer.open {
+            left: 6px;
+            bottom: auto;
+        }
+
+        body.ui-mobile #upgradeToggleBtn {
+            top: 50%;
+            left: 6px;
+            bottom: auto;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 40px;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.98rem;
+        }
+
+        body.ui-mobile .stat-row {
+            min-height: 28px;
+            padding: 3px 5px;
+        }
+
+        body.ui-mobile .stat-label {
+            width: 74px;
+            flex: 0 0 74px;
+            font-size: 0.69rem;
+        }
+
+        body.ui-mobile .bar-segment {
+            width: 5px;
+            height: 10px;
+        }
+
+        body.ui-mobile .stat-cost {
+            right: 4px;
+            font-size: 0.6rem;
+        }
+
+        body.ui-mobile #topHud {
+            top: calc(env(safe-area-inset-top) + 8px);
+            font-size: 1.25rem;
+            padding: 8px 14px;
+        }
+
+        body.ui-mobile #homeBtn,
+        body.ui-mobile #pauseBtn {
+            width: 34px;
+            height: 34px;
+            min-width: 34px;
+            min-height: 34px;
+            max-width: 34px;
+            max-height: 34px;
+        }
+
+        body.ui-mobile #hud {
+            bottom: 210px;
+            width: min(700px, 92%);
+        }
+
+        body.ui-mobile #classShopBtn {
+            top: calc(env(safe-area-inset-top) + 0px);
+            right: calc(env(safe-area-inset-right) + 0px);
+            min-width: 94px;
+            padding: 6px 6px;
+            font-size: 0.66rem;
+            border-radius: 7px;
+        }
+
+        body.ui-mobile #classShopMenu {
+            top: calc(env(safe-area-inset-top) + 42px);
+            right: calc(env(safe-area-inset-right) + 0px);
+            left: auto;
+            bottom: auto;
+            transform: none;
+            width: min(168px, 53vw);
+            height: 246px;
+            max-height: 246px;
+            padding: 6px;
+            gap: 4px;
+            border-radius: 10px;
+        }
+
+        body.ui-mobile .class-card {
+            padding: 6px 6px;
+            min-height: 76px;
+            height: 76px;
+            font-size: 0.72rem;
+            line-height: 1.1;
+            overflow: visible;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        body.ui-mobile .class-role {
+            font-size: 0.6rem;
+            min-height: auto;
+            margin-top: 1px;
+            line-height: 1.1;
+            white-space: normal;
+            overflow: visible;
+        }
+
+        body.ui-mobile .class-stats {
+            font-size: 0.56rem;
+            margin-top: 1px;
+            line-height: 1.1;
+            white-space: normal;
+            overflow: visible;
+        }
+
+        body.ui-mobile .class-price {
+            font-size: 0.82rem;
+            margin-top: 1px;
+            line-height: 1.1;
+        }
+
+        body.ui-mobile .joystick-container {
+            width: 130px;
+            height: 130px;
+        }
+
+        body.ui-mobile .joystick-stick {
+            width: 41%;
+            height: 41%;
+            top: 29.5%;
+            left: 29.5%;
+        }
+
+        body.ui-mobile #leftJoystick {
+            bottom: calc(env(safe-area-inset-bottom) + 16px);
+            left: calc(env(safe-area-inset-left) + 14px);
+        }
+
+        body.ui-mobile #rightJoystick {
+            bottom: calc(env(safe-area-inset-bottom) + 16px);
+            right: calc(env(safe-area-inset-right) + 14px);
+        }
+
         @media (max-width: 700px) {
+            body.ui-mobile #upgradeContainer {
+                top: calc(env(safe-area-inset-top) + 68px);
+            }
+
             #upgradeContainer {
                 left: -190px;
                 width: 190px;
@@ -1255,10 +2151,11 @@
     <div id="mainMenu" class="overlay">
         <div class="screen-panel">
             <h1>TANKS.PLAY V0.2</h1>
-            <p>Survive, Farm Shapes, Upgrade Stats, and Destroy Bots.</p>
+            <p>Battle shapes, upgrade stats, unlock classes, and outplay bots.</p>
             <button onclick="startGame()">Play</button>
             <button class="secondary" onclick="showHowTo()">How to Play</button>
             <button class="settings" onclick="showSettings()">Settings</button>
+            <button class="customize" onclick="showColorMenu()">Character Color</button>
         </div>
     </div>
 
@@ -1266,12 +2163,15 @@
         <div class="screen-panel">
             <h2>How to Play</h2>
             <p>
-                <b>WASD</b> to Move<br>
-                <b>Mouse</b> to Aim & Shoot<br><br>
-                Destroy <b>Squares, Triangles, and Pentagons</b> to earn Score & Coins.<br>
-                Crashing into shapes damages them heavily but hurts you slightly.<br>
-                Click the <b>Arrow</b> on the left edge of the screen to open the <b>Upgrade Menu</b>.<br>
-                Reach high scores to unlock powerful tanks!
+                <b>Desktop:</b> WASD to move. Mouse to aim and shoot.<br>
+                <b>Mobile/Tablet:</b> Left stick moves. Right stick aims and fires.<br><br>
+                Destroy <b>all shapes</b> (Squares, Triangles, Pentagons, and rarer polygons) to earn <b>Score + Coins</b>.<br>
+                Ramming shapes damages them heavily, but also hurts your tank.<br>
+                Bigger shapes are rarer and give better rewards. <b>Star shapes</b> are the rarest and toughest.<br>
+                Use the <b>left arrow</b> to open the <b>Upgrade Menu</b> and spend coins on stats.<br>
+                Use <b>Change Class</b> (top-right) to buy stronger tanks with unique weapons.<br>
+                Difficulty settings change bot strength and overall pressure.<br>
+                Use <b>Pause</b> or <b>Home</b> at the top at any time.
             </p>
             <button class="back" onclick="hideHowTo()">Back</button>
         </div>
@@ -1283,44 +2183,68 @@
             <div class="settings-option">
                 <label for="controlMode">Control Mode:</label>
                 <select id="controlMode" onchange="updateControlMode()">
-                    <option value="pc">PC (Mouse & Keyboard)</option>
-                    <option value="mobile">Mobile (Touch Controls)</option>
+                    <option value="pc">Desktop (Mouse & Keyboard)</option>
+                    <option value="mobile">Mobile / Tablet (Touch Controls)</option>
                 </select>
             </div>
             <div class="settings-option">
                 <label for="difficultyMode">Difficulty:</label>
                 <select id="difficultyMode" onchange="updateDifficulty()">
-                    <option value="test">Test Mode</option>
-                    <option value="easy">Easy Mode</option>
-                    <option value="normal" selected>Normal Mode</option>
-                    <option value="hard">Hard Mode</option>
+                    <option value="test">Test (Sandbox)</option>
+                    <option value="easy">Easy</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="hard">Hard</option>
                 </select>
-                <div class="difficulty-description" id="difficultyDesc">Regular gameplay experience</div>
+                <div class="difficulty-description" id="difficultyDesc">Standard gameplay balance</div>
             </div>
             <div class="checkbox-option" id="testModeToggle" style="display: none;">
                 <input type="checkbox" id="canDieToggle" onchange="updateCanDie()">
-                <label for="canDieToggle">Can Die (Test Mode)</label>
+                <label for="canDieToggle">Allow Death in Test Mode</label>
             </div>
             <div class="settings-option">
-                <label for="soundEnabledToggle">Sound Effects: <span id="soundStatusLabel">ON</span></label>
+                <label for="soundEnabledToggle">Sound: <span id="soundStatusLabel">ON</span></label>
                 <div class="checkbox-option">
                     <input type="checkbox" id="soundEnabledToggle" onchange="updateSoundEnabled()">
-                    <label for="soundEnabledToggle">Enable Sounds</label>
+                    <label for="soundEnabledToggle">Enable Sound Effects</label>
                 </div>
             </div>
             <div class="settings-option">
-                <label for="soundVolumeSlider">Sound Volume: <span class="inline-value" id="soundVolumeValue">80%</span></label>
+                <label for="soundVolumeSlider">Master Volume: <span class="inline-value" id="soundVolumeValue">80%</span></label>
                 <input type="range" id="soundVolumeSlider" min="0" max="100" step="1" value="80" oninput="updateSoundVolume(true)" onchange="updateSoundVolume(false)">
             </div>
             <button class="back" onclick="hideSettings()">Back</button>
         </div>
     </div>
 
+    <div id="colorMenu" class="overlay hidden">
+        <div class="screen-panel">
+            <h2>Character Color</h2>
+            <p>Choose your tank color. Your bullets automatically use the same color.</p>
+            <div class="color-picker-wrap">
+                <div id="playerColorBoardWrap">
+                    <canvas id="playerColorBoard" width="320" height="320"></canvas>
+                </div>
+                <input type="range" id="playerHueSlider" min="0" max="360" step="1" value="195" oninput="updatePlayerHue(true)" onchange="updatePlayerHue(false)">
+                <div class="tank-preview-wrap">
+                    <canvas id="playerTankPreviewCanvas" width="118" height="84" aria-hidden="true"></canvas>
+                    <div class="color-input-column">
+                        <input id="playerColorHexInput" type="text" value="#16B9EA" maxlength="7" placeholder="#16B9EA" spellcheck="false" autocomplete="off" autocapitalize="characters" inputmode="text">
+                        <div class="color-actions">
+                            <button type="button" class="random" onclick="randomizePlayerColor()">Random</button>
+                            <button type="button" class="reset" onclick="resetPlayerColorDefault()">Default</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="back" onclick="hideColorMenu()">Back</button>
+        </div>
+    </div>
+
     <div id="loseScreen" class="overlay hidden">
         <div class="screen-panel">
-            <h2>GAME OVER</h2>
-            <p>Your journey ends here. You achieved a score of <span id="finalScore">0</span>.</p>
-            <button onclick="startGame()">Reset</button>
+            <h2>Game Over</h2>
+            <p>You were destroyed. Final score: <span id="finalScore">0</span>.</p>
+            <button onclick="startGame()">Play Again</button>
             <button class="secondary" onclick="showMainMenu()">Home</button>
         </div>
     </div>
@@ -1354,7 +2278,7 @@
 
     <div id="classShopBtn" onclick="toggleClassShop()">
         Change Class<br>
-        <span style="font-size: 0.8rem">(Requires Coins)</span>
+        <span style="font-size: 0.8rem">(Costs Coins)</span>
     </div>
     <div id="classShopMenu"></div>
 
@@ -1389,6 +2313,12 @@ const COLORS = {
     shapeSquare: '#ffe66b',
     shapeTriangle: '#ff6f80',
     shapePentagon: '#8b83ff',
+    shapeHexagon: '#52d9d4',
+    shapeHeptagon: '#ffaf58',
+    shapeOctagon: '#6fe87c',
+    shapeDecagon: '#ff76d9',
+    shapeDodecagon: '#7cc5ff',
+    shapeStar: '#ffd15a',
     barrel: '#8e98a8',
     barrelBorder: '#5a6474'
 };
@@ -1426,6 +2356,7 @@ let cameraShake = 0;
 let playerDamageFlash = 0;
 let lastFrameTime = 0;
 let player;
+let playerColorChoice = COLORS.player;
 let camera = { x: 0, y: 0 };
 let isUpgradeMenuOpen = false;
 let controlMode = 'pc';
@@ -1433,6 +2364,16 @@ let difficulty = 'normal';
 let canDieInTestMode = false;
 let isPaused = false;
 let pauseFade = 0;
+let recentBotColorHistory = [];
+const PLAYER_COLOR_DEFAULT = '#16b9ea';
+let playerColorHexEditing = false;
+let playerColorBoardState = {
+    hue: 195,
+    sat: 0.88,
+    val: 0.92,
+    dragging: false,
+    safeInsetPx: 16
+};
 
 const STAT_TYPES = [
     { id: 'regen', name: 'Health Regen', color: '#e69f58' },
@@ -1446,17 +2387,17 @@ const STAT_TYPES = [
 ];
 
 const CLASSES = [
-    { id: 'basic', name: 'Scout', role: 'Starter frame', price: 0, dmgRating: 1, spdRating: 2, hpRating: 1, fireMode: 'standard', scale: 1, recoil: 1, aiRange: 205, accent: '#66d9ff', barrelColor: '#9a9a9a', barrelBorder: '#707070', emblem: 'dot', guns: [{x:0, y:0, width:1.0, height:1.9, angle:0, delay:0}] },
-    { id: 'twin', name: 'Twin', role: 'Classic dual barrels', price: 2000, dmgRating: 2, spdRating: 3, hpRating: 2, fireMode: 'standard', scale: 1.02, recoil: 1.05, aiRange: 220, accent: '#00d8ff', barrelColor: '#8ea9bd', barrelBorder: '#657889', moveSpdMult: 1.04, maxHpMult: 1.03, guns: [{x:0.5, y:0, width:1.0, height:1.9, angle:0, delay:0}, {x:-0.5, y:0, width:1.0, height:1.9, angle:0, delay:0.5}], emblem: 'double' },
-    { id: 'raptor', name: 'Raptor', role: 'Fast alternating guns', price: 3200, dmgRating: 2, spdRating: 5, hpRating: 1, fireMode: 'alternate', scale: 1.03, recoil: 1.05, aiRange: 210, accent: '#00ff99', barrelColor: '#8db79a', barrelBorder: '#68886f', moveSpdMult: 1.22, maxHpMult: 0.92, bulletDmgMult: 0.92, guns: [{x:0.45, y:0, width:0.9, height:1.85, angle:0.05, delay:0}, {x:-0.45, y:0, width:0.9, height:1.85, angle:-0.05, delay:0.3}, {x:0, y:0, width:0.75, height:1.35, angle:Math.PI, delay:0.2, reloadMult:1.15, dmgMult:0.72}], emblem: 'arrow' },
+    { id: 'basic', name: 'Scout', role: 'Balanced starter tank', price: 0, dmgRating: 1, spdRating: 2, hpRating: 1, fireMode: 'standard', scale: 1, recoil: 1, aiRange: 205, accent: '#66d9ff', barrelColor: '#9a9a9a', barrelBorder: '#707070', emblem: 'dot', guns: [{x:0, y:0, width:1.0, height:1.9, angle:0, delay:0}] },
+    { id: 'twin', name: 'Twin', role: 'Reliable dual cannons', price: 2000, dmgRating: 2, spdRating: 3, hpRating: 2, fireMode: 'standard', scale: 1.02, recoil: 1.05, aiRange: 220, accent: '#00d8ff', barrelColor: '#8ea9bd', barrelBorder: '#657889', moveSpdMult: 1.04, maxHpMult: 1.03, guns: [{x:0.5, y:0, width:1.0, height:1.9, angle:0, delay:0}, {x:-0.5, y:0, width:1.0, height:1.9, angle:0, delay:0.5}], emblem: 'double' },
+    { id: 'raptor', name: 'Raptor', role: 'Fast alternating fire', price: 3200, dmgRating: 2, spdRating: 5, hpRating: 1, fireMode: 'alternate', scale: 1.03, recoil: 1.05, aiRange: 210, accent: '#00ff99', barrelColor: '#8db79a', barrelBorder: '#68886f', moveSpdMult: 1.22, maxHpMult: 0.92, bulletDmgMult: 0.92, guns: [{x:0.45, y:0, width:0.9, height:1.85, angle:0.05, delay:0}, {x:-0.45, y:0, width:0.9, height:1.85, angle:-0.05, delay:0.3}, {x:0, y:0, width:0.75, height:1.35, angle:Math.PI, delay:0.2, reloadMult:1.15, dmgMult:0.72}], emblem: 'arrow' },
     { id: 'cyclone', name: 'Cyclone', role: '360-degree bullet ring', price: 4500, dmgRating: 3, spdRating: 3, hpRating: 2, fireMode: 'radial', fireConfig: { count: 14, speedMult: 0.95, dmgMult: 0.74, penMult: 0.78, sizeMult: 0.82, reloadMult: 1.08, spinStep: 0.22 }, scale: 1.08, recoil: 0.55, aiRange: 185, accent: '#7dffff', barrelColor: '#87a6b3', barrelBorder: '#657b85', moveSpdMult: 1.05, bulletSpdMult: 0.95, guns: [{x:0, y:0, width:0.82, height:1.25, angle:0, delay:0}], emblem: 'burst' },
     { id: 'sniper', name: 'Sniper', role: 'Long-range precision cannon', price: 5000, dmgRating: 4, spdRating: 2, hpRating: 1, fireMode: 'standard', scale: 1.08, recoil: 2.1, aiRange: 345, accent: '#ffb000', barrelColor: '#b29a83', barrelBorder: '#846f5b', moveSpdMult: 0.9, maxHpMult: 0.9, bulletSpdMult: 1.3, bulletDmgMult: 1.2, guns: [{x:0, y:0, width:0.95, height:2.7, angle:0, delay:0, speedMult:1.75, dmgMult:2.25, reloadMult:0.5}], emblem: 'diamond' },
-    { id: 'trident', name: 'Trident', role: '3-way front fan', price: 7000, dmgRating: 3, spdRating: 3, hpRating: 3, fireMode: 'fan', fireConfig: { count: 3, spread: 0.14, speedMult: 1.05, dmgMult: 0.95, reloadMult: 0.95 }, scale: 1.1, recoil: 1.2, aiRange: 230, accent: '#a500ff', barrelColor: '#9e93b9', barrelBorder: '#726b86', moveSpdMult: 0.97, maxHpMult: 1.08, bodyDmgMult: 1.05, guns: [{x:0.62, y:0, width:0.84, height:1.92, angle:-0.08, delay:0}, {x:0, y:0, width:1.0, height:2.05, angle:0, delay:0.25}, {x:-0.62, y:0, width:0.84, height:1.92, angle:0.08, delay:0.5}], emblem: 'triangle' },
-    { id: 'broadside', name: 'Broadside', role: 'Side cannons + frontal pressure', price: 8200, dmgRating: 4, spdRating: 2, hpRating: 3, fireMode: 'standard', scale: 1.14, recoil: 1.45, aiRange: 190, accent: '#4d8dff', barrelColor: '#8f9eb4', barrelBorder: '#68758a', moveSpdMult: 0.95, maxHpMult: 1.15, bodyDmgMult: 1.12, bulletPenMult: 1.1, guns: [{x:0, y:0, width:0.9, height:1.9, angle:0, delay:0}, {x:0, y:0, width:0.78, height:1.55, angle:Math.PI / 2, delay:0.2, dmgMult:0.85}, {x:0, y:0, width:0.78, height:1.55, angle:-Math.PI / 2, delay:0.45, dmgMult:0.85}], emblem: 'square' },
-    { id: 'shatter', name: 'Shatter', role: 'Close-range pellet blast', price: 9600, dmgRating: 5, spdRating: 2, hpRating: 3, fireMode: 'shotgun', fireConfig: { count: 8, spread: 0.37, speedMult: 0.8, dmgMult: 0.6, penMult: 0.75, sizeMult: 0.88, reloadMult: 0.92 }, scale: 1.16, recoil: 1.95, aiRange: 135, accent: '#ffd600', barrelColor: '#b9aa88', barrelBorder: '#8a7d62', moveSpdMult: 0.9, maxHpMult: 1.2, bodyDmgMult: 1.2, bulletDmgMult: 1.1, guns: [{x:0, y:0, width:1.18, height:1.45, angle:0, delay:0}], emblem: 'burst' },
-    { id: 'aegis', name: 'Aegis', role: '4-direction defensive stream', price: 11200, dmgRating: 4, spdRating: 1, hpRating: 5, fireMode: 'cross', fireConfig: { directions: 4, speedMult: 1, dmgMult: 0.92, penMult: 1.1, reloadMult: 0.88 }, scale: 1.22, recoil: 1.2, aiRange: 175, accent: '#00f6ff', barrelColor: '#8fa8b8', barrelBorder: '#667684', moveSpdMult: 0.82, maxHpMult: 1.35, bodyDmgMult: 1.35, bulletPenMult: 1.22, guns: [{x:0, y:0, width:0.76, height:1.72, angle:0, delay:0}, {x:0, y:0, width:0.76, height:1.72, angle:Math.PI / 2, delay:0.25}, {x:0, y:0, width:0.76, height:1.72, angle:Math.PI, delay:0.5}, {x:0, y:0, width:0.76, height:1.72, angle:-Math.PI / 2, delay:0.75}], emblem: 'square' },
+    { id: 'trident', name: 'Trident', role: 'Three-way forward fan', price: 7000, dmgRating: 3, spdRating: 3, hpRating: 3, fireMode: 'fan', fireConfig: { count: 3, spread: 0.14, speedMult: 1.05, dmgMult: 0.95, reloadMult: 0.95 }, scale: 1.1, recoil: 1.2, aiRange: 230, accent: '#a500ff', barrelColor: '#9e93b9', barrelBorder: '#726b86', moveSpdMult: 0.97, maxHpMult: 1.08, bodyDmgMult: 1.05, guns: [{x:0.62, y:0, width:0.84, height:1.92, angle:-0.08, delay:0}, {x:0, y:0, width:1.0, height:2.05, angle:0, delay:0.25}, {x:-0.62, y:0, width:0.84, height:1.92, angle:0.08, delay:0.5}], emblem: 'triangle' },
+    { id: 'broadside', name: 'Broadside', role: 'Side cannons with frontal fire', price: 8200, dmgRating: 4, spdRating: 2, hpRating: 3, fireMode: 'standard', scale: 1.14, recoil: 1.45, aiRange: 190, accent: '#4d8dff', barrelColor: '#8f9eb4', barrelBorder: '#68758a', moveSpdMult: 0.95, maxHpMult: 1.15, bodyDmgMult: 1.12, bulletPenMult: 1.1, guns: [{x:0, y:0, width:0.9, height:1.9, angle:0, delay:0}, {x:0, y:0, width:0.78, height:1.55, angle:Math.PI / 2, delay:0.2, dmgMult:0.85}, {x:0, y:0, width:0.78, height:1.55, angle:-Math.PI / 2, delay:0.45, dmgMult:0.85}], emblem: 'square' },
+    { id: 'shatter', name: 'Shatter', role: 'Close-range burst spread', price: 9600, dmgRating: 5, spdRating: 2, hpRating: 3, fireMode: 'shotgun', fireConfig: { count: 8, spread: 0.37, speedMult: 0.8, dmgMult: 0.6, penMult: 0.75, sizeMult: 0.88, reloadMult: 0.92 }, scale: 1.16, recoil: 1.95, aiRange: 135, accent: '#ffd600', barrelColor: '#b9aa88', barrelBorder: '#8a7d62', moveSpdMult: 0.9, maxHpMult: 1.2, bodyDmgMult: 1.2, bulletDmgMult: 1.1, guns: [{x:0, y:0, width:1.18, height:1.45, angle:0, delay:0}], emblem: 'burst' },
+    { id: 'aegis', name: 'Aegis', role: '4-way defensive fire', price: 11200, dmgRating: 4, spdRating: 1, hpRating: 5, fireMode: 'cross', fireConfig: { directions: 4, speedMult: 1, dmgMult: 0.92, penMult: 1.1, reloadMult: 0.88 }, scale: 1.22, recoil: 1.2, aiRange: 175, accent: '#00f6ff', barrelColor: '#8fa8b8', barrelBorder: '#667684', moveSpdMult: 0.82, maxHpMult: 1.35, bodyDmgMult: 1.35, bulletPenMult: 1.22, guns: [{x:0, y:0, width:0.76, height:1.72, angle:0, delay:0}, {x:0, y:0, width:0.76, height:1.72, angle:Math.PI / 2, delay:0.25}, {x:0, y:0, width:0.76, height:1.72, angle:Math.PI, delay:0.5}, {x:0, y:0, width:0.76, height:1.72, angle:-Math.PI / 2, delay:0.75}], emblem: 'square' },
     { id: 'phantom', name: 'Phantom', role: 'High-speed twin lances', price: 13000, dmgRating: 5, spdRating: 4, hpRating: 2, fireMode: 'paired', fireConfig: { spread: 0.06, speedMult: 1.35, dmgMult: 1.15, penMult: 1.05, reloadMult: 0.95 }, scale: 1.17, recoil: 2.2, aiRange: 320, accent: '#ff4d8d', barrelColor: '#b08a95', barrelBorder: '#815f68', moveSpdMult: 1.15, maxHpMult: 0.92, bulletSpdMult: 1.4, bulletDmgMult: 1.25, guns: [{x:0.35, y:0, width:0.72, height:2.35, angle:0.02, delay:0}, {x:-0.35, y:0, width:0.72, height:2.35, angle:-0.02, delay:0.25}], emblem: 'crosshair' },
-    { id: 'destroyer', name: 'Destroyer', role: 'Ultimate twin siege cannons', price: 18000, dmgRating: 5, spdRating: 2, hpRating: 5, fireMode: 'paired', fireConfig: { spread: 0.12, speedMult: 1.02, dmgMult: 1.45, penMult: 1.28, reloadMult: 0.74 }, scale: 1.52, recoil: 4.9, aiRange: 300, accent: '#ff2a2a', barrelColor: '#a08181', barrelBorder: '#775e5e', moveSpdMult: 0.74, maxHpMult: 1.52, bodyDmgMult: 1.46, bulletPenMult: 1.48, bulletDmgMult: 1.72, guns: [{x:0.45, y:0, width:1.04, height:2.3, angle:0.03, delay:0, speedMult:1.05, dmgMult:4.4, reloadMult:0.36, sizeMult:1.65}, {x:-0.45, y:0, width:1.04, height:2.3, angle:-0.03, delay:0.2, speedMult:1.05, dmgMult:4.4, reloadMult:0.36, sizeMult:1.65}], emblem: 'star' }
+    { id: 'destroyer', name: 'Destroyer', role: 'Ultimate siege dual cannons', price: 18000, dmgRating: 5, spdRating: 2, hpRating: 5, fireMode: 'paired', fireConfig: { spread: 0.12, speedMult: 1.02, dmgMult: 1.45, penMult: 1.28, reloadMult: 0.74 }, scale: 1.52, recoil: 4.9, aiRange: 300, accent: '#ff2a2a', barrelColor: '#a08181', barrelBorder: '#775e5e', moveSpdMult: 0.74, maxHpMult: 1.52, bodyDmgMult: 1.46, bulletPenMult: 1.48, bulletDmgMult: 1.72, guns: [{x:0.45, y:0, width:1.04, height:2.3, angle:0.03, delay:0, speedMult:1.05, dmgMult:4.4, reloadMult:0.36, sizeMult:1.65}, {x:-0.45, y:0, width:1.04, height:2.3, angle:-0.03, delay:0.2, speedMult:1.05, dmgMult:4.4, reloadMult:0.36, sizeMult:1.65}], emblem: 'star' }
 ];
 
 const SHOP_CLASS_ORDER = ['twin', 'raptor', 'cyclone', 'sniper', 'trident', 'broadside', 'shatter', 'aegis', 'phantom', 'destroyer'];
@@ -1592,9 +2533,25 @@ function getDifficultySettings() {
 }
 
 window.addEventListener('resize', resize);
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', resize);
+}
+window.addEventListener('orientationchange', () => {
+    setTimeout(() => {
+        resize();
+        fitMainMenuPanel();
+        fitHowToPanel();
+        fitColorMenuPanel();
+    }, 90);
+});
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
         requestAudioUnlockBoost();
+        requestAnimationFrame(() => {
+            fitMainMenuPanel();
+            fitHowToPanel();
+            fitColorMenuPanel();
+        });
     }
 });
 
@@ -1626,7 +2583,7 @@ function isGameplayUIElement(target) {
     if (!target || !target.closest) return false;
     return !!target.closest(
         '#upgradeContainer, #upgradeToggleBtn, #homeBtn, #pauseBtn, #classShopBtn, #classShopMenu, ' +
-        '#mainMenu, #howToPlay, #settingsMenu, #loseScreen, button, select, label, .stat-row, .class-card'
+        '#mainMenu, #howToPlay, #settingsMenu, #colorMenu, #loseScreen, button, select, label, .stat-row, .class-card'
     );
 }
 
@@ -1635,6 +2592,7 @@ function isMenuOpen() {
         !document.getElementById('mainMenu').classList.contains('hidden') ||
         !document.getElementById('howToPlay').classList.contains('hidden') ||
         !document.getElementById('settingsMenu').classList.contains('hidden') ||
+        !document.getElementById('colorMenu').classList.contains('hidden') ||
         !document.getElementById('loseScreen').classList.contains('hidden');
     return overlaysOpen;
 }
@@ -1719,6 +2677,10 @@ function handleTouchStart(e) {
 }
 
 function handleTouchMove(e) {
+    const colorMenu = document.getElementById('colorMenu');
+    if (playerColorBoardState.dragging && colorMenu && !colorMenu.classList.contains('hidden')) {
+        e.preventDefault();
+    }
     if (controlMode !== 'mobile' || !isRunning || isPaused) return;
     
     for (let touch of e.changedTouches) {
@@ -1829,7 +2791,7 @@ const SFX = {
     primed: false,
     masterVolume: 0.8,
     activeSources: 0,
-    maxSources: (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0) ? 18 : 26,
+    maxSources: 24,
     shotTick: -999,
     lastUiAt: 0,
     lastShapeBoomAt: 0,
@@ -1973,7 +2935,11 @@ function getAudioContext() {
     const Ctor = window.AudioContext || window.webkitAudioContext;
     if (!Ctor) return null;
     if (!SFX.ctx) {
-        SFX.ctx = new Ctor();
+        try {
+            SFX.ctx = new Ctor({ latencyHint: 'interactive' });
+        } catch (_) {
+            SFX.ctx = new Ctor();
+        }
         SFX.compressor = SFX.ctx.createDynamicsCompressor();
         SFX.compressor.threshold.value = -20;
         SFX.compressor.knee.value = 16;
@@ -2060,7 +3026,13 @@ function createNoiseBuffer(ctx) {
     const length = Math.floor(ctx.sampleRate * duration);
     const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
     const data = buffer.getChannelData(0);
-    for (let i = 0; i < length; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / length);
+    // Deterministic noise keeps the explosion/hit timbre consistent across devices.
+    let seed = 0x8f3d9ab;
+    for (let i = 0; i < length; i++) {
+        seed = (seed * 1664525 + 1013904223) >>> 0;
+        const white = (seed / 4294967295) * 2 - 1;
+        data[i] = white * (1 - i / length);
+    }
     return buffer;
 }
 
@@ -2391,6 +3363,156 @@ function getHealthColor(pct) {
     return `hsl(${Math.round(p * 120)}, 100%, 50%)`;
 }
 
+function drawTankEmblem(ctx, emblem, radius) {
+    switch (emblem) {
+        case 'double':
+            ctx.beginPath();
+            ctx.arc(-radius * 0.23, 0, radius * 0.13, 0, Math.PI * 2);
+            ctx.arc(radius * 0.23, 0, radius * 0.13, 0, Math.PI * 2);
+            ctx.fill();
+            break;
+        case 'arrow':
+            ctx.beginPath();
+            ctx.moveTo(radius * 0.35, 0);
+            ctx.lineTo(-radius * 0.15, -radius * 0.2);
+            ctx.lineTo(-radius * 0.15, radius * 0.2);
+            ctx.closePath();
+            ctx.fill();
+            break;
+        case 'diamond':
+            ctx.beginPath();
+            ctx.moveTo(0, -radius * 0.22);
+            ctx.lineTo(radius * 0.22, 0);
+            ctx.lineTo(0, radius * 0.22);
+            ctx.lineTo(-radius * 0.22, 0);
+            ctx.closePath();
+            ctx.fill();
+            break;
+        case 'triangle':
+            ctx.beginPath();
+            ctx.moveTo(0, -radius * 0.22);
+            ctx.lineTo(radius * 0.22, radius * 0.19);
+            ctx.lineTo(-radius * 0.22, radius * 0.19);
+            ctx.closePath();
+            ctx.fill();
+            break;
+        case 'burst':
+            for (let i = 0; i < 6; i++) {
+                const a = (i / 6) * Math.PI * 2;
+                ctx.beginPath();
+                ctx.arc(Math.cos(a) * radius * 0.24, Math.sin(a) * radius * 0.24, radius * 0.07, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            break;
+        case 'crosshair':
+            ctx.fillRect(-radius * 0.03, -radius * 0.25, radius * 0.06, radius * 0.5);
+            ctx.fillRect(-radius * 0.25, -radius * 0.03, radius * 0.5, radius * 0.06);
+            break;
+        case 'square':
+            ctx.fillRect(-radius * 0.16, -radius * 0.16, radius * 0.32, radius * 0.32);
+            break;
+        case 'star':
+            ctx.beginPath();
+            for (let i = 0; i < 10; i++) {
+                const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
+                const r = i % 2 === 0 ? radius * 0.23 : radius * 0.1;
+                const px = Math.cos(a) * r;
+                const py = Math.sin(a) * r;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            ctx.fill();
+            break;
+        default:
+            ctx.beginPath();
+            ctx.arc(0, 0, radius * 0.14, 0, Math.PI * 2);
+            ctx.fill();
+            break;
+    }
+}
+
+function drawTankCore(ctx, options = {}) {
+    const radius = Number(options.radius) || 20;
+    const guns = Array.isArray(options.guns) && options.guns.length
+        ? options.guns
+        : [{ x: 0, y: 0, width: 1.0, height: 1.9, angle: 0, kick: 0 }];
+    const bodyColor = options.bodyColor || COLORS.player;
+    const baseBorderColor = options.baseBorderColor || COLORS.playerBorder;
+    const barrelBase = options.barrelBase || COLORS.barrel;
+    const barrelBorder = options.barrelBorder || COLORS.barrelBorder;
+    const accent = options.accent || '#66d9ff';
+    const emblem = options.emblem || 'dot';
+    const damageMix = clamp(options.damageMix ?? 0, 0, 1);
+    const pulse = clamp(options.pulse ?? 0, 0, 1);
+    const shadowColor = options.shadowColor || null;
+    const woundedBodyColor = mixHexColors(bodyColor, '#ff2a3f', damageMix * 0.65);
+    const woundedBorderColor = mixHexColors(baseBorderColor, '#8a1d2f', damageMix * 0.5);
+
+    guns.forEach(g => {
+        const w = radius * (g.width || 1);
+        const h = radius * (g.height || 1.9);
+        const kick = g.kick || 0;
+        ctx.save();
+        ctx.translate((g.x || 0) * radius, (g.y || 0) * radius);
+        ctx.rotate(g.angle || 0);
+        ctx.fillStyle = shadeHex(barrelBase, -0.04);
+        ctx.strokeStyle = shadeHex(barrelBorder, -0.1);
+        ctx.lineWidth = 2;
+        ctx.fillRect(-kick, -w / 2, h, w);
+        ctx.strokeRect(-kick, -w / 2, h, w);
+        ctx.restore();
+    });
+
+    if (shadowColor) {
+        ctx.shadowColor = shadowColor;
+        ctx.shadowBlur = radius * 0.46;
+        ctx.shadowOffsetY = 2;
+    }
+    ctx.beginPath();
+    ctx.arc(0, 0, radius, 0, Math.PI * 2);
+    ctx.fillStyle = woundedBodyColor;
+    ctx.strokeStyle = woundedBorderColor;
+    ctx.lineWidth = 3;
+    ctx.fill();
+    if (shadowColor) {
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
+    }
+    ctx.stroke();
+
+    ctx.strokeStyle = hexToRgba(woundedBorderColor, 0.36);
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.arc(0, 0, radius * 0.82, 0, Math.PI * 2);
+    ctx.stroke();
+
+    if (pulse > 0) {
+        ctx.strokeStyle = `rgba(255, 70, 90, ${0.2 + pulse * 0.28})`;
+        ctx.lineWidth = 1.5 + pulse * 1.2;
+        ctx.beginPath();
+        ctx.arc(0, 0, radius * (1.04 + pulse * 0.06), 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.16)';
+    ctx.beginPath();
+    ctx.arc(-radius * 0.26, -radius * 0.24, radius * 0.24, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(0, 0, radius * 0.7, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.fillStyle = accent;
+    ctx.globalAlpha = 0.35;
+    drawTankEmblem(ctx, emblem, radius);
+    ctx.globalAlpha = 1;
+}
+
 class Entity {
     constructor(x, y, radius, color) {
         this.x = x;
@@ -2424,23 +3546,29 @@ class Entity {
     }
 }
 
+const SHAPE_TYPES = Object.freeze([
+    { id: 'square', sides: 4, radius: 15, hp: 60, xp: 20, damage: 9, color: COLORS.shapeSquare, weight: 0.42, detail: 'square' },
+    { id: 'triangle', sides: 3, radius: 20, hp: 90, xp: 30, damage: 12, color: COLORS.shapeTriangle, weight: 0.2, detail: 'triangle' },
+    { id: 'pentagon', sides: 5, radius: 26, hp: 120, xp: 40, damage: 15, color: COLORS.shapePentagon, weight: 0.12, detail: 'pentagon' },
+    { id: 'hexagon', sides: 6, radius: 31, hp: 150, xp: 50, damage: 18, color: COLORS.shapeHexagon, weight: 0.08, detail: 'hexagon' },
+    { id: 'heptagon', sides: 7, radius: 36, hp: 180, xp: 60, damage: 22, color: COLORS.shapeHeptagon, weight: 0.06, detail: 'heptagon' },
+    { id: 'octagon', sides: 8, radius: 42, hp: 210, xp: 70, damage: 26, color: COLORS.shapeOctagon, weight: 0.04, detail: 'octagon' },
+    { id: 'decagon', sides: 10, radius: 50, hp: 240, xp: 80, damage: 30, color: COLORS.shapeDecagon, weight: 0.03, detail: 'decagon' },
+    { id: 'dodecagon', sides: 12, radius: 60, hp: 270, xp: 90, damage: 35, color: COLORS.shapeDodecagon, weight: 0.025, detail: 'dodecagon' },
+    { id: 'star', sides: 10, points: 5, kind: 'star', radius: 72, hp: 300, xp: 100, damage: 40, color: COLORS.shapeStar, weight: 0.015, detail: 'star' }
+]);
+
 class Shape extends Entity {
     constructor(x, y, type) {
-        let r, sides, hp, xp, color, dmg;
+        const shapeDef = SHAPE_TYPES[type] || SHAPE_TYPES[0];
         const diffSettings = getDifficultySettings();
-        if (type === 0) {
-            r = 15; sides = 4; hp = 10; xp = 10; color = COLORS.shapeSquare; dmg = 8;
-        } else if (type === 1) {
-            r = 20; sides = 3; hp = 30; xp = 25; color = COLORS.shapeTriangle; dmg = 12;
-        } else {
-            r = 35; sides = 5; hp = 100; xp = 120; color = COLORS.shapePentagon; dmg = 20;
-        }
-        super(x, y, r, color);
-        this.sides = sides;
-        this.maxHp = hp;
-        this.hp = hp;
-        this.xpValue = xp;
-        this.bodyDamage = dmg * diffSettings.shapeDamageMultiplier;
+        super(x, y, shapeDef.radius, shapeDef.color);
+        this.shapeType = shapeDef;
+        this.sides = shapeDef.sides;
+        this.maxHp = shapeDef.hp;
+        this.hp = shapeDef.hp;
+        this.xpValue = shapeDef.xp;
+        this.bodyDamage = shapeDef.damage * diffSettings.shapeDamageMultiplier;
         this.rotation = rand(0, Math.PI * 2);
         this.rotateSpeed = rand(-0.02, 0.02);
     }
@@ -2468,29 +3596,48 @@ class Shape extends Entity {
         ctx.fillStyle = this.color;
         ctx.strokeStyle = shadeHex(this.color, -0.42);
         ctx.lineWidth = 2.8;
-        ctx.beginPath();
-        for (let i = 0; i < this.sides; i++) {
-            const theta = (i / this.sides) * Math.PI * 2;
-            const px = Math.cos(theta) * this.radius;
-            const py = Math.sin(theta) * this.radius;
-            if (i === 0) ctx.moveTo(px, py);
-            else ctx.lineTo(px, py);
+        const drawRegularPolygon = (scale, sides = this.sides) => {
+            ctx.beginPath();
+            for (let i = 0; i < sides; i++) {
+                const theta = (i / sides) * Math.PI * 2;
+                const px = Math.cos(theta) * this.radius * scale;
+                const py = Math.sin(theta) * this.radius * scale;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+        };
+        const drawStar = (scale, points = 5) => {
+            const outerR = this.radius * scale;
+            const innerR = outerR * 0.48;
+            ctx.beginPath();
+            for (let i = 0; i < points * 2; i++) {
+                const theta = (i / (points * 2)) * Math.PI * 2 - Math.PI / 2;
+                const r = (i % 2 === 0) ? outerR : innerR;
+                const px = Math.cos(theta) * r;
+                const py = Math.sin(theta) * r;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+        };
+        if (this.shapeType.kind === 'star') {
+            drawStar(1, this.shapeType.points || 5);
+        } else {
+            drawRegularPolygon(1, this.sides);
         }
-        ctx.closePath();
         ctx.fill();
         ctx.stroke();
 
+        const drawInnerPolygon = scale => drawRegularPolygon(scale, this.sides);
+
         ctx.strokeStyle = shadeHex(this.color, -0.12);
         ctx.lineWidth = 1.2;
-        ctx.beginPath();
-        for (let i = 0; i < this.sides; i++) {
-            const theta = (i / this.sides) * Math.PI * 2;
-            const px = Math.cos(theta) * (this.radius * 0.74);
-            const py = Math.sin(theta) * (this.radius * 0.74);
-            if (i === 0) ctx.moveTo(px, py);
-            else ctx.lineTo(px, py);
+        if (this.shapeType.kind === 'star') {
+            drawStar(0.62, this.shapeType.points || 5);
+        } else {
+            drawInnerPolygon(this.sides >= 10 ? 0.68 : 0.74);
         }
-        ctx.closePath();
         ctx.stroke();
 
         // Keep shape details consistent and high-contrast across colors.
@@ -2499,36 +3646,95 @@ class Shape extends Entity {
         ctx.strokeStyle = detailStroke;
         ctx.fillStyle = detailFill;
         ctx.lineWidth = 1.35;
-        if (this.sides === 4) {
-            ctx.strokeRect(-this.radius * 0.22, -this.radius * 0.22, this.radius * 0.44, this.radius * 0.44);
-            ctx.beginPath();
-            ctx.moveTo(-this.radius * 0.12, 0);
-            ctx.lineTo(this.radius * 0.12, 0);
-            ctx.moveTo(0, -this.radius * 0.12);
-            ctx.lineTo(0, this.radius * 0.12);
-            ctx.stroke();
-        } else if (this.sides === 3) {
-            ctx.beginPath();
-            for (let i = 0; i < this.sides; i++) {
-                const theta = (i / this.sides) * Math.PI * 2;
-                const px = Math.cos(theta) * this.radius * 0.34;
-                const py = Math.sin(theta) * this.radius * 0.34;
-                if (i === 0) ctx.moveTo(px, py);
-                else ctx.lineTo(px, py);
+
+        switch (this.shapeType.detail) {
+            case 'square':
+                ctx.strokeRect(-this.radius * 0.22, -this.radius * 0.22, this.radius * 0.44, this.radius * 0.44);
+                ctx.beginPath();
+                ctx.moveTo(-this.radius * 0.12, 0);
+                ctx.lineTo(this.radius * 0.12, 0);
+                ctx.moveTo(0, -this.radius * 0.12);
+                ctx.lineTo(0, this.radius * 0.12);
+                ctx.stroke();
+                break;
+            case 'triangle':
+                drawInnerPolygon(0.34);
+                ctx.stroke();
+                break;
+            case 'pentagon':
+                drawInnerPolygon(0.3);
+                ctx.stroke();
+                break;
+            case 'hexagon':
+                drawInnerPolygon(0.34);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(0, 0, this.radius * 0.08, 0, Math.PI * 2);
+                ctx.fill();
+                break;
+            case 'heptagon':
+                drawInnerPolygon(0.33);
+                ctx.stroke();
+                ctx.beginPath();
+                for (let i = 0; i < this.sides; i++) {
+                    const theta = (i / this.sides) * Math.PI * 2;
+                    ctx.moveTo(0, 0);
+                    ctx.lineTo(Math.cos(theta) * this.radius * 0.24, Math.sin(theta) * this.radius * 0.24);
+                }
+                ctx.stroke();
+                break;
+            case 'octagon':
+                drawInnerPolygon(0.35);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(-this.radius * 0.24, 0);
+                ctx.lineTo(this.radius * 0.24, 0);
+                ctx.moveTo(0, -this.radius * 0.24);
+                ctx.lineTo(0, this.radius * 0.24);
+                ctx.moveTo(-this.radius * 0.17, -this.radius * 0.17);
+                ctx.lineTo(this.radius * 0.17, this.radius * 0.17);
+                ctx.moveTo(this.radius * 0.17, -this.radius * 0.17);
+                ctx.lineTo(-this.radius * 0.17, this.radius * 0.17);
+                ctx.stroke();
+                break;
+            case 'decagon': {
+                const pts = [];
+                for (let i = 0; i < this.sides; i++) {
+                    const theta = (i / this.sides) * Math.PI * 2;
+                    pts.push({
+                        x: Math.cos(theta) * this.radius * 0.3,
+                        y: Math.sin(theta) * this.radius * 0.3
+                    });
+                }
+                ctx.beginPath();
+                for (let i = 0; i < pts.length; i++) {
+                    const p = pts[i];
+                    const q = pts[(i + 3) % pts.length];
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(q.x, q.y);
+                }
+                ctx.stroke();
+                break;
             }
-            ctx.closePath();
-            ctx.stroke();
-        } else if (this.sides === 5) {
-            ctx.beginPath();
-            for (let i = 0; i < this.sides; i++) {
-                const theta = (i / this.sides) * Math.PI * 2;
-                const px = Math.cos(theta) * this.radius * 0.3;
-                const py = Math.sin(theta) * this.radius * 0.3;
-                if (i === 0) ctx.moveTo(px, py);
-                else ctx.lineTo(px, py);
-            }
-            ctx.closePath();
-            ctx.stroke();
+            case 'dodecagon':
+                ctx.beginPath();
+                ctx.arc(0, 0, this.radius * 0.28, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(0, 0, this.radius * 0.12, 0, Math.PI * 2);
+                ctx.fill();
+                break;
+            case 'star':
+                drawStar(0.36, this.shapeType.points || 5);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(0, 0, this.radius * 0.11, 0, Math.PI * 2);
+                ctx.fill();
+                break;
+            default:
+                drawInnerPolygon(0.34);
+                ctx.stroke();
+                break;
         }
 
         // Very light mark with no outline, positioned subtly so it looks clean on all shape colors.
@@ -2601,8 +3807,9 @@ class Bullet extends Entity {
 
 class Tank extends Entity {
     constructor(x, y, isBot) {
-        super(x, y, 20, isBot ? COLORS.enemy : COLORS.player);
+        super(x, y, 20, isBot ? COLORS.enemy : playerColorChoice);
         this.isBot = isBot;
+        this.baseBorderColor = isBot ? COLORS.enemyBorder : COLORS.playerBorder;
         
         this.stats = {
             regen: 0, maxHp: 0, bodyDmg: 0, bulletSpd: 0,
@@ -2743,10 +3950,7 @@ class Tank extends Entity {
         if (this.isBot && source instanceof Tank && source !== this && !source.isDead) {
             this.recentAttacker = source;
             this.recentHitTimer = 240;
-            const ai = this.getBotTuning();
-            if (this.hp / this.getStat('maxHp') <= ai.hitRetreatHp) {
-                this.retreatTimer = Math.max(this.retreatTimer, 50);
-            }
+            this.retreatTimer = Math.max(this.retreatTimer, 28);
         }
 
         if (this.hp <= 0 && !this.isDead) {
@@ -3047,11 +4251,6 @@ class Tank extends Entity {
         if (affordableStats.length === 0) return;
 
         let candidateStats = affordableStats;
-        const hpPct = this.hp / this.getStat('maxHp');
-        if (hpPct < ai.retreatHp + 0.12) {
-            const defensive = affordableStats.filter(s => s.id === 'regen' || s.id === 'maxHp' || s.id === 'moveSpd');
-            if (defensive.length > 0) candidateStats = defensive;
-        }
 
         if (ai.intelligence >= 0.75) {
             const classOffense = ['bulletDmg', 'bulletPen', 'reload', 'bulletSpd'];
@@ -3092,29 +4291,11 @@ class Tank extends Entity {
         this.maybeUpgradeAI();
 
         const nearestEnemy = this.getBestTankTarget(650 * diffSettings.botAggression * ai.scanMultiplier);
-        const nearestShape = this.getNearestShape(420 * (ai.fightBias < 0.55 ? 1.2 : 0.9));
-        const hpPct = this.hp / this.getStat('maxHp');
-        const underPressure = this.recentHitTimer > 0 && hpPct <= ai.hitRetreatHp;
-        const shouldRetreat = hpPct <= ai.retreatHp || underPressure || this.retreatTimer > 0;
+        const nearestShape = this.getNearestShape(430);
         let nextState = 'wander';
         let nextTarget = null;
 
-        if (shouldRetreat) {
-            nextState = 'flee';
-            nextTarget = (this.recentAttacker && !this.recentAttacker.isDead) ? this.recentAttacker : nearestEnemy;
-        } else if (nearestEnemy && nearestShape) {
-            const enemyDist = dist(this.x, this.y, nearestEnemy.x, nearestEnemy.y);
-            const shapeDist = dist(this.x, this.y, nearestShape.x, nearestShape.y);
-            const enemyScore = enemyDist * (1 - ai.fightBias * 0.25);
-            const shapeScore = shapeDist * (0.92 + ai.fightBias * 0.28);
-            if (enemyScore <= shapeScore) {
-                nextState = 'fight';
-                nextTarget = nearestEnemy;
-            } else {
-                nextState = 'farm';
-                nextTarget = nearestShape;
-            }
-        } else if (nearestEnemy) {
+        if (nearestEnemy) {
             nextState = 'fight';
             nextTarget = nearestEnemy;
         } else if (nearestShape) {
@@ -3123,7 +4304,7 @@ class Tank extends Entity {
         }
 
         const hasLockedTarget = this.target && !this.target.isDead && this.aiTargetLock > 0;
-        if (hasLockedTarget && !shouldRetreat) {
+        if (hasLockedTarget) {
             const lockedIsTank = this.target instanceof Tank;
             const lockedDist = dist(this.x, this.y, this.target.x, this.target.y);
             const nextDist = nextTarget ? dist(this.x, this.y, nextTarget.x, nextTarget.y) : Infinity;
@@ -3138,8 +4319,7 @@ class Tank extends Entity {
         this.state = nextState;
         this.target = nextTarget;
         if (switched) {
-            if (this.state === 'flee') this.aiTargetLock = randInt(12, 24);
-            else if (this.target) this.aiTargetLock = randInt(24, 52);
+            if (this.target) this.aiTargetLock = randInt(24, 52);
             else this.aiTargetLock = 0;
         }
 
@@ -3150,49 +4330,36 @@ class Tank extends Entity {
             this.aiStrafeDir *= -1;
         }
 
-        if (this.state === 'flee' && this.target && !this.target.isDead) {
-            const angleTo = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-            const fleeAccel = this.getStat('moveSpd');
-            this.angle = rotateTowardAngle(this.angle, angleTo, aimTurnRate * 0.85);
-            this.vx -= Math.cos(angleTo) * (fleeAccel * 0.82);
-            this.vy -= Math.sin(angleTo) * (fleeAccel * 0.82);
-            this.vx += Math.cos(angleTo + Math.PI / 2) * (fleeAccel * (0.12 + ai.strafeBias * 0.2)) * this.aiStrafeDir;
-            this.vy += Math.sin(angleTo + Math.PI / 2) * (fleeAccel * (0.12 + ai.strafeBias * 0.2)) * this.aiStrafeDir;
-            const fleeMax = this.getStat('moveSpd') * 8.6;
-            const fleeSpeed = Math.hypot(this.vx, this.vy);
-            if (fleeSpeed > fleeMax) {
-                const mul = fleeMax / fleeSpeed;
-                this.vx *= mul;
-                this.vy *= mul;
-            }
-            this.fire();
-        } else if (this.state === 'fight' && this.target && !this.target.isDead) {
+        if (this.state === 'fight' && this.target && !this.target.isDead) {
             const angleTo = Math.atan2(this.target.y - this.y, this.target.x - this.x);
             const d = dist(this.x, this.y, this.target.x, this.target.y);
             const preferredRange = this.getPreferredCombatRange();
             this.angle = rotateTowardAngle(this.angle, angleTo, aimTurnRate);
 
             if (d > preferredRange + 30) {
-                this.vx += Math.cos(angleTo) * (accel * (0.8 + ai.fightBias * 0.45));
-                this.vy += Math.sin(angleTo) * (accel * (0.8 + ai.fightBias * 0.45));
+                this.vx += Math.cos(angleTo) * (accel * 1.02);
+                this.vy += Math.sin(angleTo) * (accel * 1.02);
             } else if (d < preferredRange - 30) {
-                this.vx -= Math.cos(angleTo) * (accel * (0.75 + (1 - ai.fightBias) * 0.35));
-                this.vy -= Math.sin(angleTo) * (accel * (0.75 + (1 - ai.fightBias) * 0.35));
+                this.vx -= Math.cos(angleTo) * (accel * 0.94);
+                this.vy -= Math.sin(angleTo) * (accel * 0.94);
             }
-
-            this.vx += Math.cos(angleTo + Math.PI / 2) * (accel * (0.25 + ai.strafeBias * 0.65)) * this.aiStrafeDir;
-            this.vy += Math.sin(angleTo + Math.PI / 2) * (accel * (0.25 + ai.strafeBias * 0.65)) * this.aiStrafeDir;
+            if (this.retreatTimer > 0) {
+                this.vx -= Math.cos(angleTo) * (accel * 0.22);
+                this.vy -= Math.sin(angleTo) * (accel * 0.22);
+            }
+            this.vx += Math.cos(angleTo + Math.PI / 2) * (accel * (0.22 + ai.strafeBias * 0.62)) * this.aiStrafeDir;
+            this.vy += Math.sin(angleTo + Math.PI / 2) * (accel * (0.22 + ai.strafeBias * 0.62)) * this.aiStrafeDir;
             this.fire();
         } else if (this.state === 'farm' && this.target && !this.target.isDead) {
             const angleTo = Math.atan2(this.target.y - this.y, this.target.x - this.x);
             const d = dist(this.x, this.y, this.target.x, this.target.y);
             this.angle = rotateTowardAngle(this.angle, angleTo, aimTurnRate * 0.92);
-            if (d > 120) {
-                this.vx += Math.cos(angleTo) * (accel * 0.6);
-                this.vy += Math.sin(angleTo) * (accel * 0.6);
-            } else if (d < 70) {
-                this.vx -= Math.cos(angleTo) * (accel * 0.4);
-                this.vy -= Math.sin(angleTo) * (accel * 0.4);
+            if (d > 110) {
+                this.vx += Math.cos(angleTo) * (accel * 0.72);
+                this.vy += Math.sin(angleTo) * (accel * 0.72);
+            } else if (d < 60) {
+                this.vx -= Math.cos(angleTo) * (accel * 0.35);
+                this.vy -= Math.sin(angleTo) * (accel * 0.35);
             }
             this.fire();
         } else {
@@ -3220,139 +4387,22 @@ class Tank extends Entity {
         ctx.rotate(this.angle);
 
         const classDef = this.classDef || {};
-        const accent = classDef.accent || '#ffffff';
-        const bodyColor = this.isBot ? COLORS.enemy : COLORS.player;
-        const barrelBase = classDef.barrelColor || COLORS.barrel;
-        const barrelBorder = classDef.barrelBorder || COLORS.barrelBorder;
         const hpPct = Math.max(0, this.hp / this.getStat('maxHp'));
         const damageMix = Math.pow(1 - hpPct, 0.8);
-        const baseBorderColor = this.isBot ? COLORS.enemyBorder : COLORS.playerBorder;
-        const woundedBodyColor = mixHexColors(bodyColor, '#ff2a3f', damageMix * 0.65);
-        const woundedBorderColor = mixHexColors(baseBorderColor, '#8a1d2f', damageMix * 0.5);
-        ctx.lineWidth = 2;
-
-        this.guns.forEach(g => {
-            const w = this.radius * g.width;
-            const h = this.radius * g.height;
-            const kick = g.kick || 0;
-            ctx.save();
-            ctx.translate(g.x * this.radius, g.y * this.radius);
-            ctx.rotate(g.angle);
-            ctx.fillStyle = shadeHex(barrelBase, -0.04);
-            ctx.strokeStyle = shadeHex(barrelBorder, -0.1);
-            ctx.fillRect(-kick, -w/2, h, w);
-            ctx.strokeRect(-kick, -w/2, h, w);
-            ctx.restore();
+        const pulse = hpPct < 0.36 ? (0.5 + 0.5 * Math.sin(gameTick * 0.24)) : 0;
+        drawTankCore(ctx, {
+            radius: this.radius,
+            guns: this.guns,
+            bodyColor: this.color,
+            baseBorderColor: this.baseBorderColor || (this.isBot ? COLORS.enemyBorder : COLORS.playerBorder),
+            barrelBase: classDef.barrelColor || COLORS.barrel,
+            barrelBorder: classDef.barrelBorder || COLORS.barrelBorder,
+            accent: classDef.accent || '#ffffff',
+            emblem: classDef.emblem || 'dot',
+            damageMix,
+            pulse,
+            shadowColor: WORLD_STYLE.entityShadow
         });
-        ctx.shadowColor = WORLD_STYLE.entityShadow;
-        ctx.shadowBlur = this.radius * 0.46;
-        ctx.shadowOffsetY = 2;
-        ctx.beginPath();
-        ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = woundedBodyColor;
-        ctx.strokeStyle = woundedBorderColor;
-        ctx.lineWidth = 3;
-        ctx.fill();
-        ctx.shadowColor = 'transparent';
-        ctx.shadowBlur = 0;
-        ctx.shadowOffsetY = 0;
-        ctx.stroke();
-
-        ctx.strokeStyle = hexToRgba(woundedBorderColor, 0.36);
-        ctx.lineWidth = 1.2;
-        ctx.beginPath();
-        ctx.arc(0, 0, this.radius * 0.82, 0, Math.PI * 2);
-        ctx.stroke();
-
-        if (hpPct < 0.36) {
-            const pulse = 0.5 + 0.5 * Math.sin(gameTick * 0.24);
-            ctx.strokeStyle = `rgba(255, 70, 90, ${0.2 + pulse * 0.28})`;
-            ctx.lineWidth = 1.5 + pulse * 1.2;
-            ctx.beginPath();
-            ctx.arc(0, 0, this.radius * (1.04 + pulse * 0.06), 0, Math.PI * 2);
-            ctx.stroke();
-        }
-
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.16)';
-        ctx.beginPath();
-        ctx.arc(-this.radius * 0.26, -this.radius * 0.24, this.radius * 0.24, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.strokeStyle = accent;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(0, 0, this.radius * 0.7, 0, Math.PI * 2);
-        ctx.stroke();
-
-        ctx.fillStyle = accent;
-        ctx.globalAlpha = 0.35;
-        switch (classDef.emblem) {
-            case 'double':
-                ctx.beginPath();
-                ctx.arc(-this.radius * 0.23, 0, this.radius * 0.13, 0, Math.PI * 2);
-                ctx.arc(this.radius * 0.23, 0, this.radius * 0.13, 0, Math.PI * 2);
-                ctx.fill();
-                break;
-            case 'arrow':
-                ctx.beginPath();
-                ctx.moveTo(this.radius * 0.35, 0);
-                ctx.lineTo(-this.radius * 0.15, -this.radius * 0.2);
-                ctx.lineTo(-this.radius * 0.15, this.radius * 0.2);
-                ctx.closePath();
-                ctx.fill();
-                break;
-            case 'diamond':
-                ctx.beginPath();
-                ctx.moveTo(0, -this.radius * 0.22);
-                ctx.lineTo(this.radius * 0.22, 0);
-                ctx.lineTo(0, this.radius * 0.22);
-                ctx.lineTo(-this.radius * 0.22, 0);
-                ctx.closePath();
-                ctx.fill();
-                break;
-            case 'triangle':
-                ctx.beginPath();
-                ctx.moveTo(0, -this.radius * 0.22);
-                ctx.lineTo(this.radius * 0.22, this.radius * 0.19);
-                ctx.lineTo(-this.radius * 0.22, this.radius * 0.19);
-                ctx.closePath();
-                ctx.fill();
-                break;
-            case 'burst':
-                for (let i = 0; i < 6; i++) {
-                    const a = (i / 6) * Math.PI * 2;
-                    ctx.beginPath();
-                    ctx.arc(Math.cos(a) * this.radius * 0.24, Math.sin(a) * this.radius * 0.24, this.radius * 0.07, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-                break;
-            case 'crosshair':
-                ctx.fillRect(-this.radius * 0.03, -this.radius * 0.25, this.radius * 0.06, this.radius * 0.5);
-                ctx.fillRect(-this.radius * 0.25, -this.radius * 0.03, this.radius * 0.5, this.radius * 0.06);
-                break;
-            case 'square':
-                ctx.fillRect(-this.radius * 0.16, -this.radius * 0.16, this.radius * 0.32, this.radius * 0.32);
-                break;
-            case 'star':
-                ctx.beginPath();
-                for (let i = 0; i < 10; i++) {
-                    const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
-                    const r = i % 2 === 0 ? this.radius * 0.23 : this.radius * 0.1;
-                    const px = Math.cos(a) * r;
-                    const py = Math.sin(a) * r;
-                    if (i === 0) ctx.moveTo(px, py);
-                    else ctx.lineTo(px, py);
-                }
-                ctx.closePath();
-                ctx.fill();
-                break;
-            default:
-                ctx.beginPath();
-                ctx.arc(0, 0, this.radius * 0.14, 0, Math.PI * 2);
-                ctx.fill();
-                break;
-        }
-        ctx.globalAlpha = 1;
 
         ctx.restore();
 
@@ -3660,19 +4710,30 @@ function createExplosion(x, y, size, color, kind = 'shape') {
 function spawnShape() {
     const diffSettings = getDifficultySettings();
     if (entities.filter(e => e instanceof Shape).length >= diffSettings.maxShapes) return;
-    const x = rand(50, CONFIG.mapWidth - 50);
-    const y = rand(50, CONFIG.mapHeight - 50);
-    const r = Math.random();
-    let type = 0;
-    if (r > 0.8) type = 1;
-    if (r > 0.95) type = 2;
-    entities.push(new Shape(x, y, type));
+    const maxShapeRadius = SHAPE_TYPES.reduce((m, s) => Math.max(m, s.radius || 0), 0);
+    const margin = maxShapeRadius + 10;
+    const x = rand(margin, CONFIG.mapWidth - margin);
+    const y = rand(margin, CONFIG.mapHeight - margin);
+    let roll = Math.random();
+    let shapeType = -1;
+    for (let i = 0; i < SHAPE_TYPES.length; i++) {
+        roll -= SHAPE_TYPES[i].weight;
+        if (roll <= 0) {
+            shapeType = i;
+            break;
+        }
+    }
+    if (shapeType === -1) return;
+    entities.push(new Shape(x, y, shapeType));
 }
 
 function spawnBot() {
     const x = rand(100, CONFIG.mapWidth - 100);
     const y = rand(100, CONFIG.mapHeight - 100);
     const bot = new Tank(x, y, true);
+    const botColor = getRandomBotColor();
+    bot.color = botColor;
+    bot.baseBorderColor = derivePlayerBorderColor(botColor);
     entities.push(bot);
 }
 
@@ -4115,7 +5176,7 @@ function initUI() {
         card.innerHTML = `
             <div class="class-title">${cls.name}</div>
             <div class="class-role">${cls.role || ''}</div>
-            <div class="class-stats">DMG ${cls.dmgRating || 1}/5 • SPD ${cls.spdRating || 1}/5 • ARM ${cls.hpRating || 1}/5</div>
+            <div class="class-stats">DMG ${cls.dmgRating || 1}/5 • SPD ${cls.spdRating || 1}/5 • DEF ${cls.hpRating || 1}/5</div>
             <div class="class-price">${cls.price === 0 ? 'Free' : cls.price.toLocaleString()}</div>
         `;
         card.onclick = () => {
@@ -4204,6 +5265,38 @@ function resize() {
     canvas.height = window.innerHeight;
     syncUpgradeToggleVisual();
     syncHomeButtonPosition();
+    fitMainMenuPanel();
+    fitHowToPanel();
+    const colorMenu = document.getElementById('colorMenu');
+    if (colorMenu && !colorMenu.classList.contains('hidden')) {
+        fitColorMenuPanel();
+    }
+}
+
+function applyControlModeUI() {
+    const isMobileMode = controlMode === 'mobile';
+    document.body.classList.toggle('ui-mobile', isMobileMode);
+    document.body.classList.toggle('ui-pc', !isMobileMode);
+
+    const leftJoystick = document.getElementById('leftJoystick');
+    const rightJoystick = document.getElementById('rightJoystick');
+    if (!leftJoystick || !rightJoystick) return;
+
+    if (isRunning && isMobileMode) {
+        leftJoystick.style.display = 'flex';
+        rightJoystick.style.display = 'flex';
+    } else {
+        leftJoystick.style.display = 'none';
+        rightJoystick.style.display = 'none';
+        joysticks.left.active = false;
+        joysticks.right.active = false;
+        joysticks.left.touchId = null;
+        joysticks.right.touchId = null;
+        resetJoystickVisual('left');
+        resetJoystickVisual('right');
+    }
+
+    syncHomeButtonPosition();
 }
 
 function syncHomeButtonPosition() {
@@ -4269,7 +5362,9 @@ function syncPauseTopLabel(alpha = 0) {
 function showMainMenu() {
     playUiSfx('home');
     document.getElementById('loseScreen').classList.add('hidden');
-    document.getElementById('mainMenu').classList.remove('hidden');
+    document.getElementById('colorMenu').classList.add('hidden');
+    const mainMenu = document.getElementById('mainMenu');
+    mainMenu.classList.remove('hidden');
     document.getElementById('hud').style.display = 'none';
     document.getElementById('topHud').style.display = 'none';
     document.getElementById('homeBtn').style.display = 'none';
@@ -4289,6 +5384,7 @@ function showMainMenu() {
     syncPauseTopLabel(0);
     syncUpgradeToggleVisual();
     isRunning = false;
+    requestAnimationFrame(fitMainMenuPanel);
 }
 
 function startGame() {
@@ -4296,6 +5392,7 @@ function startGame() {
     document.getElementById('mainMenu').classList.add('hidden');
     document.getElementById('loseScreen').classList.add('hidden');
     document.getElementById('settingsMenu').classList.add('hidden');
+    document.getElementById('colorMenu').classList.add('hidden');
     document.getElementById('hud').style.display = 'block';
     document.getElementById('topHud').style.display = 'block';
     document.getElementById('homeBtn').style.display = 'flex';
@@ -4318,6 +5415,7 @@ function startGame() {
     particles = [];
     muzzleFlashes = [];
     explosionWaves = [];
+    recentBotColorHistory = [];
     gameTick = 0;
     cameraShake = 0;
     lastFrameTime = 0;
@@ -4348,13 +5446,105 @@ function startGame() {
 function showHowTo() {
     playUiSfx('open');
     document.getElementById('mainMenu').classList.add('hidden');
-    document.getElementById('howToPlay').classList.remove('hidden');
+    const howTo = document.getElementById('howToPlay');
+    howTo.classList.remove('hidden');
+    requestAnimationFrame(fitHowToPanel);
+    setTimeout(fitHowToPanel, 70);
 }
 
 function hideHowTo() {
     playUiSfx('back');
-    document.getElementById('howToPlay').classList.add('hidden');
-    document.getElementById('mainMenu').classList.remove('hidden');
+    const howTo = document.getElementById('howToPlay');
+    howTo.classList.add('hidden');
+    howTo.classList.remove('compact', 'compact-tight');
+    const mainMenu = document.getElementById('mainMenu');
+    mainMenu.classList.remove('hidden');
+    requestAnimationFrame(fitMainMenuPanel);
+}
+
+function isTabletViewport() {
+    const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const mobileDevice = document.body.classList.contains('device-mobile');
+    const mobileModeSelected = controlMode === 'mobile' && hasTouch;
+    const viewportShort = Math.min(window.innerWidth, window.innerHeight);
+    const viewportLong = Math.max(window.innerWidth, window.innerHeight);
+    const screenShort = Math.min(window.screen?.width || viewportShort, window.screen?.height || viewportLong);
+    const screenLong = Math.max(window.screen?.width || viewportShort, window.screen?.height || viewportLong);
+    const tabletByScreen = screenShort >= 600 && screenLong >= 900;
+    const tabletByViewport = viewportShort >= 430 && viewportLong >= 700;
+    return (tabletByScreen || tabletByViewport) && (mobileDevice || mobileModeSelected);
+}
+
+function getViewportHeight() {
+    if (window.visualViewport && Number.isFinite(window.visualViewport.height) && window.visualViewport.height > 0) {
+        return Math.round(window.visualViewport.height);
+    }
+    return window.innerHeight;
+}
+
+function fitMainMenuPanel() {
+    const mainMenu = document.getElementById('mainMenu');
+    if (!mainMenu || mainMenu.classList.contains('hidden')) return;
+    const panel = mainMenu.querySelector('.screen-panel');
+    if (!panel) return;
+
+    mainMenu.classList.remove('compact', 'compact-tight', 'compact-ultra');
+    if (!isTabletViewport()) return;
+
+    const maxHeight = getViewportHeight() - 12;
+    if (panel.scrollHeight > maxHeight) {
+        mainMenu.classList.add('compact');
+    }
+    if (panel.scrollHeight > maxHeight) {
+        mainMenu.classList.add('compact-tight');
+    }
+    if (panel.scrollHeight > maxHeight) {
+        mainMenu.classList.add('compact-ultra');
+    }
+}
+
+function fitHowToPanel() {
+    const howTo = document.getElementById('howToPlay');
+    if (!howTo || howTo.classList.contains('hidden')) return;
+    const panel = howTo.querySelector('.screen-panel');
+    if (!panel) return;
+
+    howTo.classList.remove('compact', 'compact-tight');
+    const maxHeight = getViewportHeight() - 18;
+    if (panel.scrollHeight > maxHeight) {
+        howTo.classList.add('compact');
+    }
+    if (panel.scrollHeight > maxHeight) {
+        howTo.classList.add('compact-tight');
+    }
+}
+
+function fitColorMenuPanel() {
+    const colorMenu = document.getElementById('colorMenu');
+    if (!colorMenu || colorMenu.classList.contains('hidden')) return;
+    const panel = colorMenu.querySelector('.screen-panel');
+    if (!panel) return;
+
+    colorMenu.classList.remove('compact', 'compact-tight', 'compact-ultra');
+    const maxHeight = getViewportHeight() - 14;
+    const isTablet = isTabletViewport();
+
+    if (panel.scrollHeight > maxHeight) {
+        colorMenu.classList.add('compact');
+    }
+    if (!isTablet && panel.scrollHeight > maxHeight) {
+        colorMenu.classList.add('compact-tight');
+    }
+    if (!isTablet && panel.scrollHeight > maxHeight) {
+        colorMenu.classList.add('compact-ultra');
+    }
+
+    if (playerColorHexEditing) {
+        drawPlayerColorBoard();
+        drawPlayerTankPreview(normalizeHexColor(playerColorChoice, PLAYER_COLOR_DEFAULT));
+    } else {
+        syncPlayerColorUI(true);
+    }
 }
 
 function showSettings() {
@@ -4370,12 +5560,473 @@ function showSettings() {
 function hideSettings() {
     playUiSfx('back');
     document.getElementById('settingsMenu').classList.add('hidden');
-    document.getElementById('mainMenu').classList.remove('hidden');
+    const mainMenu = document.getElementById('mainMenu');
+    mainMenu.classList.remove('hidden');
+    requestAnimationFrame(fitMainMenuPanel);
+}
+
+function normalizeHexColor(value, fallback = PLAYER_COLOR_DEFAULT) {
+    if (typeof value !== 'string') return fallback;
+    const raw = value.trim();
+    const hex = raw.startsWith('#') ? raw : `#${raw}`;
+    if (/^#[0-9a-fA-F]{6}$/.test(hex)) return hex.toLowerCase();
+    if (/^#[0-9a-fA-F]{3}$/.test(hex)) {
+        const short = hex.slice(1);
+        return `#${short[0]}${short[0]}${short[1]}${short[1]}${short[2]}${short[2]}`.toLowerCase();
+    }
+    return fallback;
+}
+
+function toHexByte(n) {
+    return clamp(Math.round(n), 0, 255).toString(16).padStart(2, '0');
+}
+
+function derivePlayerBorderColor(hex) {
+    const c = parseHexColor(hex);
+    if (!c) return COLORS.playerBorder;
+    const darken = 0.62;
+    return `#${toHexByte(c.r * darken)}${toHexByte(c.g * darken)}${toHexByte(c.b * darken)}`;
+}
+
+function hslToHex(h, s, l) {
+    const hue = ((h % 360) + 360) % 360;
+    const sat = clamp(s, 0, 100) / 100;
+    const light = clamp(l, 0, 100) / 100;
+    const c = (1 - Math.abs(2 * light - 1)) * sat;
+    const x = c * (1 - Math.abs((hue / 60) % 2 - 1));
+    const m = light - c / 2;
+    let r = 0;
+    let g = 0;
+    let b = 0;
+    if (hue < 60) { r = c; g = x; }
+    else if (hue < 120) { r = x; g = c; }
+    else if (hue < 180) { g = c; b = x; }
+    else if (hue < 240) { g = x; b = c; }
+    else if (hue < 300) { r = x; b = c; }
+    else { r = c; b = x; }
+    return `#${toHexByte((r + m) * 255)}${toHexByte((g + m) * 255)}${toHexByte((b + m) * 255)}`;
+}
+
+function hsvToRgb(h, s, v) {
+    const hue = ((h % 360) + 360) % 360;
+    const sat = clamp(s, 0, 1);
+    const val = clamp(v, 0, 1);
+    const c = val * sat;
+    const x = c * (1 - Math.abs((hue / 60) % 2 - 1));
+    const m = val - c;
+    let r = 0;
+    let g = 0;
+    let b = 0;
+    if (hue < 60) { r = c; g = x; }
+    else if (hue < 120) { r = x; g = c; }
+    else if (hue < 180) { g = c; b = x; }
+    else if (hue < 240) { g = x; b = c; }
+    else if (hue < 300) { r = x; b = c; }
+    else { r = c; b = x; }
+    return {
+        r: Math.round((r + m) * 255),
+        g: Math.round((g + m) * 255),
+        b: Math.round((b + m) * 255)
+    };
+}
+
+function hsvToHex(h, s, v) {
+    const c = hsvToRgb(h, s, v);
+    return `#${toHexByte(c.r)}${toHexByte(c.g)}${toHexByte(c.b)}`;
+}
+
+function rgbToHsv(r, g, b) {
+    const rn = clamp(r, 0, 255) / 255;
+    const gn = clamp(g, 0, 255) / 255;
+    const bn = clamp(b, 0, 255) / 255;
+    const max = Math.max(rn, gn, bn);
+    const min = Math.min(rn, gn, bn);
+    const d = max - min;
+    let h = 0;
+    const s = max === 0 ? 0 : d / max;
+    const v = max;
+    if (d !== 0) {
+        switch (max) {
+            case rn: h = ((gn - bn) / d) % 6; break;
+            case gn: h = ((bn - rn) / d) + 2; break;
+            default: h = ((rn - gn) / d) + 4; break;
+        }
+        h *= 60;
+        if (h < 0) h += 360;
+    }
+    return { h, s, v };
+}
+
+function colorDistanceSqHex(a, b) {
+    const c1 = parseHexColor(a);
+    const c2 = parseHexColor(b);
+    if (!c1 || !c2) return 0;
+    const dr = c1.r - c2.r;
+    const dg = c1.g - c2.g;
+    const db = c1.b - c2.b;
+    return dr * dr + dg * dg + db * db;
+}
+
+function getRandomBotColor() {
+    const liveBotColors = entities
+        .filter(e => e instanceof Tank && e.isBot && !e.isDead)
+        .map(e => normalizeHexColor(e.color, '#ff4f72'));
+    const avoidColors = [...liveBotColors, ...recentBotColorHistory];
+
+    let bestColor = hslToHex(rand(0, 360), rand(70, 100), rand(45, 62));
+    let bestScore = -1;
+    const attempts = 42;
+
+    for (let i = 0; i < attempts; i++) {
+        const candidate = hslToHex(rand(0, 360), rand(70, 100), rand(45, 62));
+        if (avoidColors.length === 0) {
+            bestColor = candidate;
+            if (Math.random() < 0.25) break;
+            continue;
+        }
+
+        let minDist = Infinity;
+        for (let j = 0; j < avoidColors.length; j++) {
+            const d = colorDistanceSqHex(candidate, avoidColors[j]);
+            if (d < minDist) minDist = d;
+        }
+        if (minDist > bestScore || (Math.abs(minDist - bestScore) < 160 && Math.random() < 0.3)) {
+            bestScore = minDist;
+            bestColor = candidate;
+        }
+    }
+
+    recentBotColorHistory.push(bestColor);
+    if (recentBotColorHistory.length > 14) recentBotColorHistory.shift();
+    return bestColor;
+}
+
+function applyPlayerColor(nextColor) {
+    const color = normalizeHexColor(nextColor, COLORS.player);
+    playerColorChoice = color;
+    COLORS.player = color;
+    COLORS.playerBorder = derivePlayerBorderColor(color);
+    if (player && !player.isBot) {
+        player.color = color;
+        player.baseBorderColor = COLORS.playerBorder;
+    }
+}
+
+function drawPlayerColorBoard() {
+    const board = document.getElementById('playerColorBoard');
+    const wrap = document.getElementById('playerColorBoardWrap');
+    if (!board || !wrap) return;
+
+    const size = Math.max(140, Math.min(320, Math.floor(Math.min(wrap.clientWidth || 320, wrap.clientHeight || 320))));
+    const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1), 2);
+    const w = Math.max(2, Math.round(size * dpr));
+    const h = Math.max(2, Math.round(size * dpr));
+    if (board.width !== w || board.height !== h) {
+        board.width = w;
+        board.height = h;
+        board.style.width = `${size}px`;
+        board.style.height = `${size}px`;
+    }
+
+    const bctx = board.getContext('2d');
+    bctx.clearRect(0, 0, w, h);
+    bctx.fillStyle = hsvToHex(playerColorBoardState.hue, 1, 1);
+    bctx.fillRect(0, 0, w, h);
+
+    const whiteFade = bctx.createLinearGradient(0, 0, w, 0);
+    whiteFade.addColorStop(0, 'rgba(255,255,255,1)');
+    whiteFade.addColorStop(1, 'rgba(255,255,255,0)');
+    bctx.fillStyle = whiteFade;
+    bctx.fillRect(0, 0, w, h);
+
+    const blackFade = bctx.createLinearGradient(0, 0, 0, h);
+    blackFade.addColorStop(0, 'rgba(0,0,0,0)');
+    blackFade.addColorStop(1, 'rgba(0,0,0,1)');
+    bctx.fillStyle = blackFade;
+    bctx.fillRect(0, 0, w, h);
+
+    const inset = clamp(
+        Math.round(Math.min(w, h) * 0.055),
+        Math.round(10 * dpr),
+        Math.round(24 * dpr)
+    );
+    playerColorBoardState.safeInsetPx = inset;
+
+    const sat = clamp(playerColorBoardState.sat, 0, 1);
+    const val = clamp(playerColorBoardState.val, 0, 1);
+    const usableW = Math.max(1, w - inset * 2);
+    const usableH = Math.max(1, h - inset * 2);
+    const x = inset + sat * usableW;
+    const y = inset + (1 - val) * usableH;
+
+    const ringRadius = clamp(
+        Math.round(Math.min(w, h) * 0.034),
+        Math.round(7 * dpr),
+        Math.round(13 * dpr)
+    );
+    const outerRadius = ringRadius + Math.max(2, Math.round(1.8 * dpr));
+
+    bctx.save();
+    bctx.beginPath();
+    bctx.lineWidth = Math.max(1.8, 2 * dpr);
+    bctx.strokeStyle = 'rgba(12, 18, 28, 0.95)';
+    bctx.arc(x, y, outerRadius, 0, Math.PI * 2);
+    bctx.stroke();
+
+    bctx.beginPath();
+    bctx.lineWidth = Math.max(1.8, 2 * dpr);
+    bctx.strokeStyle = '#ffffff';
+    bctx.arc(x, y, ringRadius, 0, Math.PI * 2);
+    bctx.stroke();
+    bctx.restore();
+}
+
+function drawPlayerTankPreview(color) {
+    const c = document.getElementById('playerTankPreviewCanvas');
+    if (!c) return;
+
+    const rect = c.getBoundingClientRect();
+    const cssW = Math.max(1, Math.round(rect.width || parseFloat(getComputedStyle(c).width) || 118));
+    const cssH = Math.max(1, Math.round(rect.height || parseFloat(getComputedStyle(c).height) || 84));
+    const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1), 2);
+    const targetW = Math.max(2, Math.round(cssW * dpr));
+    const targetH = Math.max(2, Math.round(cssH * dpr));
+
+    if (c.width !== targetW || c.height !== targetH) {
+        c.width = targetW;
+        c.height = targetH;
+    }
+
+    const pctx = c.getContext('2d');
+    pctx.setTransform(1, 0, 0, 1, 0, 0);
+    pctx.clearRect(0, 0, c.width, c.height);
+    pctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const starterClass = getClassById('basic') || CLASSES[0] || {};
+    const guns = Array.isArray(starterClass.guns) && starterClass.guns.length
+        ? starterClass.guns.map(g => ({ ...g, kick: 0 }))
+        : [{ x: 0, y: 0, width: 1.0, height: 1.9, angle: 0, kick: 0 }];
+    const radius = clamp(Math.round(cssH * 0.24), 14, 24);
+    const cx = Math.round(clamp(cssW * 0.5, radius + 4, cssW - radius - 4));
+    const cy = Math.round(cssH * 0.5);
+
+    pctx.save();
+    pctx.translate(cx, cy);
+    drawTankCore(pctx, {
+        radius,
+        guns,
+        bodyColor: color,
+        baseBorderColor: derivePlayerBorderColor(color),
+        barrelBase: starterClass.barrelColor || COLORS.barrel,
+        barrelBorder: starterClass.barrelBorder || COLORS.barrelBorder,
+        accent: starterClass.accent || '#66d9ff',
+        emblem: starterClass.emblem || 'dot',
+        damageMix: 0,
+        pulse: 0,
+        shadowColor: WORLD_STYLE.entityShadow
+    });
+
+    pctx.restore();
+}
+
+function colorBoardStateToHex() {
+    return hsvToHex(playerColorBoardState.hue, playerColorBoardState.sat, playerColorBoardState.val);
+}
+
+function setColorBoardStateFromColor(color) {
+    const c = parseHexColor(color);
+    if (!c) return;
+    const hsv = rgbToHsv(c.r, c.g, c.b);
+    playerColorBoardState.hue = clamp(hsv.h, 0, 360);
+    playerColorBoardState.sat = clamp(hsv.s, 0, 1);
+    playerColorBoardState.val = clamp(hsv.v, 0, 1);
+}
+
+function syncPlayerColorUI(updateBoardStateFromColor = true) {
+    const color = normalizeHexColor(playerColorChoice, PLAYER_COLOR_DEFAULT);
+    if (updateBoardStateFromColor) setColorBoardStateFromColor(color);
+    const hueSlider = document.getElementById('playerHueSlider');
+    const hexInput = document.getElementById('playerColorHexInput');
+    if (hueSlider) hueSlider.value = String(Math.round(playerColorBoardState.hue));
+    if (hexInput && !playerColorHexEditing && document.activeElement !== hexInput) {
+        hexInput.value = color.toUpperCase();
+    }
+    drawPlayerColorBoard();
+    drawPlayerTankPreview(color);
+}
+
+function updatePlayerColorFromBoard(clientX, clientY, playSound = false) {
+    const board = document.getElementById('playerColorBoard');
+    if (!board) return;
+    const rect = board.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const dpr = Math.max(1, board.width / rect.width);
+    const safeCanvas = Math.max(
+        playerColorBoardState.safeInsetPx || 0,
+        clamp(Math.round(Math.min(board.width, board.height) * 0.055), Math.round(10 * dpr), Math.round(24 * dpr))
+    );
+    const safeCss = safeCanvas / dpr;
+
+    const localX = clamp(clientX - rect.left, safeCss, rect.width - safeCss);
+    const localY = clamp(clientY - rect.top, safeCss, rect.height - safeCss);
+    const usableW = Math.max(1, rect.width - safeCss * 2);
+    const usableH = Math.max(1, rect.height - safeCss * 2);
+
+    playerColorBoardState.sat = clamp((localX - safeCss) / usableW, 0, 1);
+    playerColorBoardState.val = clamp(1 - ((localY - safeCss) / usableH), 0, 1);
+    const color = colorBoardStateToHex();
+    applyPlayerColor(color);
+    syncPlayerColorUI(false);
+    if (playSound) playUiSfx('select');
+}
+
+function updatePlayerHue(live = true) {
+    const hueSlider = document.getElementById('playerHueSlider');
+    if (!hueSlider) return;
+    playerColorBoardState.hue = clamp(Number(hueSlider.value) || 0, 0, 360);
+    drawPlayerColorBoard();
+    applyPlayerColor(colorBoardStateToHex());
+    syncPlayerColorUI(false);
+    if (!live) playUiSfx('select');
+}
+
+function updatePlayerColorHexInput(live = true) {
+    const hexInput = document.getElementById('playerColorHexInput');
+    if (!hexInput) return;
+
+    const raw = String(hexInput.value || '').replace(/\s+/g, '');
+    if (raw === '') {
+        if (!live) hexInput.value = normalizeHexColor(playerColorChoice, PLAYER_COLOR_DEFAULT).toUpperCase();
+        return;
+    }
+
+    const prefixed = raw.startsWith('#') ? raw : `#${raw}`;
+    const completeHexPattern = /^#[0-9a-fA-F]{6}$|^#[0-9a-fA-F]{3}$/;
+    if (!completeHexPattern.test(prefixed)) {
+        if (!live) hexInput.value = normalizeHexColor(playerColorChoice, PLAYER_COLOR_DEFAULT).toUpperCase();
+        return;
+    }
+
+    const color = normalizeHexColor(prefixed, playerColorChoice);
+    applyPlayerColor(color);
+    setColorBoardStateFromColor(color);
+    syncPlayerColorUI(false);
+    if (!live) {
+        hexInput.value = color.toUpperCase();
+        playUiSfx('select');
+    }
+}
+
+function randomizePlayerColor() {
+    const randomColor = hslToHex(rand(0, 360), rand(68, 100), rand(42, 72));
+    applyPlayerColor(randomColor);
+    setColorBoardStateFromColor(randomColor);
+    syncPlayerColorUI(false);
+    playUiSfx('select');
+}
+
+function resetPlayerColorDefault() {
+    applyPlayerColor(PLAYER_COLOR_DEFAULT);
+    setColorBoardStateFromColor(PLAYER_COLOR_DEFAULT);
+    syncPlayerColorUI(false);
+    playUiSfx('select');
+}
+
+function initPlayerColorBoardControls() {
+    const board = document.getElementById('playerColorBoard');
+    const hexInput = document.getElementById('playerColorHexInput');
+
+    if (hexInput && hexInput.dataset.bound !== '1') {
+        hexInput.dataset.bound = '1';
+        hexInput.addEventListener('focus', () => {
+            playerColorHexEditing = true;
+        });
+        hexInput.addEventListener('blur', () => {
+            playerColorHexEditing = false;
+            updatePlayerColorHexInput(false);
+        });
+        hexInput.addEventListener('input', () => {
+            updatePlayerColorHexInput(true);
+        });
+        hexInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                hexInput.blur();
+            }
+        });
+    }
+
+    if (!board || board.dataset.bound === '1') return;
+    board.dataset.bound = '1';
+
+    const stopDragging = () => {
+        playerColorBoardState.dragging = false;
+    };
+
+    board.addEventListener('pointerdown', e => {
+        if (typeof e.button === 'number' && e.button !== 0) return;
+        playerColorBoardState.dragging = true;
+        if (board.setPointerCapture && e.pointerId !== undefined) {
+            try { board.setPointerCapture(e.pointerId); } catch (_) {}
+        }
+        updatePlayerColorFromBoard(e.clientX, e.clientY, true);
+        e.preventDefault();
+    });
+
+    board.addEventListener('pointermove', e => {
+        if (!playerColorBoardState.dragging) return;
+        updatePlayerColorFromBoard(e.clientX, e.clientY, false);
+        e.preventDefault();
+    });
+
+    board.addEventListener('pointerup', e => {
+        if (playerColorBoardState.dragging) {
+            updatePlayerColorFromBoard(e.clientX, e.clientY, false);
+        }
+        stopDragging();
+    });
+    board.addEventListener('pointercancel', stopDragging);
+    board.addEventListener('lostpointercapture', stopDragging);
+    board.addEventListener('pointerleave', stopDragging);
+
+    if (board.dataset.boundWindowUp !== '1') {
+        board.dataset.boundWindowUp = '1';
+        window.addEventListener('pointerup', stopDragging, { passive: true });
+        window.addEventListener('pointercancel', stopDragging, { passive: true });
+        window.addEventListener('blur', stopDragging);
+    }
+}
+
+function showColorMenu() {
+    playUiSfx('open');
+    document.getElementById('mainMenu').classList.add('hidden');
+    const colorMenu = document.getElementById('colorMenu');
+    colorMenu.classList.remove('hidden');
+    playerColorHexEditing = false;
+    playerColorBoardState.dragging = false;
+    initPlayerColorBoardControls();
+    syncPlayerColorUI(true);
+    requestAnimationFrame(fitColorMenuPanel);
+    setTimeout(fitColorMenuPanel, 70);
+}
+
+function hideColorMenu() {
+    playUiSfx('back');
+    const colorMenu = document.getElementById('colorMenu');
+    colorMenu.classList.add('hidden');
+    colorMenu.classList.remove('compact', 'compact-tight', 'compact-ultra');
+    playerColorHexEditing = false;
+    playerColorBoardState.dragging = false;
+    const mainMenu = document.getElementById('mainMenu');
+    mainMenu.classList.remove('hidden');
+    requestAnimationFrame(fitMainMenuPanel);
 }
 
 function updateControlMode() {
     playUiSfx('select');
     controlMode = document.getElementById('controlMode').value;
+    applyControlModeUI();
+    resize();
 }
 
 function updateDifficulty() {
@@ -4390,19 +6041,19 @@ function updateDifficultyDescription() {
     
     switch(difficulty) {
         case 'test':
-            desc.textContent = 'Infinite money, no death (unless enabled), test everything!';
+            desc.textContent = 'Unlimited coins. You cannot die unless "Allow Death in Test Mode" is enabled.';
             testToggle.style.display = 'flex';
             break;
         case 'easy':
-            desc.textContent = 'Fewer enemies, reduced damage, relaxed gameplay';
+            desc.textContent = 'Fewer bots, lower damage, and a calmer match.';
             testToggle.style.display = 'none';
             break;
         case 'normal':
-            desc.textContent = 'Regular gameplay experience';
+            desc.textContent = 'Standard gameplay balance.';
             testToggle.style.display = 'none';
             break;
         case 'hard':
-            desc.textContent = 'More enemies, increased damage, challenging gameplay';
+            desc.textContent = 'More bots, higher damage, and aggressive combat.';
             testToggle.style.display = 'none';
             break;
     }
@@ -4414,22 +6065,45 @@ function updateCanDie() {
 }
 
 function detectMobile() {
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    
-    if (isMobile || isTouch) {
+    const ua = navigator.userAgent || '';
+    const mobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+    const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const coarsePointer = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    const iPadDesktopUA = /Macintosh/i.test(ua) && hasTouch;
+    const uaDataMobile = !!(navigator.userAgentData && navigator.userAgentData.mobile);
+    const isMobileDevice = mobileUA || uaDataMobile || iPadDesktopUA || (hasTouch && coarsePointer);
+
+    document.body.classList.toggle('device-mobile', isMobileDevice);
+    document.body.classList.toggle('device-desktop', !isMobileDevice);
+
+    if (isMobileDevice) {
         controlMode = 'mobile';
-        document.getElementById('controlMode').value = 'mobile';
+        const controlModeSelect = document.getElementById('controlMode');
+        if (controlModeSelect) {
+            controlModeSelect.value = 'mobile';
+        }
     }
+
+    applyControlModeUI();
 }
 
+detectMobile();
 resize();
+syncPlayerColorUI();
 loadSfxSettings();
 SFX.enabled = true;
 setMasterVolume(0.8);
 saveSfxSettings();
 syncSoundControls();
-detectMobile();
+
+if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+        resize();
+        fitMainMenuPanel();
+        fitHowToPanel();
+        fitColorMenuPanel();
+    }).catch(() => {});
+}
 
 </script>
 </body>
