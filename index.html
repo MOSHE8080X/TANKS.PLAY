@@ -2191,9 +2191,11 @@
                 <label for="difficultyMode">Difficulty:</label>
                 <select id="difficultyMode" onchange="updateDifficulty()">
                     <option value="test">Test (Sandbox)</option>
+                    <option value="ultra-easy">Ultra Easy</option>
                     <option value="easy">Easy</option>
                     <option value="normal" selected>Normal</option>
                     <option value="hard">Hard</option>
+                    <option value="ultra-hard">Ultra Hard</option>
                 </select>
                 <div class="difficulty-description" id="difficultyDesc">Standard gameplay balance</div>
             </div>
@@ -2427,7 +2429,16 @@ const DEFAULT_AI_PROFILE = AI_PROFILES[1];
 
 function pickAIProfile(mode = difficulty) {
     let weights;
-    if (mode === 'easy') {
+    if (mode === 'ultra-easy') {
+        weights = [
+            { id: 'dumb', w: 0.62 },
+            { id: 'medium', w: 0.25 },
+            { id: 'smart', w: 0.03 },
+            { id: 'berserker', w: 0.02 },
+            { id: 'survivor', w: 0.07 },
+            { id: 'hunter', w: 0.01 }
+        ];
+    } else if (mode === 'easy') {
         weights = [
             { id: 'dumb', w: 0.38 },
             { id: 'medium', w: 0.35 },
@@ -2435,6 +2446,15 @@ function pickAIProfile(mode = difficulty) {
             { id: 'berserker', w: 0.06 },
             { id: 'survivor', w: 0.1 },
             { id: 'hunter', w: 0.04 }
+        ];
+    } else if (mode === 'ultra-hard') {
+        weights = [
+            { id: 'dumb', w: 0.01 },
+            { id: 'medium', w: 0.08 },
+            { id: 'smart', w: 0.36 },
+            { id: 'berserker', w: 0.27 },
+            { id: 'survivor', w: 0.08 },
+            { id: 'hunter', w: 0.2 }
         ];
     } else if (mode === 'hard') {
         weights = [
@@ -2489,6 +2509,16 @@ function getDifficultySettings() {
                 botAggression: 1,
                 botSkillMultiplier: 1
             };
+        case 'ultra-easy':
+            return {
+                maxShapes: 85,
+                maxBots: 5,
+                botDamageMultiplier: 0.3,
+                shapeDamageMultiplier: 0.35,
+                spawnRateMultiplier: 0.35,
+                botAggression: 0.5,
+                botSkillMultiplier: 0.6
+            };
         case 'easy':
             return {
                 maxShapes: 100,
@@ -2518,6 +2548,16 @@ function getDifficultySettings() {
                 spawnRateMultiplier: 2,
                 botAggression: 1.5,
                 botSkillMultiplier: 1.3
+            };
+        case 'ultra-hard':
+            return {
+                maxShapes: 250,
+                maxBots: 30,
+                botDamageMultiplier: 2.2,
+                shapeDamageMultiplier: 2,
+                spawnRateMultiplier: 3,
+                botAggression: 2.1,
+                botSkillMultiplier: 1.5
             };
         default:
             return {
@@ -6048,12 +6088,20 @@ function updateDifficultyDescription() {
             desc.textContent = 'Fewer bots, lower damage, and a calmer match.';
             testToggle.style.display = 'none';
             break;
+        case 'ultra-easy':
+            desc.textContent = 'Very low pressure: very few bots, much lower damage, and much slower spawns.';
+            testToggle.style.display = 'none';
+            break;
         case 'normal':
             desc.textContent = 'Standard gameplay balance.';
             testToggle.style.display = 'none';
             break;
         case 'hard':
             desc.textContent = 'More bots, higher damage, and aggressive combat.';
+            testToggle.style.display = 'none';
+            break;
+        case 'ultra-hard':
+            desc.textContent = 'Maximum pressure: many bots, much higher damage, and very intense spawns.';
             testToggle.style.display = 'none';
             break;
     }
