@@ -1555,93 +1555,8 @@
             font-style: italic;
         }
 
-        @media (max-height: 760px) and (min-width: 700px) and (hover: none),
-               (max-height: 760px) and (min-width: 700px) and (pointer: coarse) {
-            #settingsMenu {
-                justify-content: center;
-                align-items: center;
-                padding-top: max(8px, calc(env(safe-area-inset-top) + 4px));
-                padding-bottom: max(8px, calc(env(safe-area-inset-bottom) + 4px));
-            }
-
-            #settingsMenu .screen-panel {
-                width: min(96vw, 900px);
-                max-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 16px);
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                align-items: start;
-                justify-items: center;
-                column-gap: 12px;
-                row-gap: 8px;
-                padding: 12px 14px;
-                overflow: hidden;
-            }
-
-            #settingsMenu h2 {
-                grid-column: 1 / -1;
-                margin: 0;
-                font-size: clamp(1.55rem, 4.2vw, 2.2rem);
-            }
-
-            #settingsMenu .settings-option {
-                margin: 0;
-                width: 100%;
-                padding: 6px 8px;
-            }
-
-            #settingsMenu .settings-option label {
-                margin-bottom: 5px;
-                font-size: clamp(0.9rem, 2vw, 1.05rem);
-            }
-
-            #settingsMenu .settings-option select,
-            #settingsMenu .settings-option input[type="range"] {
-                min-width: 0;
-                width: 100%;
-            }
-
-            #settingsMenu .settings-option select {
-                padding: 8px 10px;
-                font-size: clamp(0.82rem, 1.8vw, 0.95rem);
-            }
-
-            #settingsMenu .difficulty-description {
-                font-size: 0.78rem;
-                margin-top: 3px;
-            }
-
-            #settingsMenu .checkbox-option {
-                margin: 4px 0 0;
-                gap: 8px;
-                width: 100%;
-                padding: 5px 7px;
-            }
-
-            #settingsMenu #testModeToggle {
-                grid-column: 1 / -1;
-                margin: 0;
-            }
-
-            #settingsMenu .back {
-                grid-column: 1 / -1;
-                margin: 2px 0 0;
-                min-width: min(200px, 42vw);
-                padding: 8px 16px;
-            }
-        }
-
-        @media (max-height: 700px) and (min-width: 700px) and (hover: none),
-               (max-height: 700px) and (min-width: 700px) and (pointer: coarse) {
-            #settingsMenu .screen-panel {
-                padding: 10px 12px;
-                gap: 6px;
-            }
-
-            #settingsMenu .settings-option label {
-                margin-bottom: 4px;
-            }
-        }
-
+        /* Compact settings: 2-column grid for PC/laptop ONLY (hover:hover + pointer:fine).
+           Tablets and phones are NOT affected — they keep the normal scrollable layout. */
         @media (max-height: 760px) and (min-width: 700px) and (hover: hover) and (pointer: fine) {
             #settingsMenu {
                 justify-content: center;
@@ -2451,7 +2366,7 @@
 </head>
 <body>
 
-    <div id="mainMenu" class="overlay hidden">
+    <div id="mainMenu" class="overlay">
         <div class="screen-panel">
             <h1>TANKS.PLAY V0.2</h1>
             <p>Battle shapes, upgrade stats, unlock classes, and outplay bots.</p>
@@ -2480,7 +2395,7 @@
         </div>
     </div>
 
-    <div id="settingsMenu" class="overlay">
+    <div id="settingsMenu" class="overlay hidden">
         <div class="screen-panel">
             <h2>Settings</h2>
             <div class="settings-option">
@@ -3406,12 +3321,32 @@ function updateFPSLimit(preview = false) {
     const slider = document.getElementById('fpsLimitSlider');
     const value = document.getElementById('fpsLimitValue');
     const fps = Math.max(15, Math.min(240, parseInt(slider.value) || 60));
+    const prevFps = CONFIG.fpsLimit || 60;
     CONFIG.fpsLimit = fps;
     value.textContent = fps;
     
     // Update the target frame time for the new FPS
     fpsTargetTime = 1000 / fps;
     frameInterpolation = 1.0;
+    
+    // Play a tone when dragging the FPS slider (same style as volume slider preview)
+    if (preview && SFX.enabled) {
+        requestAudioUnlockBoost();
+        const now = performance.now();
+        if (now - (SFX.lastFpsPreviewAt || 0) > 110 && Math.abs(fps - prevFps) >= 1) {
+            SFX.lastFpsPreviewAt = now;
+            // Map FPS range 15-240 to a pitch range (lower FPS = lower pitch)
+            const t = (fps - 15) / (240 - 15); // 0..1
+            playTone({
+                type: 'sine',
+                freq: 280 + t * 400,
+                freqEnd: 220 + t * 320,
+                duration: 0.05,
+                volume: 0.03 + t * 0.05,
+                force: true
+            });
+        }
+    }
     
     // Log for debugging
     if (CONFIG.showFPS) {
