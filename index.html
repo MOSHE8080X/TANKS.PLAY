@@ -283,8 +283,17 @@
         }
 
         #settingsMenu .screen-panel {
-            width: min(92vw, 540px);
-            gap: 10px;
+            width: min(95vw, 480px);
+            gap: clamp(6px, 1.5vh, 10px);
+            padding: clamp(12px, 2vh, 18px) clamp(10px, 2vw, 16px);
+            max-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 20px);
+            overflow-y: auto;
+        }
+
+        #settingsMenu .screen-panel h2 {
+            margin: 0 0 8px;
+            font-size: clamp(1.4rem, 4.5vw, 2.2rem);
+            line-height: 1;
         }
 
         #colorMenu .screen-panel {
@@ -865,22 +874,53 @@
         }
 
         #settingsMenu .settings-option {
-            width: min(420px, 86vw);
-            margin: 6px 0 8px;
-            padding: 9px 11px;
-            border-radius: 12px;
+            width: min(95%, 380px);
+            margin: 4px 0 6px;
+            padding: 6px 8px;
+            border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.18);
             background: linear-gradient(160deg, rgba(14, 20, 30, 0.44), rgba(26, 33, 42, 0.34));
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 8px 18px rgba(0, 0, 0, 0.2);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 14px rgba(0, 0, 0, 0.2);
             box-sizing: border-box;
         }
 
+        #settingsMenu .settings-option label {
+            font-size: clamp(0.75rem, 2.2vw, 0.9rem);
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+
         #settingsMenu .checkbox-option {
-            width: min(420px, 86vw);
-            border-radius: 10px;
+            width: min(95%, 380px);
+            border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.12);
             background: rgba(12, 17, 24, 0.28);
             box-sizing: border-box;
+            padding: 6px 10px;
+            margin: 3px 0;
+        }
+
+        #settingsMenu .checkbox-option label {
+            font-size: clamp(0.7rem, 2vw, 0.85rem);
+            line-height: 1.3;
+        }
+
+        #settingsMenu button.back {
+            padding: 10px 20px;
+            font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+            margin: 8px 0 4px;
+            min-width: min(200px, 60vw);
+        }
+
+        #settingsMenu select {
+            padding: 6px 8px;
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+            border-radius: 6px;
+        }
+
+        #settingsMenu input[type="range"] {
+            height: 16px;
+            margin: 4px 0;
         }
 
         #loseScreen .screen-panel {
@@ -2162,11 +2202,256 @@
             }
         }
 
+        /* Responsive styles for small screens */
+        @media (max-width: 480px) {
+            .overlay {
+                padding: 8px 4px;
+            }
+            
+            h1 {
+                font-size: clamp(2rem, 8vw, 3.5rem);
+                margin: 0 0 2px;
+            }
+            
+            h2 {
+                font-size: clamp(1.4rem, 5vw, 2rem);
+                margin: 0 0 4px;
+            }
+            
+            p {
+                font-size: clamp(0.8rem, 2.2vw, 1rem);
+                line-height: 1.4;
+                padding: 0 2px;
+            }
+            
+            button {
+                padding: 10px 20px;
+                font-size: clamp(0.9rem, 2.8vw, 1.2rem);
+                margin: 4px 0;
+                min-width: min(260px, 80vw);
+            }
+            
+            #settingsMenu .screen-panel {
+                width: 98vw;
+                max-width: 480px;
+                padding: 6px 4px;
+                gap: 3px;
+                max-height: 98vh;
+                overflow-y: auto;
+            }
+            
+            #settingsMenu .settings-option,
+            #settingsMenu .checkbox-option {
+                width: 95%;
+                margin: 1px 0;
+                padding: 3px 4px;
+            }
+            
+            #settingsMenu .settings-option label,
+            #settingsMenu .checkbox-option label {
+                font-size: clamp(0.75rem, 2.5vw, 0.9rem);
+                margin: 1px 0;
+                line-height: 1.2;
+            }
+            
+            #settingsMenu .checkbox-option label span {
+                display: inline-block;
+                margin: 0;
+            }
+            
+            #settingsMenu button.back {
+                padding: 6px 12px;
+                font-size: clamp(0.75rem, 2.8vw, 0.9rem);
+                margin-top: 4px;
+                min-height: 32px;
+            }
+            
+            #settingsMenu select {
+                padding: 3px 4px;
+                font-size: clamp(0.7rem, 2.2vw, 0.8rem);
+            }
+            
+            #settingsMenu input[type="range"] {
+                height: 12px;
+            }
+            
+            #settingsMenu .difficulty-description {
+                font-size: clamp(0.65rem, 2vw, 0.75rem);
+                margin-top: 2px;
+            }
+            
+            @media (max-height: 700px) {
+                #settingsMenu .screen-panel {
+                    padding: 4px 2px;
+                    gap: 2px;
+                }
+                
+                #settingsMenu .settings-option,
+                #settingsMenu .checkbox-option {
+                    padding: 2px 3px;
+                    margin: 0;
+                }
+                
+                #settingsMenu button.back {
+                    padding: 4px 8px;
+                    font-size: clamp(0.7rem, 2.5vw, 0.8rem);
+                }
+            }
+        }
+
+        /* Ultra-compact for very small screens */
+        @media (max-width: 320px) {
+            #settingsMenu .screen-panel h2 {
+                font-size: 1.2rem;
+                margin: 0 0 4px;
+            }
+            
+            #settingsMenu .settings-option label {
+                font-size: 0.7rem;
+            }
+            
+            #settingsMenu select,
+            #settingsMenu .checkbox-option label {
+                font-size: 0.65rem;
+            }
+        }
+
+        /* Ultra-compact for laptop screens - make everything squished together */
+        @media (max-height: 600px) and (min-width: 768px) {
+            #settingsMenu .screen-panel {
+                width: 95vw;
+                max-width: 420px;
+                padding: 3px 2px;
+                gap: 1px;
+                max-height: 95vh;
+                overflow-y: auto;
+            }
+            
+            #settingsMenu .screen-panel h2 {
+                font-size: clamp(1.1rem, 2.5vh, 1.4rem);
+                margin: 0 0 3px;
+                padding: 2px 0;
+            }
+            
+            #settingsMenu .settings-option,
+            #settingsMenu .checkbox-option {
+                width: 98%;
+                margin: 0;
+                padding: 2px 1px;
+                border-radius: 4px;
+            }
+            
+            #settingsMenu .settings-option label,
+            #settingsMenu .checkbox-option label {
+                font-size: clamp(0.65rem, 1.8vh, 0.8rem);
+                margin: 0;
+                line-height: 1.1;
+                padding: 1px 0;
+            }
+            
+            #settingsMenu select {
+                padding: 1px 2px;
+                font-size: clamp(0.6rem, 1.6vh, 0.75rem);
+                height: auto;
+                min-height: 16px;
+                line-height: 1;
+            }
+            
+            #settingsMenu input[type="range"] {
+                height: 8px;
+                margin: 1px 0;
+            }
+            
+            #settingsMenu .difficulty-description {
+                font-size: clamp(0.55rem, 1.4vh, 0.65rem);
+                margin-top: 1px;
+                line-height: 1.1;
+                padding: 1px 0;
+            }
+            
+            #settingsMenu button.back {
+                padding: 3px 6px;
+                font-size: clamp(0.6rem, 1.8vh, 0.75rem);
+                margin-top: 2px;
+                min-height: 20px;
+                line-height: 1;
+            }
+            
+            #settingsMenu .inline-value {
+                font-size: clamp(0.6rem, 1.6vh, 0.7rem);
+            }
+            
+            #settingsMenu .checkbox-option input[type="checkbox"] {
+                width: 12px;
+                height: 12px;
+                margin-right: 3px;
+            }
+        }
+
+        /* Super ultra-compact for tiny laptops */
+        @media (max-height: 500px) and (min-width: 768px) {
+            #settingsMenu .screen-panel {
+                width: 92vw;
+                max-width: 360px;
+                padding: 2px 1px;
+                gap: 0;
+                max-height: 92vh;
+            }
+            
+            #settingsMenu .screen-panel h2 {
+                font-size: clamp(1rem, 2vh, 1.2rem);
+                margin: 0 0 2px;
+            }
+            
+            #settingsMenu .settings-option,
+            #settingsMenu .checkbox-option {
+                width: 99%;
+                margin: 0;
+                padding: 1px 0;
+                border-radius: 2px;
+            }
+            
+            #settingsMenu .settings-option label,
+            #settingsMenu .checkbox-option label {
+                font-size: clamp(0.55rem, 1.5vh, 0.7rem);
+                margin: 0;
+                line-height: 1;
+                padding: 0;
+            }
+            
+            #settingsMenu select {
+                padding: 0 1px;
+                font-size: clamp(0.55rem, 1.4vh, 0.65rem);
+                min-height: 14px;
+            }
+            
+            #settingsMenu input[type="range"] {
+                height: 6px;
+                margin: 0;
+            }
+            
+            #settingsMenu .difficulty-description {
+                font-size: clamp(0.5rem, 1.2vh, 0.6rem);
+                margin-top: 0;
+            }
+            
+            #settingsMenu button.back {
+                padding: 2px 4px;
+                font-size: clamp(0.55rem, 1.5vh, 0.65rem);
+                margin-top: 1px;
+                min-height: 16px;
+            }
+            
+            #settingsMenu .inline-value {
+                font-size: clamp(0.55rem, 1.4vh, 0.6rem);
+            }
+        }
+
     </style>
 </head>
 <body>
 
-    <div id="mainMenu" class="overlay">
+    <div id="mainMenu" class="overlay hidden">
         <div class="screen-panel">
             <h1>TANKS.PLAY V0.2</h1>
             <p>Battle shapes, upgrade stats, unlock classes, and outplay bots.</p>
@@ -2195,42 +2480,58 @@
         </div>
     </div>
 
-    <div id="settingsMenu" class="overlay hidden">
+    <div id="settingsMenu" class="overlay">
         <div class="screen-panel">
             <h2>Settings</h2>
             <div class="settings-option">
-                <label for="controlMode">Control Mode:</label>
+                <label for="controlMode">Control:</label>
                 <select id="controlMode" onchange="updateControlMode()">
-                    <option value="pc">Desktop (Mouse & Keyboard)</option>
-                    <option value="mobile">Mobile / Tablet (Touch Controls)</option>
+                    <option value="pc">Desktop</option>
+                    <option value="mobile">Mobile</option>
                 </select>
             </div>
             <div class="settings-option">
                 <label for="difficultyMode">Difficulty:</label>
                 <select id="difficultyMode" onchange="updateDifficulty()">
-                    <option value="test">Test (Sandbox)</option>
+                    <option value="test">Test</option>
                     <option value="ultra-easy">Ultra Easy</option>
                     <option value="easy">Easy</option>
                     <option value="normal" selected>Normal</option>
                     <option value="hard">Hard</option>
                     <option value="ultra-hard">Ultra Hard</option>
                 </select>
-                <div class="difficulty-description" id="difficultyDesc">Standard gameplay balance</div>
+                <div class="difficulty-description" id="difficultyDesc">Standard balance.</div>
             </div>
             <div class="checkbox-option" id="testModeToggle" style="display: none;">
                 <input type="checkbox" id="canDieToggle" onchange="updateCanDie()">
-                <label for="canDieToggle">Allow Death in Test Mode</label>
+                <label for="canDieToggle">Allow Death in Test</label>
             </div>
             <div class="settings-option">
                 <label for="soundEnabledToggle">Sound: <span id="soundStatusLabel">ON</span></label>
                 <div class="checkbox-option">
                     <input type="checkbox" id="soundEnabledToggle" onchange="updateSoundEnabled()">
-                    <label for="soundEnabledToggle">Enable Sound Effects</label>
+                    <label for="soundEnabledToggle">Enable Sound</label>
                 </div>
             </div>
             <div class="settings-option">
-                <label for="soundVolumeSlider">Master Volume: <span class="inline-value" id="soundVolumeValue">80%</span></label>
+                <label for="soundVolumeSlider">Volume: <span class="inline-value" id="soundVolumeValue">80%</span></label>
                 <input type="range" id="soundVolumeSlider" min="0" max="100" step="1" value="80" oninput="updateSoundVolume(true)" onchange="updateSoundVolume(false)">
+            </div>
+            <div class="settings-option">
+                <label for="fpsLimitSlider">FPS: <span class="inline-value" id="fpsLimitValue">60</span></label>
+                <input type="range" id="fpsLimitSlider" min="15" max="240" step="1" value="60" oninput="updateFPSLimit(true)" onchange="updateFPSLimit(false)">
+            </div>
+            <div class="checkbox-option">
+                <input type="checkbox" id="showFPSToggle" checked onchange="updateShowFPS()">
+                <label for="showFPSToggle">Show FPS</label>
+            </div>
+            <div class="checkbox-option">
+                <input type="checkbox" id="performanceModeToggle" onchange="updatePerformanceMode()">
+                <label for="performanceModeToggle">Performance Mode</label>
+            </div>
+            <div class="checkbox-option">
+                <input type="checkbox" id="autoFPSToggle" onchange="updateAutoFPS()">
+                <label for="autoFPSToggle">Auto FPS</label>
             </div>
             <button class="back" onclick="hideSettings()">Back</button>
         </div>
@@ -2270,6 +2571,7 @@
     </div>
 
     <div id="topHud">
+        <span id="fpsDisplay" style="color: #00ff00; font-family: 'Ubuntu', sans-serif; font-size: 14px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); margin-right: 15px;">FPS: --</span>
         Coins: <span id="topCoinVal">0</span>
     </div>
     <button id="homeBtn" onclick="goHomeFromGame()" aria-label="Home" title="Home">
@@ -2312,7 +2614,7 @@
         <div class="joystick-stick"></div>
     </div>
 
-    <canvas id="gameCanvas"></canvas>
+    <canvas id="gameCanvas" width="1110" height="667"></canvas>
 
 <script>
 const CONFIG = {
@@ -2320,8 +2622,81 @@ const CONFIG = {
     mapHeight: 3000,
     gridSize: 50,
     maxShapes: 150,
-    maxBots: 10
+    maxBots: 10,
+    fpsLimit: 60,
+    showFPS: true,
+    performanceMode: false,
+    autoFPS: true,
+    minFPS: 15,
+    maxFPS: 240
 };
+
+// Auto FPS detection variables
+let autoFPSInterval = null;
+let frameTimeHistory = [];
+let lastAutoFPSCheck = 0;
+
+// Initialize auto FPS on first load
+function initializeAutoFPS() {
+    if (!CONFIG.autoFPS) return;
+    
+    try {
+        // Detect hardware capabilities
+        const cores = navigator.hardwareConcurrency || 2;
+        const memory = navigator.deviceMemory || 4;
+        const isLowEnd = cores <= 2 && memory <= 4;
+        const isHighEnd = cores >= 8 && memory >= 16;
+        
+        // Set initial FPS based on hardware
+        let initialFPS = 60; // Default
+        
+        if (isLowEnd) {
+            // Low-end device
+            initialFPS = 45;
+            CONFIG.performanceMode = true;
+            if (document.getElementById('performanceModeToggle')) {
+                document.getElementById('performanceModeToggle').checked = true;
+            }
+        } else if (isHighEnd) {
+            // High-end device
+            initialFPS = 120;
+        }
+        
+        // Update CONFIG and UI
+        CONFIG.fpsLimit = initialFPS;
+        const slider = document.getElementById('fpsLimitSlider');
+        const valueDisplay = document.getElementById('fpsLimitValue');
+        if (slider) slider.value = initialFPS;
+        if (valueDisplay) valueDisplay.textContent = initialFPS;
+        
+        if (CONFIG.showFPS) {
+            console.log(`Auto FPS: Set initial FPS to ${initialFPS} (cores: ${cores}, memory: ${memory}GB)`);
+        }
+        
+        // Start monitoring after game begins
+        setTimeout(() => {
+            if (CONFIG.autoFPS && isRunning) {
+                startAutoFPSDetection();
+            }
+        }, 3000); // Start after 3 seconds
+        
+    } catch (error) {
+        console.error('Error initializing auto FPS:', error);
+        CONFIG.fpsLimit = 60; // Fallback
+    }
+}
+
+// Load performance mode from localStorage
+const savedPerformanceMode = localStorage.getItem('performanceMode');
+if (savedPerformanceMode !== null) {
+    CONFIG.performanceMode = savedPerformanceMode === '1';
+}
+
+// Load auto FPS from localStorage
+const savedAutoFPS = localStorage.getItem('autoFPS');
+if (savedAutoFPS !== null) {
+    CONFIG.autoFPS = savedAutoFPS === '1';
+}
 
 const COLORS = {
     bg: '#6a717b',
@@ -2363,6 +2738,10 @@ const UI_TEXT_COLORS = Object.freeze({
     grayMid: '#c9c9c9'
 });
 
+// Frame interpolation for smooth appearance at any FPS
+let frameInterpolation = 1.0;
+let lastFrameDelta = 16.6667;
+
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -2381,6 +2760,13 @@ let camera = { x: 0, y: 0 };
 let worldBackdropCache = { width: 0, height: 0, bgGrad: null, angleWash: null, softSweep: null };
 let screenOverlayCache = { width: 0, height: 0, hitVignette: null, dangerVignette: null };
 let isUpgradeMenuOpen = false;
+
+// FPS tracking for better accuracy and variable frame rates
+let fpsFrameCount = 0;
+let fpsLastTime = 0;
+let fpsCurrent = 60;
+let fpsAccumulator = 0;
+let fpsTargetTime = 16.6667; // Default to 60fps
 let controlMode = 'pc';
 let difficulty = 'normal';
 let canDieInTestMode = false;
@@ -2389,6 +2775,13 @@ let pauseFade = 0;
 let recentBotColorHistory = [];
 const PLAYER_COLOR_DEFAULT = '#16b9ea';
 let playerColorHexEditing = false;
+
+let fpsCounter = {
+    current: 0,
+    lastUpdate: 0,
+    frameCount: 0
+};
+
 let playerColorBoardState = {
     hue: 195,
     sat: 0.88,
@@ -3007,6 +3400,127 @@ function updateSoundVolume(preview = false) {
     }
 
     if (!preview) saveSfxSettings();
+}
+
+function updateFPSLimit(preview = false) {
+    const slider = document.getElementById('fpsLimitSlider');
+    const value = document.getElementById('fpsLimitValue');
+    const fps = Math.max(15, Math.min(240, parseInt(slider.value) || 60));
+    CONFIG.fpsLimit = fps;
+    value.textContent = fps;
+    
+    // Update the target frame time for the new FPS
+    fpsTargetTime = 1000 / fps;
+    frameInterpolation = 1.0;
+    
+    // Log for debugging
+    if (CONFIG.showFPS) {
+        console.log(`FPS changed to: ${fps} (target: ${fpsTargetTime.toFixed(1)}ms)`);
+    }
+}
+
+function updateShowFPS() {
+    const checkbox = document.getElementById('showFPSToggle');
+    CONFIG.showFPS = checkbox.checked;
+    const fpsDisplay = document.getElementById('fpsDisplay');
+    if (fpsDisplay) {
+        fpsDisplay.style.display = CONFIG.showFPS ? 'inline' : 'none';
+    }
+}
+
+function updatePerformanceMode() {
+    const checkbox = document.getElementById('performanceModeToggle');
+    CONFIG.performanceMode = checkbox.checked;
+    localStorage.setItem('performanceMode', CONFIG.performanceMode ? '1' : '0');
+}
+
+function updateAutoFPS() {
+    const checkbox = document.getElementById('autoFPSToggle');
+    CONFIG.autoFPS = checkbox.checked;
+    localStorage.setItem('autoFPS', CONFIG.autoFPS ? '1' : '0');
+    
+    if (CONFIG.autoFPS) {
+        startAutoFPSDetection();
+    } else {
+        stopAutoFPSDetection();
+    }
+}
+
+function startAutoFPSDetection() {
+    if (autoFPSInterval) return;
+    
+    frameTimeHistory = [];
+    lastAutoFPSCheck = performance.now();
+    
+    autoFPSInterval = setInterval(() => {
+        const now = performance.now();
+        const frameTime = now - lastFrameTime;
+        
+        if (frameTime > 0) {
+            frameTimeHistory.push(frameTime);
+            if (frameTimeHistory.length > 60) {
+                frameTimeHistory.shift();
+            }
+        }
+        
+        // Check every 2 seconds
+        if (now - lastAutoFPSCheck > 2000) {
+            optimizeFPSForHardware();
+            lastAutoFPSCheck = now;
+        }
+    }, 100);
+}
+
+function stopAutoFPSDetection() {
+    if (autoFPSInterval) {
+        clearInterval(autoFPSInterval);
+        autoFPSInterval = null;
+    }
+}
+
+function optimizeFPSForHardware() {
+    if (frameTimeHistory.length < 30) return;
+    
+    const avgFrameTime = frameTimeHistory.reduce((a, b) => a + b, 0) / frameTimeHistory.length;
+    const currentFPS = 1000 / avgFrameTime;
+    const targetFPS = CONFIG.fpsLimit;
+    
+    // More conservative adjustment logic
+    const fpsDifference = Math.abs(currentFPS - targetFPS);
+    const percentDifference = fpsDifference / targetFPS;
+    
+    // Only adjust if difference is significant (>15%)
+    if (percentDifference > 0.15) {
+        if (currentFPS < targetFPS * 0.85 && targetFPS > 30) {
+            // Lower FPS if underperforming
+            const newFPS = Math.max(30, Math.floor(targetFPS * 0.92));
+            updateFPSLimitValue(newFPS);
+            if (CONFIG.showFPS) {
+                console.log(`Auto FPS: Lowering to ${newFPS} FPS (current: ${currentFPS.toFixed(1)})`);
+            }
+        }
+        else if (currentFPS > targetFPS * 1.15 && CONFIG.fpsLimit < 144) {
+            // Raise FPS if overperforming
+            const newFPS = Math.min(144, Math.ceil(targetFPS * 1.08));
+            updateFPSLimitValue(newFPS);
+            if (CONFIG.showFPS) {
+                console.log(`Auto FPS: Raising to ${newFPS} FPS (current: ${currentFPS.toFixed(1)})`);
+            }
+        }
+    }
+}
+
+function updateFPSLimitValue(newFPS) {
+    CONFIG.fpsLimit = Math.max(CONFIG.minFPS, Math.min(CONFIG.maxFPS, newFPS));
+    const slider = document.getElementById('fpsLimitSlider');
+    const valueDisplay = document.getElementById('fpsLimitValue');
+    
+    if (slider) slider.value = CONFIG.fpsLimit;
+    if (valueDisplay) valueDisplay.textContent = CONFIG.fpsLimit;
+    
+    // Update the target frame time for the new FPS
+    fpsTargetTime = 1000 / CONFIG.fpsLimit;
+    frameInterpolation = 1.0;
 }
 
 function getAudioContext() {
@@ -4034,7 +4548,9 @@ class Tank extends Entity {
         this.hp -= amount;
         if (!this.isBot && amount > 0) {
             const hitStrength = clamp(amount / Math.max(1, this.getStat('maxHp')), 0.05, 0.24);
-            playerDamageFlash = Math.max(playerDamageFlash, hitStrength);
+            if (!CONFIG.performanceMode) {
+                playerDamageFlash = Math.max(playerDamageFlash, hitStrength);
+            }
             playHitSfx(hitStrength * 2.2);
         }
 
@@ -4114,7 +4630,7 @@ class Tank extends Entity {
             g.lastFxTick = gameTick;
         }
         g.kick = Math.max(g.kick || 0, Math.min(this.radius * 0.34, flashSize * 0.22));
-        if (!this.isBot) {
+        if (!this.isBot && !CONFIG.performanceMode) {
             cameraShake = Math.max(cameraShake, Math.min(3.2, flashSize * 0.08));
         }
 
@@ -4751,6 +5267,9 @@ class MuzzleFlash {
 }
 
 function createMuzzleFlash(x, y, angle, size, color) {
+    // Skip muzzle flash creation in performance mode
+    if (CONFIG.performanceMode) return;
+    
     if (muzzleFlashes.length > 700) {
         muzzleFlashes.splice(0, 140);
     }
@@ -4764,6 +5283,9 @@ function createExplosion(x, y, size, color, kind = 'shape') {
     const sparkCount = Math.max(10, Math.floor(size * 0.75 * burstScale));
     const shardCount = Math.max(8, Math.floor(size * 0.46 * burstScale));
     const smokeCount = Math.max(5, Math.floor(size * 0.28 * burstScale));
+
+    // Skip particle creation in performance mode
+    if (CONFIG.performanceMode) return;
 
     for (let i = 0; i < sparkCount; i++) {
         particles.push(new Particle(x, y, color, {
@@ -4805,7 +5327,9 @@ function createExplosion(x, y, size, color, kind = 'shape') {
         explosionWaves.push(new ExplosionWave(x, y, size * 2.05, shadeHex(color, 0.12)));
     }
 
-    cameraShake = Math.max(cameraShake, Math.min(7.2, size * (isTankExplosion ? 0.2 : 0.12)));
+    if (!CONFIG.performanceMode) {
+        cameraShake = Math.max(cameraShake, Math.min(7.2, size * (isTankExplosion ? 0.2 : 0.12)));
+    }
     playExplosionSfx(kind, size);
 }
 
@@ -5114,10 +5638,60 @@ function drawGrid(camX = camera.x, camY = camera.y) {
 
 function gameLoop(now = performance.now()) {
     if (!isRunning) return;
-    if (!isPaused) gameTick++;
-    if (!lastFrameTime) lastFrameTime = now;
-    const fxDt = clamp((now - lastFrameTime) / 16.6667, 0.6, 1.9);
+    
+    // True variable frame rate system - supports any target FPS
+    const targetFPS = CONFIG.fpsLimit || 60;
+    const targetFrameTime = 1000 / targetFPS;
+    
+    if (lastFrameTime === 0) {
+        lastFrameTime = now - targetFrameTime;
+        fpsLastTime = now;
+        fpsFrameCount = 0;
+        fpsAccumulator = 0;
+    }
+    
+    const deltaTime = now - lastFrameTime;
+    
+    // Variable frame timing - allows any FPS, not just discrete steps
+    fpsAccumulator += deltaTime;
+    
+    // Only draw when we've accumulated enough time for the target FPS
+    if (fpsAccumulator < targetFrameTime) {
+        requestAnimationFrame(gameLoop);
+        return;
+    }
+    
+    // Handle accumulated frame time more precisely
+    const frameRatio = fpsAccumulator / targetFrameTime;
+    const wholeFrames = Math.floor(frameRatio);
+    
+    // For high refresh rates, allow multiple frames if we've fallen behind
+    if (wholeFrames > 1 && targetFPS < 45) {
+        fpsAccumulator = targetFrameTime * 0.3; // Reset with small remainder
+    } else {
+        fpsAccumulator = Math.max(0, fpsAccumulator - (targetFrameTime * wholeFrames));
+    }
+    
+    // Calculate actual FPS with better accuracy
+    fpsFrameCount += wholeFrames || 1;
+    const fpsElapsed = now - fpsLastTime;
+    
+    if (fpsElapsed >= 1000) {
+        const actualFPS = (fpsFrameCount * 1000) / fpsElapsed;
+        fpsCurrent = Math.abs(actualFPS - targetFPS) <= 5 ? targetFPS : Math.round(actualFPS);
+        fpsFrameCount = 0;
+        fpsLastTime = now;
+        
+        if (CONFIG.showFPS) {
+            updateFPSDisplay(fpsCurrent);
+        }
+    }
+    
+    // Normalize delta time for game logic consistency
+    const fxDt = clamp(deltaTime / 16.6667, 0.4, 2.5);
     lastFrameTime = now;
+    
+    if (!isPaused) gameTick++;
 
     if (player.isDead) {
         endGame();
@@ -5140,15 +5714,29 @@ function gameLoop(now = performance.now()) {
         if (botCount < diffSettings.maxBots) spawnBot();
 
         for (let i = 0; i < entities.length; i++) entities[i].update();
-        for (let i = 0; i < particles.length; i++) particles[i].update(fxDt);
-        for (let i = 0; i < muzzleFlashes.length; i++) muzzleFlashes[i].update(fxDt);
-        for (let i = 0; i < explosionWaves.length; i++) explosionWaves[i].update(fxDt);
+        
+        // Skip visual effects updates in performance mode
+        if (!CONFIG.performanceMode) {
+            for (let i = 0; i < particles.length; i++) particles[i].update(fxDt);
+            for (let i = 0; i < muzzleFlashes.length; i++) muzzleFlashes[i].update(fxDt);
+            for (let i = 0; i < explosionWaves.length; i++) explosionWaves[i].update(fxDt);
+        }
+        
         checkCollisions();
 
         compactArrayInPlace(entities, e => !e.isDead);
-        compactArrayInPlace(particles, p => p.life > 0);
-        compactArrayInPlace(muzzleFlashes, f => f.life > 0);
-        compactArrayInPlace(explosionWaves, w => w.life > 0);
+        
+        // Skip cleanup of visual effects arrays in performance mode
+        if (!CONFIG.performanceMode) {
+            compactArrayInPlace(particles, p => p.life > 0);
+            compactArrayInPlace(muzzleFlashes, f => f.life > 0);
+            compactArrayInPlace(explosionWaves, w => w.life > 0);
+        } else {
+            // In performance mode, clear the arrays to save memory
+            particles.length = 0;
+            muzzleFlashes.length = 0;
+            explosionWaves.length = 0;
+        }
 
         camera.x += (player.x - camera.x) * 0.1;
         camera.y += (player.y - camera.y) * 0.1;
@@ -5156,7 +5744,9 @@ function gameLoop(now = performance.now()) {
 
     let renderCamX = camera.x;
     let renderCamY = camera.y;
-    if (cameraShake > 0.05) {
+    
+    // Disable camera shake in performance mode
+    if (!CONFIG.performanceMode && cameraShake > 0.05) {
         renderCamX += rand(-cameraShake, cameraShake);
         renderCamY += rand(-cameraShake, cameraShake);
         cameraShake *= 0.78;
@@ -5183,13 +5773,18 @@ function gameLoop(now = performance.now()) {
         const e = entities[i];
         if (e instanceof Tank) e.draw(ctx);
     }
-    for (let i = 0; i < explosionWaves.length; i++) explosionWaves[i].draw(ctx);
-    for (let i = 0; i < muzzleFlashes.length; i++) muzzleFlashes[i].draw(ctx);
-    for (let i = 0; i < particles.length; i++) particles[i].draw(ctx);
+    
+    // Skip visual effects in performance mode
+    if (!CONFIG.performanceMode) {
+        for (let i = 0; i < explosionWaves.length; i++) explosionWaves[i].draw(ctx);
+        for (let i = 0; i < muzzleFlashes.length; i++) muzzleFlashes[i].draw(ctx);
+        for (let i = 0; i < particles.length; i++) particles[i].draw(ctx);
+    }
 
     ctx.restore();
 
-    if (playerDamageFlash > 0.001) {
+    // Disable damage flash in performance mode
+    if (!CONFIG.performanceMode && playerDamageFlash > 0.001) {
         const pulse = 0.78 + 0.22 * Math.sin(gameTick * 0.32);
         ctx.save();
         ctx.globalAlpha = playerDamageFlash * pulse;
@@ -5202,7 +5797,8 @@ function gameLoop(now = performance.now()) {
     }
 
     const hpPct = Math.max(0, player.hp / player.getStat('maxHp'));
-    if (hpPct < 0.55) {
+    // Disable danger vignette in performance mode
+    if (!CONFIG.performanceMode && hpPct < 0.55) {
         const danger = (0.55 - hpPct) / 0.55;
         const pulse = 0.6 + 0.4 * Math.sin(gameTick * 0.22);
         ctx.save();
@@ -5442,6 +6038,21 @@ function updateUI() {
     if (coinTextChanged) syncHomeButtonPosition();
 }
 
+function updateFPSDisplay(fps) {
+    const fpstext = document.getElementById('fpsDisplay');
+    if (fpstext && CONFIG.showFPS) {
+        fpstext.textContent = `FPS: ${fps}`;
+        // Color coding based on FPS
+        if (fps >= CONFIG.fpsLimit * 0.9) {
+            fpstext.style.color = '#00ff00'; // Green - good
+        } else if (fps >= CONFIG.fpsLimit * 0.7) {
+            fpstext.style.color = '#ffff00'; // Yellow - okay
+        } else {
+            fpstext.style.color = '#ff0000'; // Red - poor
+        }
+    }
+}
+
 function toggleClassShop(playClick = true) {
     if (isPaused) return;
     input.mouseDown = false;
@@ -5605,6 +6216,12 @@ function showMainMenu() {
 }
 
 function startGame() {
+    // Initialize FPS timing
+    lastFrameTime = 0;
+    fpsLastTime = 0;
+    fpsFrameCount = 0;
+    fpsAccumulator = 0;
+    fpsTargetTime = 1000 / (CONFIG.fpsLimit || 60);
     playUiSfx('start');
     document.getElementById('mainMenu').classList.add('hidden');
     document.getElementById('loseScreen').classList.add('hidden');
@@ -5626,6 +6243,14 @@ function startGame() {
         document.getElementById('leftJoystick').style.display = 'none';
         document.getElementById('rightJoystick').style.display = 'none';
     }
+
+    // Apply FPS settings
+    const fpsDisplay = document.getElementById('fpsDisplay');
+    if (fpsDisplay) {
+        fpsDisplay.style.display = CONFIG.showFPS ? 'inline' : 'none';
+    }
+    
+    initializeAutoFPS();
 
     isRunning = true;
     entities = [];
@@ -5761,21 +6386,70 @@ function fitColorMenuPanel() {
 }
 
 function showSettings() {
-    playUiSfx('open');
-    document.getElementById('mainMenu').classList.add('hidden');
-    document.getElementById('settingsMenu').classList.remove('hidden');
-    document.getElementById('controlMode').value = controlMode;
-    document.getElementById('difficultyMode').value = difficulty;
-    syncSoundControls();
-    updateDifficultyDescription();
+    try {
+        playUiSfx('open');
+        
+        // Hide main menu and show settings
+        const mainMenu = document.getElementById('mainMenu');
+        const settingsMenu = document.getElementById('settingsMenu');
+        
+        if (mainMenu) mainMenu.classList.add('hidden');
+        if (settingsMenu) settingsMenu.classList.remove('hidden');
+        
+        // Sync all settings with UI
+        const controlModeEl = document.getElementById('controlMode');
+        const difficultyEl = document.getElementById('difficultyMode');
+        const performanceEl = document.getElementById('performanceModeToggle');
+        const autoFPSEl = document.getElementById('autoFPSToggle');
+        
+        if (controlModeEl) controlModeEl.value = controlMode;
+        if (difficultyEl) difficultyEl.value = difficulty;
+        if (performanceEl) performanceEl.checked = CONFIG.performanceMode;
+        if (autoFPSEl) autoFPSEl.checked = CONFIG.autoFPS;
+        
+        syncSoundControls();
+        updateDifficultyDescription();
+        
+        // Start auto FPS detection if enabled
+        if (CONFIG.autoFPS) {
+            startAutoFPSDetection();
+        }
+        
+        // Ensure settings menu is visible
+        requestAnimationFrame(() => {
+            if (settingsMenu) {
+                settingsMenu.scrollIntoView({ behavior: 'auto', block: 'start' });
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error showing settings:', error);
+        // Fallback: show main menu
+        showMainMenu();
+    }
 }
 
 function hideSettings() {
-    playUiSfx('back');
-    document.getElementById('settingsMenu').classList.add('hidden');
-    const mainMenu = document.getElementById('mainMenu');
-    mainMenu.classList.remove('hidden');
-    requestAnimationFrame(fitMainMenuPanel);
+    try {
+        playUiSfx('back');
+        
+        const settingsMenu = document.getElementById('settingsMenu');
+        const mainMenu = document.getElementById('mainMenu');
+        
+        if (settingsMenu) settingsMenu.classList.add('hidden');
+        if (mainMenu) mainMenu.classList.remove('hidden');
+        
+        // Stop auto FPS detection when leaving settings
+        if (CONFIG.autoFPS) {
+            stopAutoFPSDetection();
+        }
+        
+        requestAnimationFrame(fitMainMenuPanel);
+        
+    } catch (error) {
+        console.error('Error hiding settings:', error);
+        showMainMenu();
+    }
 }
 
 function normalizeHexColor(value, fallback = PLAYER_COLOR_DEFAULT) {
